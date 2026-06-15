@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>sandbox-math System Map</title>
-  <meta name="description" content="Interactive web system map for sandbox-math 0.2.0">
+  <meta name="description" content="Interactive web system map for sandbox-math 0.3.0">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800&display=swap');
 
@@ -287,7 +287,7 @@
         <div class="mark">Σ</div>
         <div>
           <strong>sandbox-math</strong>
-          <span>System Map 0.2.0</span>
+          <span>System Map 0.3.0</span>
         </div>
       </div>
       <nav aria-label="Page sections">
@@ -306,12 +306,12 @@
       <header class="hero">
         <div class="eyebrow">Interactive docs · Mermaid diagrams</div>
         <h1>อ่าน system map ได้ง่ายขึ้นในหน้าเว็บเดียว</h1>
-        <p class="lead">สรุปภาพรวม sandbox-math ตั้งแต่ CLI data flow, โครงสร้างไฟล์, branch/PR history, CI flow, release 0.2.0 และแผนต่อไป โดยออกแบบให้อ่านเร็วกว่า Markdown ยาวๆ</p>
+        <p class="lead">สรุปภาพรวม sandbox-math ตั้งแต่ CLI data flow, โครงสร้างไฟล์, branch/PR history, CI flow, release 0.3.0 และแผนต่อไป โดยออกแบบให้อ่านเร็วกว่า Markdown ยาวๆ</p>
         <div class="status-grid">
           <div class="stat"><span>GitHub repo</span><strong>Supreamth/my-sprees</strong></div>
-          <div class="stat"><span>Release</span><strong>0.2.0</strong></div>
+          <div class="stat"><span>Release</span><strong>0.3.0</strong></div>
           <div class="stat"><span>Main HEAD</span><strong>f4e886d</strong></div>
-          <div class="stat"><span>Final verify</span><strong>25/25 tests passed</strong></div>
+          <div class="stat"><span>Final verify</span><strong>36/36 tests passed</strong></div>
         </div>
       </header>
 
@@ -325,23 +325,28 @@
     Parser --> Mode{Output mode?}
     Parser --> Values[values positional args]
     Parser --> Precision[--precision optional]
+    Parser --> InputFile[--input-file optional]
+    Parser --> FieldFilter[--fields optional]
+    Parser --> Sample[--sample-stddev optional]
 
+    InputFile --> Values
     Values --> Normalize[normalize_numbers]
     Normalize --> Summary[summarize]
     Summary --> Stats[Summary dictionary]
-    Stats --> Round[round_summary if --precision]
+    Stats --> FieldFilter
+    FieldFilter --> Round[round_summary if --precision]
 
     Round --> Mode
     Mode -->|default| Text[Python dict text output]
     Mode -->|--json| JSON[JSON output]
     Mode -->|--csv| CSV[2-line CSV output]
 
-    Summary --> Fields[count / total / mean / minimum / maximum / median / range / unique / stddev]</pre>
+    Summary --> Fields[count / total / mean / minimum / maximum / median / range / unique / stddev / sample_stddev]</pre>
         </div>
         <div class="cards">
           <div class="card"><strong>Library + CLI</strong><p><code>sandbox_math.py</code> เป็นทั้ง module และ entry point</p></div>
           <div class="card"><strong>Data normalization</strong><p><code>normalize_numbers()</code> แปลง input เป็น float และ reject ค่าที่ไม่ใช่ตัวเลข</p></div>
-          <div class="card"><strong>Output modes</strong><p>รองรับ default text, <code>--json</code>, และ <code>--csv</code></p></div>
+          <div class="card"><strong>Output modes</strong><p>รองรับ default text, <code>--json</code>, <code>--csv</code>, field selection, input files และ sample stddev</p></div>
         </div>
       </section>
 
@@ -358,7 +363,7 @@
     Repo --> Docs[README.md]
     Repo --> Changelog[CHANGELOG.md]
 
-    Code --> Functions[normalize_numbers / summarize / round_summary / format_csv / main]
+    Code --> Functions[normalize_numbers / summarize / read_input_file / select_fields / round_summary / format_csv / main]
     Tests1 --> BehaviorTests[Unit + CLI subprocess behavior tests]
     Tests2 --> MetadataTests[Packaging / workflow / changelog tests]
     Packaging --> ConsoleScript[sandbox-math = sandbox_math:main]
@@ -400,7 +405,7 @@
     C->>R: round_summary(summary, 2)
     R-->>C: rounded summary dict
     C->>O: format_csv(summary)
-    O-->>U: CSV header + values</pre>
+    O-->>U: CSV header + values, or values only with --no-header</pre>
         </div>
       </section>
 
@@ -446,11 +451,11 @@
     checkout main
     merge "feat/add-precision-option" id: "PR #14 02b0220"
 
-    branch "chore/release-0.2.0"
-    checkout "chore/release-0.2.0"
+    branch "chore/release-0.3.0"
+    checkout "chore/release-0.3.0"
     commit id: "3da1d0d release"
     checkout main
-    merge "chore/release-0.2.0" id: "PR #15 f4e886d"</pre>
+    merge "chore/release-0.3.0" id: "PR #15 f4e886d"</pre>
         </div>
         <table>
           <thead><tr><th>PR</th><th>Branch</th><th>Commit</th><th>เพิ่มอะไร</th><th>สถานะ</th></tr></thead>
@@ -461,7 +466,7 @@
             <tr><td>#12</td><td><code>feat/add-csv-output</code></td><td><code>a34ef9e</code></td><td><code>--csv</code></td><td>merged + cleaned</td></tr>
             <tr><td>#13</td><td><code>feat/add-stddev-summary</code></td><td><code>23b944a</code></td><td>stddev</td><td>merged + cleaned</td></tr>
             <tr><td>#14</td><td><code>feat/add-precision-option</code></td><td><code>636fc7c</code></td><td><code>--precision</code></td><td>merged + cleaned</td></tr>
-            <tr><td>#15</td><td><code>chore/release-0.2.0</code></td><td><code>3da1d0d</code></td><td>CHANGELOG + version</td><td>merged + cleaned</td></tr>
+            <tr><td>#15</td><td><code>chore/release-0.3.0</code></td><td><code>3da1d0d</code></td><td>CHANGELOG + version</td><td>merged + cleaned</td></tr>
           </tbody>
         </table>
       </section>
@@ -484,18 +489,18 @@
     Cleanup --> Final[Sync main + final verify]</pre>
         </div>
         <div class="cards">
-          <div class="card"><strong>CI checks</strong><p>install package, unittest, help/version smoke, JSON/CSV/precision smoke</p></div>
+          <div class="card"><strong>CI checks</strong><p>install package, unittest, help/version smoke, JSON/CSV/precision/input-file/fields/sample-stddev smoke</p></div>
           <div class="card"><strong>Local verification</strong><p><code>python3 -m unittest -v</code> และ installed CLI smoke test</p></div>
           <div class="card"><strong>Known limitation</strong><p>เครื่อง local ไม่มี gh/API token จึงต้องเปิด/merge PR ผ่าน GitHub Web</p></div>
         </div>
       </section>
 
       <section id="feature-map">
-        <h2>6. Current release: 0.2.0 feature map</h2>
-        <p class="section-kicker">Release 0.2.0 ครอบคลุม input, summary fields, output modes, CLI options และ quality gates</p>
+        <h2>6. Current release: 0.3.0 feature map</h2>
+        <p class="section-kicker">Release 0.3.0 ครอบคลุม file input, selected fields, headerless CSV, sample stddev, output modes และ quality gates</p>
         <div class="diagram">
           <pre class="mermaid">mindmap
-  root((sandbox-math 0.2.0))
+  root((sandbox-math 0.3.0))
     Input
       integers
       floats
@@ -530,11 +535,22 @@
         </div>
       </section>
 
+      <section id="release-0-3">
+        <h2>7. Release 0.3.0 user-facing features</h2>
+        <p class="section-kicker">เพิ่ม CLI flags ใหม่ 4 ตัวที่ผู้ใช้เรียกได้โดยตรง</p>
+        <div class="cards">
+          <div class="card"><strong><code>--input-file</code></strong><p>อ่าน numeric values จากไฟล์แบบ whitespace-separated และรวมกับ positional args ได้</p></div>
+          <div class="card"><strong><code>--fields</code></strong><p>เลือกและจัดลำดับ fields ที่ต้องการแสดง เช่น <code>count,mean</code></p></div>
+          <div class="card"><strong><code>--no-header</code></strong><p>ใช้กับ <code>--csv</code> เพื่อแสดงเฉพาะแถว values ไม่มี header</p></div>
+          <div class="card"><strong><code>--sample-stddev</code></strong><p>เพิ่ม field <code>sample_stddev</code> โดยใช้สูตร sample standard deviation</p></div>
+        </div>
+      </section>
+
       <section id="roadmap">
         <h2>7. แผนที่จะทำต่อไป</h2>
-        <p class="section-kicker">Release <code>v0.2.0</code> ปิดงานสมบูรณ์แล้ว: merge เข้า <code>main</code>, สร้าง tag, push tag และ publish GitHub Release จาก CHANGELOG เรียบร้อยแล้ว</p>
+        <p class="section-kicker">Release <code>v0.3.0</code> ปิดงานสมบูรณ์แล้ว: merge เข้า <code>main</code>, สร้าง tag, push tag และ publish GitHub Release จาก CHANGELOG เรียบร้อยแล้ว</p>
         <div class="roadmap">
-          <div class="card"><strong>Phase A: Release hygiene</strong><p>เสร็จแล้ว — <code>v0.2.0</code> tag และ GitHub Release ถูก publish แล้ว</p></div>
+          <div class="card"><strong>Phase A: Release hygiene</strong><p>เสร็จแล้ว — <code>v0.3.0</code> tag และ GitHub Release ถูก publish แล้ว</p></div>
           <div class="card"><strong>Phase B: User-facing features</strong><p><code>--input-file</code>, <code>--fields</code>, <code>--no-header</code>, <code>--sample-stddev</code></p></div>
           <div class="card"><strong>Phase C: Engineering quality</strong><p>เพิ่ม ruff/formatting, README badge, release checklist, split tests</p></div>
         </div>
@@ -543,11 +559,11 @@
       <section id="next-action">
         <h2>8. Recommended next action</h2>
         <div class="timeline">
-          <div class="step"><span class="num">1</span><div><strong>Release v0.2.0 ปิดงานแล้ว</strong><br>ไม่ต้องสร้าง tag หรือ GitHub Release ซ้ำ</div></div>
+          <div class="step"><span class="num">1</span><div><strong>Release v0.3.0 ปิดงานแล้ว</strong><br>ไม่ต้องสร้าง tag หรือ GitHub Release ซ้ำ</div></div>
           <div class="step"><span class="num">2</span><div><strong>ถ้าต้องการเพิ่ม feature</strong><br>เริ่ม <code>--input-file</code> ด้วย TDD</div></div>
           <div class="step"><span class="num">3</span><div><strong>ถ้าต้องการปรับคุณภาพ repo</strong><br>เพิ่ม ruff/formatting + README badge</div></div>
         </div>
-        <div class="callout"><strong>คำแนะนำ:</strong> ถ้าจะทำต่อ ให้เริ่ม feature ถัดไปหรือปรับคุณภาพ repo; ไม่ต้องทำ release hygiene สำหรับ <code>v0.2.0</code> ซ้ำแล้ว</div>
+        <div class="callout"><strong>คำแนะนำ:</strong> ถ้าจะทำต่อ ให้เริ่ม feature ถัดไปหรือปรับคุณภาพ repo; ไม่ต้องทำ release hygiene สำหรับ <code>v0.3.0</code> ซ้ำแล้ว</div>
       </section>
     </main>
   </div>
