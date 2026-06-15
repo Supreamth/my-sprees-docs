@@ -309,7 +309,7 @@
         <p class="lead">สรุปภาพรวม sandbox-math ตั้งแต่ CLI data flow, โครงสร้างไฟล์, branch/PR history, CI flow, release 0.3.0 และแผนต่อไป โดยออกแบบให้อ่านเร็วกว่า Markdown ยาวๆ</p>
         <div class="status-grid">
           <div class="stat"><span>GitHub repo</span><strong>Supreamth/my-sprees</strong></div>
-          <div class="stat"><span>Release</span><strong>0.3.0</strong></div>
+          <div class="stat"><span>Release</span><strong>0.3.0 released · 0.4.0 PR open</strong></div>
           <div class="stat"><span>Main HEAD</span><strong>f4e886d</strong></div>
           <div class="stat"><span>Final verify</span><strong>36/36 tests passed</strong></div>
         </div>
@@ -548,11 +548,11 @@
 
       <section id="roadmap">
         <h2>7. แผนที่จะทำต่อไป</h2>
-        <p class="section-kicker">Release <code>v0.3.0</code> ปิดงานสมบูรณ์แล้ว: merge เข้า <code>main</code>, สร้าง tag, push tag และ publish GitHub Release จาก CHANGELOG เรียบร้อยแล้ว</p>
+        <p class="section-kicker">Release <code>v0.3.0</code> ปิดงานสมบูรณ์แล้ว และ <code>v0.4.0</code> engineering quality เปิด PR #19 พร้อม CI ผ่านแล้ว รอ merge/release</p>
         <div class="roadmap">
           <div class="card"><strong>Phase A: Release hygiene</strong><p>เสร็จแล้ว — <code>v0.3.0</code> tag และ GitHub Release ถูก publish แล้ว</p></div>
           <div class="card"><strong>Phase B: User-facing features</strong><p><code>--input-file</code>, <code>--fields</code>, <code>--no-header</code>, <code>--sample-stddev</code></p></div>
-          <div class="card"><strong>Phase C: Engineering quality</strong><p>เพิ่ม ruff/formatting, README badge, release checklist, split tests</p></div>
+          <div class="card"><strong>Phase C: Engineering quality</strong><p>PR #19 พร้อม CI ผ่านแล้ว: Ruff checks, README badge, release checklist, split tests</p></div>
         </div>
       </section>
 
@@ -560,10 +560,10 @@
         <h2>8. Recommended next action</h2>
         <div class="timeline">
           <div class="step"><span class="num">1</span><div><strong>Release v0.3.0 ปิดงานแล้ว</strong><br>ไม่ต้องสร้าง tag หรือ GitHub Release ซ้ำ</div></div>
-          <div class="step"><span class="num">2</span><div><strong>ถ้าต้องการเพิ่ม feature</strong><br>เริ่ม <code>--input-file</code> ด้วย TDD</div></div>
-          <div class="step"><span class="num">3</span><div><strong>ถ้าต้องการปรับคุณภาพ repo</strong><br>เพิ่ม ruff/formatting + README badge</div></div>
+          <div class="step"><span class="num">2</span><div><strong>Merge PR #19</strong><br>เปิด <code>https://github.com/Supreamth/my-sprees/pull/19</code> แล้ว merge เมื่อพร้อม</div></div>
+          <div class="step"><span class="num">3</span><div><strong>Release v0.4.0</strong><br>หลัง merge ให้ sync main, tag <code>v0.4.0</code>, publish GitHub Release และ cleanup branch</div></div>
         </div>
-        <div class="callout"><strong>คำแนะนำ:</strong> ถ้าจะทำต่อ ให้เริ่ม feature ถัดไปหรือปรับคุณภาพ repo; ไม่ต้องทำ release hygiene สำหรับ <code>v0.3.0</code> ซ้ำแล้ว</div>
+        <div class="callout"><strong>คำแนะนำ:</strong> ขั้นตอนถัดไปคือ merge PR #19 แล้วปิด lifecycle <code>v0.4.0</code> ด้วย tag + GitHub Release</div>
       </section>
     </main>
   </div>
