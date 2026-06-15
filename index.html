@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sandbox-math System Map</title>
+  <meta name="description" content="Interactive web system map for sandbox-math 0.2.0">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --panel: #fffaf2;
+      --panel-2: #ffffff;
+      --ink: #171511;
+      --muted: #6f675b;
+      --line: #e4dacb;
+      --accent: #3157d5;
+      --accent-2: #e66a35;
+      --ok: #147a50;
+      --code: #24211c;
+      --shadow: 0 18px 45px rgba(35, 28, 17, .10);
+      --radius: 22px;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(49, 87, 213, .13), transparent 34rem),
+        radial-gradient(circle at 85% 20%, rgba(230, 106, 53, .12), transparent 28rem),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
+    }
+
+    a { color: inherit; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    code {
+      background: #eee5d8;
+      border: 1px solid #dfd2c0;
+      border-radius: 7px;
+      padding: .08rem .35rem;
+      font-size: .92em;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px 22px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 250, 242, .76);
+      backdrop-filter: blur(16px);
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #20358f);
+      box-shadow: 0 10px 28px rgba(49, 87, 213, .24);
+    }
+    .brand strong { display: block; line-height: 1.1; }
+    .brand span { color: var(--muted); font-size: .9rem; }
+
+    nav a {
+      display: block;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 9px 10px;
+      border-radius: 11px;
+      margin: 2px 0;
+      font-size: .94rem;
+    }
+    nav a:hover, nav a:focus-visible {
+      color: var(--ink);
+      background: #efe6d9;
+      outline: none;
+    }
+
+    main { padding: 42px min(5vw, 76px) 76px; }
+    .hero {
+      max-width: 1120px;
+      padding: clamp(28px, 4vw, 54px);
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 8px);
+      background: rgba(255, 250, 242, .82);
+      box-shadow: var(--shadow);
+    }
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-size: .78rem;
+    }
+    h1 {
+      margin: 10px 0 14px;
+      font-size: clamp(2.2rem, 5vw, 4.6rem);
+      line-height: 1.08;
+      letter-spacing: -.055em;
+      text-wrap: balance;
+    }
+    .lead {
+      max-width: 820px;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 1.5vw, 1.26rem);
+      margin: 0;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .stat {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel-2);
+    }
+    .stat span { display: block; color: var(--muted); font-size: .82rem; }
+    .stat strong { display: block; margin-top: 4px; font-size: 1rem; }
+
+    section {
+      max-width: 1120px;
+      margin-top: 28px;
+      padding: clamp(22px, 3.2vw, 38px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .82);
+      box-shadow: 0 9px 28px rgba(35, 28, 17, .06);
+    }
+    section h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.45rem, 2.5vw, 2.2rem);
+      line-height: 1.1;
+      letter-spacing: -.035em;
+    }
+    section h3 { margin-top: 26px; font-size: 1.1rem; }
+    .section-kicker {
+      color: var(--muted);
+      margin-top: 0;
+      max-width: 820px;
+    }
+
+    .diagram {
+      margin: 20px 0;
+      padding: 18px;
+      border: 1px solid #ded4c6;
+      border-radius: 18px;
+      background: #fffdf8;
+      overflow: auto;
+    }
+    .mermaid { min-width: 680px; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fffaf2;
+    }
+    .card strong { display: block; margin-bottom: 4px; }
+    .card p { margin: 0; color: var(--muted); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      overflow: hidden;
+      border-radius: 16px;
+      font-size: .95rem;
+    }
+    th, td { border-bottom: 1px solid var(--line); padding: 12px 10px; text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; background: #f5eee4; }
+    tr:last-child td { border-bottom: none; }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--accent);
+      font-weight: 800;
+      font-size: .88rem;
+    }
+    .step div:last-child {
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .callout {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 18px;
+      background: #eef3ff;
+      border: 1px solid #ccd8ff;
+    }
+    .callout strong { color: #1f3fa8; }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .roadmap .card:first-child { border-color: #c8d5ff; background: #f4f7ff; }
+
+    .top-link {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: white;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 980px) {
+      .shell { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+      nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+      main { padding: 24px 16px 70px; }
+      .status-grid, .cards, .roadmap { grid-template-columns: 1fr; }
+      .mermaid { min-width: 560px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell" id="top">
+    <aside>
+      <div class="brand">
+        <div class="mark">Σ</div>
+        <div>
+          <strong>sandbox-math</strong>
+          <span>System Map 0.2.0</span>
+        </div>
+      </div>
+      <nav aria-label="Page sections">
+        <a href="#overview">1. ภาพรวมระบบ</a>
+        <a href="#structure">2. โครงสร้างไฟล์</a>
+        <a href="#data-flow">3. Data flow CLI</a>
+        <a href="#timeline">4. PR timeline</a>
+        <a href="#ci">5. CI / verification</a>
+        <a href="#feature-map">6. Feature map</a>
+        <a href="#roadmap">7. Roadmap</a>
+        <a href="#next-action">8. Next action</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div class="eyebrow">Interactive docs · Mermaid diagrams</div>
+        <h1>อ่าน system map ได้ง่ายขึ้นในหน้าเว็บเดียว</h1>
+        <p class="lead">สรุปภาพรวม sandbox-math ตั้งแต่ CLI data flow, โครงสร้างไฟล์, branch/PR history, CI flow, release 0.2.0 และแผนต่อไป โดยออกแบบให้อ่านเร็วกว่า Markdown ยาวๆ</p>
+        <div class="status-grid">
+          <div class="stat"><span>GitHub repo</span><strong>Supreamth/my-sprees</strong></div>
+          <div class="stat"><span>Release</span><strong>0.2.0</strong></div>
+          <div class="stat"><span>Main HEAD</span><strong>f4e886d</strong></div>
+          <div class="stat"><span>Final verify</span><strong>25/25 tests passed</strong></div>
+        </div>
+      </header>
+
+      <section id="overview">
+        <h2>1. ภาพรวมระบบ</h2>
+        <p class="section-kicker">ผู้ใช้เรียก CLI, parser รับ flags/values, normalize input, summarize, optional rounding แล้วส่งออกเป็น text / JSON / CSV</p>
+        <div class="diagram">
+          <pre class="mermaid">flowchart TD
+    User[User / CLI caller] --> CLI[sandbox-math console script]
+    CLI --> Parser[argparse parser]
+    Parser --> Mode{Output mode?}
+    Parser --> Values[values positional args]
+    Parser --> Precision[--precision optional]
+
+    Values --> Normalize[normalize_numbers]
+    Normalize --> Summary[summarize]
+    Summary --> Stats[Summary dictionary]
+    Stats --> Round[round_summary if --precision]
+
+    Round --> Mode
+    Mode -->|default| Text[Python dict text output]
+    Mode -->|--json| JSON[JSON output]
+    Mode -->|--csv| CSV[2-line CSV output]
+
+    Summary --> Fields[count / total / mean / minimum / maximum / median / range / unique / stddev]</pre>
+        </div>
+        <div class="cards">
+          <div class="card"><strong>Library + CLI</strong><p><code>sandbox_math.py</code> เป็นทั้ง module และ entry point</p></div>
+          <div class="card"><strong>Data normalization</strong><p><code>normalize_numbers()</code> แปลง input เป็น float และ reject ค่าที่ไม่ใช่ตัวเลข</p></div>
+          <div class="card"><strong>Output modes</strong><p>รองรับ default text, <code>--json</code>, และ <code>--csv</code></p></div>
+        </div>
+      </section>
+
+      <section id="structure">
+        <h2>2. โครงสร้างไฟล์สำคัญ</h2>
+        <p class="section-kicker">ไฟล์หลักแบ่งชัดเจนระหว่าง logic, tests, packaging, CI, README และ changelog</p>
+        <div class="diagram">
+          <pre class="mermaid">flowchart LR
+    Repo[my-sprees repo] --> Code[sandbox_math.py]
+    Repo --> Tests1[test_sandbox_math.py]
+    Repo --> Tests2[test_packaging.py]
+    Repo --> Packaging[pyproject.toml]
+    Repo --> CI[.github/workflows/test.yml]
+    Repo --> Docs[README.md]
+    Repo --> Changelog[CHANGELOG.md]
+
+    Code --> Functions[normalize_numbers / summarize / round_summary / format_csv / main]
+    Tests1 --> BehaviorTests[Unit + CLI subprocess behavior tests]
+    Tests2 --> MetadataTests[Packaging / workflow / changelog tests]
+    Packaging --> ConsoleScript[sandbox-math = sandbox_math:main]
+    CI --> GitHubActions[Python unittest + installed CLI smoke tests]</pre>
+        </div>
+        <table>
+          <thead><tr><th>File</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td><code>sandbox_math.py</code></td><td>Core logic และ CLI</td></tr>
+            <tr><td><code>test_sandbox_math.py</code></td><td>Behavior tests สำหรับ summarize และ CLI outputs</td></tr>
+            <tr><td><code>test_packaging.py</code></td><td>Packaging metadata, CI workflow, changelog tests</td></tr>
+            <tr><td><code>pyproject.toml</code></td><td>Package metadata และ console script</td></tr>
+            <tr><td><code>.github/workflows/test.yml</code></td><td>GitHub Actions CI</td></tr>
+            <tr><td><code>README.md</code> / <code>CHANGELOG.md</code></td><td>User docs และ release notes</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="data-flow">
+        <h2>3. Data flow ของ CLI</h2>
+        <p class="section-kicker">ตัวอย่าง flow: <code>sandbox-math --csv --precision 2 1 2 3.5</code></p>
+        <div class="diagram">
+          <pre class="mermaid">sequenceDiagram
+    participant U as User
+    participant C as sandbox-math CLI
+    participant P as argparse
+    participant N as normalize_numbers
+    participant S as summarize
+    participant R as round_summary
+    participant O as Output formatter
+
+    U->>C: sandbox-math --csv --precision 2 1 2 3.5
+    C->>P: parse flags and values
+    P-->>C: mode=csv, precision=2, values=[1,2,3.5]
+    C->>N: normalize values
+    N-->>C: [1.0, 2.0, 3.5]
+    C->>S: summarize(numbers)
+    S-->>C: summary dict with 9 fields
+    C->>R: round_summary(summary, 2)
+    R-->>C: rounded summary dict
+    C->>O: format_csv(summary)
+    O-->>U: CSV header + values</pre>
+        </div>
+      </section>
+
+      <section id="timeline">
+        <h2>4. GitHub branch และ PR timeline</h2>
+        <p class="section-kicker">ทุก feature/release branch ใน phase นี้ถูก merge และ cleanup แล้ว ตอนนี้ remote เหลือ <code>main</code> เป็น branch หลัก</p>
+        <div class="diagram">
+          <pre class="mermaid">gitGraph
+    commit id: "base"
+    branch "feat/add-median-summary"
+    checkout "feat/add-median-summary"
+    commit id: "9349e62 median"
+    checkout main
+    merge "feat/add-median-summary" id: "PR #9 eb8e1f3"
+
+    branch "feat/add-range-summary"
+    checkout "feat/add-range-summary"
+    commit id: "22c5da6 range"
+    checkout main
+    merge "feat/add-range-summary" id: "PR #10 848b994"
+
+    branch "feat/add-unique-count"
+    checkout "feat/add-unique-count"
+    commit id: "a708f75 unique"
+    checkout main
+    merge "feat/add-unique-count" id: "PR #11 b2d2e30"
+
+    branch "feat/add-csv-output"
+    checkout "feat/add-csv-output"
+    commit id: "a34ef9e csv"
+    checkout main
+    merge "feat/add-csv-output" id: "PR #12 7bf7a84"
+
+    branch "feat/add-stddev-summary"
+    checkout "feat/add-stddev-summary"
+    commit id: "23b944a stddev"
+    checkout main
+    merge "feat/add-stddev-summary" id: "PR #13 7ea84eb"
+
+    branch "feat/add-precision-option"
+    checkout "feat/add-precision-option"
+    commit id: "636fc7c precision"
+    checkout main
+    merge "feat/add-precision-option" id: "PR #14 02b0220"
+
+    branch "chore/release-0.2.0"
+    checkout "chore/release-0.2.0"
+    commit id: "3da1d0d release"
+    checkout main
+    merge "chore/release-0.2.0" id: "PR #15 f4e886d"</pre>
+        </div>
+        <table>
+          <thead><tr><th>PR</th><th>Branch</th><th>Commit</th><th>เพิ่มอะไร</th><th>สถานะ</th></tr></thead>
+          <tbody>
+            <tr><td>#9</td><td><code>feat/add-median-summary</code></td><td><code>9349e62</code></td><td>median</td><td>merged + cleaned</td></tr>
+            <tr><td>#10</td><td><code>feat/add-range-summary</code></td><td><code>22c5da6</code></td><td>range</td><td>merged + cleaned</td></tr>
+            <tr><td>#11</td><td><code>feat/add-unique-count</code></td><td><code>a708f75</code></td><td>unique count</td><td>merged + cleaned</td></tr>
+            <tr><td>#12</td><td><code>feat/add-csv-output</code></td><td><code>a34ef9e</code></td><td><code>--csv</code></td><td>merged + cleaned</td></tr>
+            <tr><td>#13</td><td><code>feat/add-stddev-summary</code></td><td><code>23b944a</code></td><td>stddev</td><td>merged + cleaned</td></tr>
+            <tr><td>#14</td><td><code>feat/add-precision-option</code></td><td><code>636fc7c</code></td><td><code>--precision</code></td><td>merged + cleaned</td></tr>
+            <tr><td>#15</td><td><code>chore/release-0.2.0</code></td><td><code>3da1d0d</code></td><td>CHANGELOG + version</td><td>merged + cleaned</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="ci">
+        <h2>5. CI / verification flow</h2>
+        <p class="section-kicker">Workflow ที่ใช้คือ branch จาก main → TDD → local verify → push → PR → GitHub Actions → merge → cleanup</p>
+        <div class="diagram">
+          <pre class="mermaid">flowchart TD
+    Dev[Developer / Agent] --> Branch[Create branch from main]
+    Branch --> TDD[Write failing tests first]
+    TDD --> Impl[Implement minimal code]
+    Impl --> LocalTests[python3 -m unittest -v]
+    LocalTests --> Smoke[Installed package smoke test]
+    Smoke --> Push[Push branch to GitHub]
+    Push --> PR[Open PR in GitHub Web]
+    PR --> Actions[GitHub Actions: Python unittest + installed CLI smoke]
+    Actions --> Merge[Merge PR into main]
+    Merge --> Cleanup[Delete remote/local branch]
+    Cleanup --> Final[Sync main + final verify]</pre>
+        </div>
+        <div class="cards">
+          <div class="card"><strong>CI checks</strong><p>install package, unittest, help/version smoke, JSON/CSV/precision smoke</p></div>
+          <div class="card"><strong>Local verification</strong><p><code>python3 -m unittest -v</code> และ installed CLI smoke test</p></div>
+          <div class="card"><strong>Known limitation</strong><p>เครื่อง local ไม่มี gh/API token จึงต้องเปิด/merge PR ผ่าน GitHub Web</p></div>
+        </div>
+      </section>
+
+      <section id="feature-map">
+        <h2>6. Current release: 0.2.0 feature map</h2>
+        <p class="section-kicker">Release 0.2.0 ครอบคลุม input, summary fields, output modes, CLI options และ quality gates</p>
+        <div class="diagram">
+          <pre class="mermaid">mindmap
+  root((sandbox-math 0.2.0))
+    Input
+      integers
+      floats
+      numeric strings
+      default values 1 2 3
+    Summary fields
+      count
+      total
+      mean
+      minimum
+      maximum
+      median
+      range
+      unique
+      stddev
+    Output modes
+      text dict
+      JSON
+      CSV
+    Options
+      --help
+      --version
+      --json
+      --csv
+      --precision
+    Quality gates
+      unittest
+      package metadata tests
+      changelog tests
+      GitHub Actions
+      installed CLI smoke tests</pre>
+        </div>
+      </section>
+
+      <section id="roadmap">
+        <h2>7. แผนที่จะทำต่อไป</h2>
+        <p class="section-kicker">ตอนนี้ไม่มีงานจำเป็นที่ต้องทำต่อ ระบบพร้อมจบที่ release 0.2.0 แล้ว ถ้าจะต่อให้เลือกตามเป้าหมาย</p>
+        <div class="roadmap">
+          <div class="card"><strong>Phase A: Release hygiene</strong><p>สร้าง tag <code>v0.2.0</code>, push tag, แล้วสร้าง GitHub Release จาก CHANGELOG</p></div>
+          <div class="card"><strong>Phase B: User-facing features</strong><p><code>--input-file</code>, <code>--fields</code>, <code>--no-header</code>, <code>--sample-stddev</code></p></div>
+          <div class="card"><strong>Phase C: Engineering quality</strong><p>เพิ่ม ruff/formatting, README badge, release checklist, split tests</p></div>
+        </div>
+      </section>
+
+      <section id="next-action">
+        <h2>8. Recommended next action</h2>
+        <div class="timeline">
+          <div class="step"><span class="num">1</span><div><strong>ถ้าต้องการปิดงาน</strong><br>สร้าง tag <code>v0.2.0</code> และ GitHub Release</div></div>
+          <div class="step"><span class="num">2</span><div><strong>ถ้าต้องการเพิ่ม feature</strong><br>เริ่ม <code>--input-file</code> ด้วย TDD</div></div>
+          <div class="step"><span class="num">3</span><div><strong>ถ้าต้องการปรับคุณภาพ repo</strong><br>เพิ่ม ruff/formatting + README badge</div></div>
+        </div>
+        <div class="callout"><strong>คำแนะนำ:</strong> ทำ Phase A ก่อน เพราะ code ตอนนี้นิ่งและ final verification ผ่านแล้ว</div>
+      </section>
+    </main>
+  </div>
+
+  <a class="top-link" href="#top" aria-label="Back to top">↑</a>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'base', securityLevel: 'loose' });
+  </script>
+</body>
+</html>
