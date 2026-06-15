@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>sandbox-math System Map</title>
-  <meta name="description" content="Interactive web system map for sandbox-math 0.8.0 PR">
+  <meta name="description" content="Interactive web system map for sandbox-math 0.8.0">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800&display=swap');
 
@@ -306,12 +306,12 @@
       <header class="hero">
         <div class="eyebrow">Interactive docs · Mermaid diagrams</div>
         <h1>อ่าน system map ได้ง่ายขึ้นในหน้าเว็บเดียว</h1>
-        <p class="lead">สรุปภาพรวม sandbox-math ตั้งแต่ CLI data flow, โครงสร้างไฟล์, branch/PR history, CI flow, release automation/checks PR และแผนต่อไป โดยออกแบบให้อ่านเร็วกว่า Markdown ยาวๆ</p>
+        <p class="lead">สรุปภาพรวม sandbox-math ตั้งแต่ CLI data flow, โครงสร้างไฟล์, branch/PR history, CI flow, release automation/checks และแผนต่อไป โดยออกแบบให้อ่านเร็วกว่า Markdown ยาวๆ</p>
         <div class="status-grid">
           <div class="stat"><span>GitHub repo</span><strong>Supreamth/my-sprees</strong></div>
-          <div class="stat"><span>Release</span><strong>0.8.0 PR open</strong></div>
-          <div class="stat"><span>Branch HEAD</span><strong>4cd5071</strong></div>
-          <div class="stat"><span>PR checks</span><strong>61/61 local + CI passed</strong></div>
+          <div class="stat"><span>Release</span><strong>0.8.0 released</strong></div>
+          <div class="stat"><span>Main HEAD</span><strong>ec2db81</strong></div>
+          <div class="stat"><span>Final verify</span><strong>61/61 local + CI passed</strong></div>
         </div>
       </header>
 
@@ -493,7 +493,7 @@
         <div class="cards">
           <div class="card"><strong>CI checks</strong><p>install package, unittest, CLI smoke, release metadata check, build/twine, wheel reinstall smoke</p></div>
           <div class="card"><strong>Local verification</strong><p><code>61/61 tests</code>, release check, Ruff, build/twine, wheel smoke ผ่านแล้ว</p></div>
-          <div class="card"><strong>Open PR</strong><p><a href="https://github.com/Supreamth/my-sprees/pull/23">PR #23</a> สำหรับ <code>v0.8.0</code> ผ่าน GitHub Actions แล้ว</p></div>
+          <div class="card"><strong>Release complete</strong><p><a href="https://github.com/Supreamth/my-sprees/releases/tag/v0.8.0">v0.8.0</a> ถูก tag, publish GitHub Release, verify และ cleanup branch แล้ว</p></div>
         </div>
       </section>
 
@@ -550,12 +550,12 @@
 
       <section id="roadmap">
         <h2>7. แผนที่จะทำต่อไป</h2>
-        <p class="section-kicker">Release <code>v0.7.0</code> ปิดงานสมบูรณ์แล้ว และ <code>v0.8.0</code> Release automation/checks เปิด PR #23 พร้อม CI green แล้ว</p>
+        <p class="section-kicker">Release <code>v0.8.0</code> ปิดงานสมบูรณ์แล้ว: PR #23 ถูก merge, tag <code>v0.8.0</code>, publish GitHub Release, verify และ cleanup branch แล้ว</p>
         <div class="roadmap">
           <div class="card"><strong>Phase A: Release hygiene</strong><p>เสร็จแล้ว — <code>v0.3.0</code> tag และ GitHub Release ถูก publish แล้ว</p></div>
           <div class="card"><strong>Phase B: User-facing features</strong><p><code>--input-file</code>, <code>--fields</code>, <code>--no-header</code>, <code>--sample-stddev</code></p></div>
           <div class="card"><strong>Phase C: Engineering quality</strong><p>เสร็จแล้ว — Ruff checks, README badge, release checklist, split tests, tag และ GitHub Release</p></div>
-          <div class="card"><strong>Phase D: Release automation/checks</strong><p>PR #23 เปิดแล้ว — เพิ่ม <code>scripts/check_release.py</code>, CI release metadata gate, tests และ docs</p></div>
+          <div class="card"><strong>Phase D: Release automation/checks</strong><p>เสร็จแล้ว — เพิ่ม <code>scripts/check_release.py</code>, CI release metadata gate, tests, docs, tag และ GitHub Release</p></div>
         </div>
       </section>
 
@@ -564,9 +564,9 @@
         <div class="timeline">
           <div class="step"><span class="num">1</span><div><strong>Release v0.3.0 ปิดงานแล้ว</strong><br>ไม่ต้องสร้าง tag หรือ GitHub Release ซ้ำ</div></div>
           <div class="step"><span class="num">2</span><div><strong>Release v0.4.0 ปิดงานแล้ว</strong><br>ไม่ต้องสร้าง tag หรือ GitHub Release ซ้ำ</div></div>
-          <div class="step"><span class="num">3</span><div><strong>PR #23 พร้อม merge: v0.8.0 Release automation/checks</strong><br>branch <code>chore/release-automation-checks-0.8.0</code>, commit <code>4cd5071</code>, GitHub Actions ผ่านแล้ว</div></div>
+          <div class="step"><span class="num">3</span><div><strong>Release v0.8.0 ปิดงานแล้ว</strong><br><a href="https://github.com/Supreamth/my-sprees/releases/tag/v0.8.0">GitHub Release v0.8.0</a>, main <code>ec2db81</code>, GitHub Actions ผ่านแล้ว</div></div>
         </div>
-        <div class="callout"><strong>คำแนะนำ:</strong> merge <a href="https://github.com/Supreamth/my-sprees/pull/23">PR #23</a> แล้วบอกว่า “merge #23 แล้ว” เพื่อให้ sync main, tag/release <code>v0.8.0</code>, cleanup branch และอัปเดต docs เป็นสถานะ released</div>
+        <div class="callout"><strong>คำแนะนำ:</strong> ขั้นตอนถัดไปคือเตรียม milestone ถัดไปหลัง release automation/checks เช่น RC readiness หรือ v0.9.0 scope ก่อนเข้าสู่ 1.0</div>
       </section>
     </main>
   </div>
