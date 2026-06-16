@@ -310,8 +310,8 @@
         <div class="status-grid">
           <div class="stat"><span>GitHub repo</span><strong>Supreamth/my-sprees</strong></div>
           <div class="stat"><span>Release</span><strong>0.8.0 released</strong></div>
-          <div class="stat"><span>Active PR</span><strong>#29 smoke matrix</strong></div>
-          <div class="stat"><span>PR verify</span><strong>67/67 local + CI passed</strong></div>
+          <div class="stat"><span>Main HEAD</span><strong>c7ee666</strong></div>
+          <div class="stat"><span>Final verify</span><strong>67/67 local + CI passed</strong></div>
         </div>
       </header>
 
@@ -367,7 +367,7 @@
     Tests1 --> BehaviorTests[Unit + CLI subprocess behavior tests]
     Tests2 --> MetadataTests[Packaging / workflow / changelog tests]
     Packaging --> ConsoleScript[sandbox-math = sandbox_math:main]
-    CI --> GitHubActions[Python unittest + installed CLI smoke tests]</pre>
+    CI --> GitHubActions[Python unittest + source/wheel smoke matrix]</pre>
         </div>
         <table>
           <thead><tr><th>File</th><th>Role</th></tr></thead>
@@ -378,6 +378,7 @@
             <tr><td><code>pyproject.toml</code></td><td>Package metadata และ console script</td></tr>
             <tr><td><code>.github/workflows/test.yml</code></td><td>GitHub Actions CI + release metadata check</td></tr>
             <tr><td><code>scripts/check_release.py</code></td><td>ตรวจ version consistency ก่อน release</td></tr>
+            <tr><td><code>scripts/smoke_matrix.py</code></td><td>RC source/wheel smoke matrix สำหรับ CLI contract paths</td></tr>
             <tr><td><code>README.md</code> / <code>CHANGELOG.md</code></td><td>User docs และ release notes</td></tr>
             <tr><td><code>docs/cli-contract.md</code></td><td>Pre-1.0 CLI contract audit สำหรับ RC readiness</td></tr>
           </tbody>
@@ -482,18 +483,18 @@
     Branch --> TDD[Write failing tests first]
     TDD --> Impl[Implement minimal code]
     Impl --> LocalTests[python3 -m unittest -v]
-    LocalTests --> Smoke[Installed package smoke test]
+    LocalTests --> Smoke[Source + wheel smoke matrix]
     Smoke --> Push[Push branch to GitHub]
     Push --> PR[Open PR in GitHub Web]
-    PR --> Actions[GitHub Actions: Python unittest + installed CLI smoke]
+    PR --> Actions[GitHub Actions: Python unittest + source/wheel smoke matrix]
     Actions --> ReleaseCheck[scripts/check_release.py]
     ReleaseCheck --> Merge[Merge PR into main]
     Merge --> Cleanup[Delete remote/local branch]
     Cleanup --> Final[Sync main + final verify]</pre>
         </div>
         <div class="cards">
-          <div class="card"><strong>CI checks</strong><p>install package, unittest, CLI smoke, release metadata check, build/twine, wheel reinstall smoke</p></div>
-          <div class="card"><strong>Local verification</strong><p><code>67/67 tests</code>, release check, Ruff, source smoke matrix, build, wheel smoke matrix และ twine ผ่านแล้วใน PR #29</p></div>
+          <div class="card"><strong>CI checks</strong><p>install package, unittest, source smoke matrix, release metadata check, build, wheel reinstall, wheel smoke matrix, twine</p></div>
+          <div class="card"><strong>Local verification</strong><p><code>67/67 tests</code>, release check, Ruff, source smoke matrix, build, wheel smoke matrix และ twine ผ่านแล้วหลัง merge #29</p></div>
           <div class="card"><strong>Release complete</strong><p><a href="https://github.com/Supreamth/my-sprees/releases/tag/v0.8.0">v0.8.0</a> ถูก tag, publish GitHub Release, verify และ cleanup branch แล้ว</p></div>
         </div>
       </section>
@@ -539,12 +540,13 @@
       package metadata tests
       changelog tests
       GitHub Actions
-      installed CLI smoke tests</pre>
+      source smoke matrix
+      wheel smoke matrix</pre>
         </div>
         <div class="cards">
           <div class="card"><strong>Stable CLI contract</strong><p><a href="https://github.com/Supreamth/my-sprees/blob/main/docs/cli-contract.md">docs/cli-contract.md</a> บันทึก behavior ที่จะ freeze ก่อน 1.0</p></div>
-          <div class="card"><strong>Release automation</strong><p><code>scripts/check_release.py</code>, build/twine, wheel reinstall smoke และ GitHub Actions ผ่านแล้วใน <code>v0.8.0</code></p></div>
-          <div class="card"><strong>Next RC hardening</strong><p>เริ่ม <a href="https://github.com/Supreamth/my-sprees/issues/25">#25 source/wheel smoke matrix</a> แล้วตามด้วย edge cases และ roadmap</p></div>
+          <div class="card"><strong>Release automation</strong><p><code>scripts/check_release.py</code>, build/twine, wheel reinstall, source/wheel smoke matrix และ GitHub Actions ผ่านแล้ว</p></div>
+          <div class="card"><strong>Next RC hardening</strong><p><a href="https://github.com/Supreamth/my-sprees/issues/26">#26 numeric edge cases</a> ถัดไป แล้วตามด้วย #27 roadmap/release notes</p></div>
         </div>
       </section>
 
@@ -556,7 +558,7 @@
           <div class="card"><strong>Phase B: User-facing features</strong><p><code>--input-file</code>, <code>--fields</code>, <code>--no-header</code>, <code>--sample-stddev</code></p></div>
           <div class="card"><strong>Phase C: Engineering quality</strong><p>เสร็จแล้ว — Ruff checks, README badge, release checklist, split tests, tag และ GitHub Release</p></div>
           <div class="card"><strong>Phase D: Release automation/checks</strong><p>เสร็จแล้ว — เพิ่ม <code>scripts/check_release.py</code>, CI release metadata gate, tests, docs, tag และ GitHub Release</p></div>
-          <div class="card"><strong>Phase E: v0.9.0 RC readiness</strong><p><a href="https://github.com/Supreamth/my-sprees/milestone/1">Milestone #1</a> กำลังทำ — <a href="https://github.com/Supreamth/my-sprees/issues/24">#24 CLI contract audit</a> เสร็จแล้ว, <a href="https://github.com/Supreamth/my-sprees/pull/29">PR #29</a> สำหรับ <a href="https://github.com/Supreamth/my-sprees/issues/25">#25 source/wheel smoke matrix</a> เปิดแล้วและ CI green</p></div>
+          <div class="card"><strong>Phase E: v0.9.0 RC readiness</strong><p><a href="https://github.com/Supreamth/my-sprees/milestone/1">Milestone #1</a> กำลังทำ — <a href="https://github.com/Supreamth/my-sprees/issues/24">#24 CLI contract audit</a> และ <a href="https://github.com/Supreamth/my-sprees/issues/25">#25 source/wheel smoke matrix</a> เสร็จแล้ว; ถัดไป <a href="https://github.com/Supreamth/my-sprees/issues/26">#26 numeric edge cases</a></p></div>
         </div>
       </section>
 
@@ -565,9 +567,9 @@
         <div class="timeline">
           <div class="step"><span class="num">1</span><div><strong>Release v0.3.0 ปิดงานแล้ว</strong><br>ไม่ต้องสร้าง tag หรือ GitHub Release ซ้ำ</div></div>
           <div class="step"><span class="num">2</span><div><strong>Release v0.4.0 ปิดงานแล้ว</strong><br>ไม่ต้องสร้าง tag หรือ GitHub Release ซ้ำ</div></div>
-          <div class="step"><span class="num">3</span><div><strong>#25 smoke matrix พร้อม merge</strong><br><a href="https://github.com/Supreamth/my-sprees/pull/29">PR #29</a>, branch <code>chore/issue-25-smoke-matrix</code>, commit <code>07eaf4a</code>, GitHub Actions ผ่านแล้ว</div></div>
+          <div class="step"><span class="num">3</span><div><strong>#25 smoke matrix ปิดงานแล้ว</strong><br><a href="https://github.com/Supreamth/my-sprees/pull/29">PR #29</a> merged, issue #25 closed, main <code>c7ee666</code>, branch cleanup แล้ว, GitHub Actions ผ่านแล้ว</div></div>
         </div>
-        <div class="callout"><strong>คำแนะนำ:</strong> merge <a href="https://github.com/Supreamth/my-sprees/pull/29">PR #29</a> แล้วบอกว่า “merge #29 แล้ว” เพื่อให้ sync main, verify, cleanup branch, อัปเดต docs และเตรียมเริ่ม #26 numeric edge cases</div>
+        <div class="callout"><strong>คำแนะนำ:</strong> เริ่มงานถัดไป <a href="https://github.com/Supreamth/my-sprees/issues/26">#26 RC readiness: decide and harden numeric edge cases</a> โดยใช้ smoke matrix ใหม่เป็น safety net ก่อนสรุป behavior ของ <code>nan</code>, <code>inf</code>, very large values และ precision edge cases</div>
       </section>
     </main>
   </div>
