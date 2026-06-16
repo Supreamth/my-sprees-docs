@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Start Form</title>
+  <meta name="description" content="แบบฟอร์มเริ่มต้น Project สำหรับเก็บข้อมูลให้ชัดเจนก่อน Discovery, PRD, UX, Architecture และ Development">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Inter:wght@500;600;700;800&display=swap');
+    :root {
+      color-scheme: light;
+      --bg: #f7f3ec;
+      --paper: #fffdf8;
+      --panel: #ffffff;
+      --ink: #17130f;
+      --muted: #6e645a;
+      --soft: #8b8176;
+      --line: #e4d8c8;
+      --accent: #2448d8;
+      --accent-2: #dd6b34;
+      --accent-soft: #eef2ff;
+      --ok: #126f49;
+      --warn: #a96513;
+      --danger: #a43c38;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(42, 31, 16, .10);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-family: "Noto Sans Thai", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 7% 0%, rgba(36, 72, 216, .14), transparent 32rem),
+        radial-gradient(circle at 96% 8%, rgba(221, 107, 52, .13), transparent 30rem),
+        var(--bg);
+      line-height: 1.65;
+    }
+    a { color: inherit; }
+    code, pre { font-family: var(--mono); }
+    code { background: #f1e7da; border: 1px solid #e1d3c0; border-radius: 7px; padding: .08rem .34rem; font-size: .92em; }
+    .layout { display: grid; grid-template-columns: 314px minmax(0, 1fr); min-height: 100vh; }
+    aside {
+      position: sticky; top: 0; height: 100vh; overflow: auto; padding: 28px 22px;
+      border-right: 1px solid var(--line); background: rgba(255, 253, 248, .78); backdrop-filter: blur(18px);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+    .mark { width: 46px; height: 46px; border-radius: 15px; display: grid; place-items: center; color: white; font-weight: 800; background: linear-gradient(135deg, var(--accent), #172c84); box-shadow: 0 14px 30px rgba(36,72,216,.24); }
+    .brand strong { display: block; line-height: 1.12; }
+    .brand span { color: var(--muted); font-size: .88rem; }
+    .nav-label { margin: 22px 0 8px; color: var(--soft); font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    nav a { display: block; text-decoration: none; color: var(--muted); padding: 8px 10px; border-radius: 11px; margin: 1px 0; font-size: .92rem; line-height: 1.35; }
+    nav a:hover, nav a:focus-visible { color: var(--ink); background: #f0e7da; outline: none; }
+    main { padding: 42px min(5vw, 76px) 86px; }
+    .hero, section { max-width: 1180px; border: 1px solid var(--line); background: rgba(255,253,248,.88); box-shadow: var(--shadow); }
+    .hero { padding: clamp(30px,4vw,58px); border-radius: 32px; }
+    section { margin-top: 28px; padding: clamp(22px,3vw,38px); border-radius: var(--radius); box-shadow: 0 10px 34px rgba(42,31,16,.06); }
+    .eyebrow { color: var(--accent); font-weight: 800; letter-spacing: .055em; text-transform: uppercase; font-size: .78rem; }
+    h1 { margin: 12px 0 14px; font-family: Inter,"Noto Sans Thai",sans-serif; font-size: clamp(2.15rem,5vw,4.8rem); line-height: 1.03; letter-spacing: -.055em; text-wrap: balance; }
+    h2 { margin: 0 0 9px; font-family: Inter,"Noto Sans Thai",sans-serif; font-size: clamp(1.5rem,2.35vw,2.3rem); line-height: 1.1; letter-spacing: -.035em; }
+    h3 { margin: 24px 0 8px; font-size: 1.12rem; }
+    .lead, .section-kicker { color: var(--muted); max-width: 900px; }
+    .lead { font-size: clamp(1.04rem,1.45vw,1.24rem); margin: 0; }
+    .section-kicker { margin: 0; }
+    .status-grid, .cards { display: grid; gap: 12px; margin-top: 20px; }
+    .status-grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+    .cards { grid-template-columns: repeat(3,minmax(0,1fr)); }
+    .stat, .card, .result-box { border: 1px solid var(--line); border-radius: 18px; background: var(--panel); padding: 16px; }
+    .stat span, .mini-label { display: block; color: var(--soft); font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+    .stat strong, .card strong { display: block; margin-top: 4px; }
+    .card p { color: var(--muted); margin: 6px 0 0; }
+    .tag { display: inline-flex; border: 1px solid #cfdaff; background: var(--accent-soft); color: #1d369f; border-radius: 999px; padding: 3px 9px; font-size: .78rem; font-weight: 800; margin-bottom: 8px; }
+    .callout { margin-top: 18px; padding: 18px; border: 1px solid #cfdaff; border-radius: 18px; background: #f1f5ff; }
+    .callout strong { color: #1d369f; }
+    .warn { border-color: #efd6a8; background: #fff8ea; }
+    .warn strong { color: var(--warn); }
+    form { display: grid; gap: 18px; margin-top: 18px; }
+    fieldset { border: 1px solid var(--line); border-radius: 20px; padding: 18px; background: var(--panel); }
+    legend { padding: 0 8px; font-weight: 800; color: var(--ink); }
+    .field { display: grid; gap: 7px; margin: 14px 0; }
+    label { font-weight: 700; }
+    .hint { color: var(--muted); font-size: .9rem; }
+    input, textarea, select { width: 100%; min-height: 44px; border: 1px solid #d9cbbb; border-radius: 13px; padding: 10px 12px; background: #fffdf8; color: var(--ink); font-size: 1rem; font-family: inherit; }
+    textarea { min-height: 92px; resize: vertical; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+    .choice-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-top: 8px; }
+    .choice { display: flex; gap: 8px; align-items: start; border: 1px solid var(--line); border-radius: 14px; padding: 10px; background: #fffaf2; }
+    .choice input { width: auto; min-height: 0; margin-top: 4px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+    button, .btn { min-height: 44px; border-radius: 999px; padding: 10px 16px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font-weight: 800; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    button.primary, .btn.primary { background: var(--ink); color: white; border-color: var(--ink); }
+    .result-box { margin-top: 18px; display: none; }
+    .result-box.show { display: block; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #17130f; color: #fff8ed; border-radius: 16px; padding: 16px; overflow: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; border-radius: 16px; overflow: hidden; }
+    th, td { border-bottom: 1px solid var(--line); padding: 12px 10px; text-align: left; vertical-align: top; }
+    th { background: #f3eadf; color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+    tr:last-child td { border-bottom: none; }
+    .top-link { position: fixed; right: 22px; bottom: 22px; width: 46px; height: 46px; border-radius: 999px; display: grid; place-items: center; background: var(--ink); color: white; text-decoration: none; box-shadow: var(--shadow); }
+    @media (max-width:1080px) { .layout { grid-template-columns: 1fr; } aside { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--line); } nav { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 2px 8px; } main { padding: 24px 16px 70px; } .status-grid,.cards,.grid-2,.choice-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="layout" id="top">
+    <aside>
+      <div class="brand"><div class="mark">P</div><div><strong>Project Start</strong><span>Clear project intake</span></div></div>
+      <div class="nav-label">Start here</div>
+      <nav aria-label="Page navigation">
+        <a href="#rules">1. ก่อนกรอก</a>
+        <a href="#form">2. Project Start Form</a>
+        <a href="#readiness">3. Readiness gate</a>
+        <a href="../company-playbook/">Company Playbook</a>
+        <a href="../clarify-form/">Problem Clarification Form</a>
+        <a href="../">Back to system map</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div class="eyebrow">Project Start Form</div>
+        <h1>เริ่มต้น Project ด้วยข้อมูลที่ชัดก่อนให้ทีมลงมือทำ</h1>
+        <p class="lead">หน้านี้เป็นแบบฟอร์มแยกสำหรับคนที่ต้องกรอกข้อมูล Project ให้ครบก่อนเข้าสู่ Discovery, PRD, UX, Architecture หรือ Development ใช้เพื่อบังคับความชัดเจนตั้งแต่ต้นทาง</p>
+        <div class="status-grid">
+          <div class="stat"><span>Input by</span><strong>Project requester</strong></div>
+          <div class="stat"><span>Reviewed by</span><strong>Founder / PM</strong></div>
+          <div class="stat"><span>Output</span><strong>Project start brief</strong></div>
+          <div class="stat"><span>Gate</span><strong>No brief, no build</strong></div>
+        </div>
+      </header>
+
+      <section id="rules">
+        <h2>1. ก่อนกรอก: กติกาเริ่ม Project</h2>
+        <p class="section-kicker">ฟอร์มนี้ไม่ได้มีไว้เก็บ idea เฉยๆ แต่มีไว้ตัดสินใจว่า Project พร้อมจะเข้า process ต่อหรือยัง</p>
+        <div class="cards">
+          <div class="card"><span class="tag">Rule 1</span><strong>เริ่มจากปัญหา ไม่ใช่ solution</strong><p>อย่าเริ่มด้วย “ทำ app/ทำ dashboard/ทำ AI” ให้บอกก่อนว่าปัญหาคืออะไร ใครเจอ และมีหลักฐานอะไร</p></div>
+          <div class="card"><span class="tag">Rule 2</span><strong>ต้องมี owner</strong><p>ทุก project ต้องมีคนรับผิดชอบ business outcome, product scope และ final decision</p></div>
+          <div class="card"><span class="tag">Rule 3</span><strong>ต้องมี acceptance criteria</strong><p>ถ้าวัดไม่ได้ว่าเสร็จและดีขึ้นจริง ยังไม่ควรเริ่ม development</p></div>
+        </div>
+      </section>
+
+      <section id="form">
+        <h2>2. Project Start Form</h2>
+        <p class="section-kicker">กรอกเท่าที่รู้ ถ้าช่อง critical ว่าง ระบบจะ mark ว่ายังไม่พร้อมเข้า implementation</p>
+        <form id="projectForm">
+          <fieldset>
+            <legend>A. Project Identity</legend>
+            <div class="grid-2">
+              <div class="field"><label for="projectName">1. Project name</label><input id="projectName" name="projectName" placeholder="เช่น Sales Report Automation"></div>
+              <div class="field"><label for="requester">2. Requester / team</label><input id="requester" name="requester" placeholder="ชื่อคน/ทีมที่ขอ"></div>
+            </div>
+            <div class="grid-2">
+              <div class="field"><label for="businessOwner">3. Business owner</label><input id="businessOwner" name="businessOwner" placeholder="คนตัดสินใจ business outcome"></div>
+              <div class="field"><label for="targetDate">4. Target date / deadline</label><input id="targetDate" name="targetDate" placeholder="เช่น Q1, 2026-08-01, no fixed date"></div>
+            </div>
+            <div class="field"><label for="oneLine">5. One-line summary</label><input id="oneLine" name="oneLine" placeholder="Project นี้แก้ปัญหาอะไรให้ใครใน 1 ประโยค"></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>B. Problem & Evidence</legend>
+            <div class="field"><label for="problem">6. ปัญหาที่พบคืออะไร?</label><textarea id="problem" name="problem" placeholder="อธิบายปัญหาโดยยังไม่เสนอ solution"></textarea></div>
+            <div class="field"><label for="who">7. ใครเจอปัญหานี้?</label><textarea id="who" name="who" placeholder="user, customer segment, internal team, buyer/decision maker"></textarea></div>
+            <div class="field"><label for="evidence">8. หลักฐานที่มี</label><textarea id="evidence" name="evidence" placeholder="interview, support tickets, screenshots, metrics, sales feedback, competitor proof"></textarea></div>
+            <div class="field"><label for="impact">9. Impact / cost</label><textarea id="impact" name="impact" placeholder="เสียเวลา/เงิน/โอกาสเท่าไหร่ เกิดบ่อยแค่ไหน severity แค่ไหน"></textarea></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>C. Goal, Scope, Non-goals</legend>
+            <div class="field"><label for="goal">10. Project goal</label><textarea id="goal" name="goal" placeholder="ผลลัพธ์ที่อยากได้ ไม่ใช่ feature list"></textarea></div>
+            <div class="field"><label for="successMetrics">11. Success metrics</label><textarea id="successMetrics" name="successMetrics" placeholder="เช่น ลดเวลาจาก 2 ชม. เหลือ 10 นาที, error -50%, conversion +10%"></textarea></div>
+            <div class="field"><label for="mvp">12. MVP scope</label><textarea id="mvp" name="mvp" placeholder="สิ่งที่ต้องมีใน version แรกเท่านั้น"></textarea></div>
+            <div class="field"><label for="nonGoals">13. Non-goals / out of scope</label><textarea id="nonGoals" name="nonGoals" placeholder="สิ่งที่ไม่ทำใน version แรก เพื่อกัน scope creep"></textarea></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>D. Workflow & Users</legend>
+            <div class="field"><label for="currentWorkflow">14. Workflow ปัจจุบัน</label><textarea id="currentWorkflow" name="currentWorkflow" placeholder="step-by-step ก่อนมีระบบใหม่"></textarea></div>
+            <div class="field"><label for="futureWorkflow">15. Workflow ที่ต้องการหลังทำ Project</label><textarea id="futureWorkflow" name="futureWorkflow" placeholder="step-by-step หลังระบบช่วยแล้ว"></textarea></div>
+            <div class="field"><label for="roles">16. User roles / permissions</label><textarea id="roles" name="roles" placeholder="ใครดูได้ แก้ได้ approve ได้ export ได้"></textarea></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>E. Data, Integration, Risk</legend>
+            <div class="field"><label for="data">17. Data ที่เกี่ยวข้อง</label><textarea id="data" name="data" placeholder="แหล่งข้อมูล schema โดยคร่าว sensitive data มีไหม"></textarea></div>
+            <div class="field"><label for="integrations">18. Integrations / systems</label><textarea id="integrations" name="integrations" placeholder="CRM, ERP, payment, email, warehouse, internal APIs"></textarea></div>
+            <div class="field"><label for="security">19. Security / compliance concerns</label><textarea id="security" name="security" placeholder="PII, payment, financial, health, PDPA/GDPR, audit log, retention"></textarea></div>
+            <div class="field"><label for="failureModes">20. Failure modes ที่รับไม่ได้</label><textarea id="failureModes" name="failureModes" placeholder="เช่น ข้อมูลรั่ว, คิดเงินผิด, downtime, ส่ง email ผิดคน"></textarea></div>
+          </fieldset>
+
+          <fieldset>
+            <legend>F. Acceptance & Routing</legend>
+            <div class="field"><label for="acceptance">21. Acceptance criteria</label><textarea id="acceptance" name="acceptance" placeholder="bullet หรือ Given/When/Then ที่พิสูจน์ว่าเสร็จจริง"></textarea></div>
+            <div class="field"><label for="constraints">22. Constraints / dependencies</label><textarea id="constraints" name="constraints" placeholder="budget, deadline, people, vendor, legal, data availability, tech stack"></textarea></div>
+            <div class="field"><label>23. Requested next phase</label><div class="choice-grid">
+              <label class="choice"><input type="radio" name="route" value="Discovery" checked> Discovery</label>
+              <label class="choice"><input type="radio" name="route" value="PRD"> PRD</label>
+              <label class="choice"><input type="radio" name="route" value="UX Design"> UX Design</label>
+              <label class="choice"><input type="radio" name="route" value="Architecture"> Architecture</label>
+              <label class="choice"><input type="radio" name="route" value="Delivery Planning"> Delivery Planning</label>
+              <label class="choice"><input type="radio" name="route" value="Implementation"> Implementation</label>
+            </div></div>
+          </fieldset>
+
+          <div class="actions">
+            <button class="primary" type="button" id="generate">Generate Project Start Brief</button>
+            <button type="reset">Clear</button>
+            <a class="btn" href="../company-playbook/">Open Company Playbook</a>
+          </div>
+        </form>
+
+        <div class="result-box" id="resultBox">
+          <span class="mini-label">Generated output</span>
+          <pre id="output"></pre>
+          <div class="actions"><button type="button" id="copy">Copy brief</button></div>
+        </div>
+      </section>
+
+      <section id="readiness">
+        <h2>3. Readiness Gate</h2>
+        <p class="section-kicker">Project พร้อมเข้า implementation ก็ต่อเมื่อช่อง critical ไม่ว่าง และ PM/Founder approve ว่า evidence, scope และ acceptance criteria เพียงพอ</p>
+        <table>
+          <thead><tr><th>Critical field</th><th>ทำไมสำคัญ</th><th>ถ้ายังว่าง</th></tr></thead>
+          <tbody>
+            <tr><td>Problem</td><td>กันการ build solution ที่ไม่มีปัญหาจริง</td><td>กลับไป discovery</td></tr>
+            <tr><td>User / customer</td><td>กันการออกแบบกว้างเกินไป</td><td>นิยาม ICP/user segment</td></tr>
+            <tr><td>Evidence</td><td>พิสูจน์ว่าปัญหาไม่ใช่ assumption</td><td>เก็บ interview/ticket/metric</td></tr>
+            <tr><td>Impact</td><td>ใช้จัด priority และ ROI</td><td>ประเมิน cost/frequency/severity</td></tr>
+            <tr><td>MVP + non-goals</td><td>กัน scope creep</td><td>กลับไป product strategy</td></tr>
+            <tr><td>Acceptance criteria</td><td>รู้ว่าเสร็จจริงเมื่อไร</td><td>เขียน PRD/test plan ก่อน</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn"><strong>No brief, no build:</strong> ถ้า form นี้ยังไม่ชัด ห้ามเริ่ม implementation ให้ส่งกลับไป Discovery, PRD หรือ Architecture ตามช่องที่ขาด</div>
+      </section>
+    </main>
+  </div>
+  <a class="top-link" href="#top" aria-label="Back to top">↑</a>
+  <script>
+    const form = document.getElementById('projectForm');
+    const output = document.getElementById('output');
+    const resultBox = document.getElementById('resultBox');
+    function value(name) {
+      const el = form.elements[name];
+      if (!el) return '';
+      if (el instanceof RadioNodeList) return el.value || '';
+      return (el.value || '').trim();
+    }
+    const critical = ['projectName','businessOwner','problem','who','evidence','impact','goal','mvp','nonGoals','acceptance'];
+    function missingCritical() { return critical.filter((name) => !value(name)); }
+    function readinessText(missing) {
+      if (missing.length) return 'Not ready for implementation. Missing critical fields: ' + missing.join(', ');
+      if (value('route') === 'Implementation') return 'Candidate for implementation after PM/Founder approval and issue-level delivery planning.';
+      return 'Ready to move to selected next phase: ' + value('route') + ', subject to human approval.';
+    }
+    document.getElementById('generate').addEventListener('click', () => {
+      const missing = missingCritical();
+      const brief = `# Project Start Brief\n\n` +
+`## Project identity\n- Project name: ${value('projectName') || '[missing]'}\n- Requester/team: ${value('requester') || '[missing]'}\n- Business owner: ${value('businessOwner') || '[missing]'}\n- Target date: ${value('targetDate') || '[not specified]'}\n- Requested next phase: ${value('route')}\n\n` +
+`## One-line summary\n${value('oneLine') || '[missing]'}\n\n` +
+`## Problem\n${value('problem') || '[missing]'}\n\n` +
+`## User / customer\n${value('who') || '[missing]'}\n\n` +
+`## Evidence\n${value('evidence') || '[missing]'}\n\n` +
+`## Impact / cost\n${value('impact') || '[missing]'}\n\n` +
+`## Goal\n${value('goal') || '[missing]'}\n\n` +
+`## Success metrics\n${value('successMetrics') || '[missing]'}\n\n` +
+`## MVP scope\n${value('mvp') || '[missing]'}\n\n` +
+`## Non-goals / out of scope\n${value('nonGoals') || '[missing]'}\n\n` +
+`## Current workflow\n${value('currentWorkflow') || '[missing]'}\n\n` +
+`## Future workflow\n${value('futureWorkflow') || '[missing]'}\n\n` +
+`## User roles / permissions\n${value('roles') || '[missing]'}\n\n` +
+`## Data\n${value('data') || '[missing]'}\n\n` +
+`## Integrations\n${value('integrations') || '[missing]'}\n\n` +
+`## Security / compliance\n${value('security') || '[missing]'}\n\n` +
+`## Unacceptable failure modes\n${value('failureModes') || '[missing]'}\n\n` +
+`## Acceptance criteria\n${value('acceptance') || '[missing]'}\n\n` +
+`## Constraints / dependencies\n${value('constraints') || '[missing]'}\n\n` +
+`## Readiness check\n${readinessText(missing)}\n`;
+      output.textContent = brief;
+      resultBox.classList.add('show');
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    document.getElementById('copy').addEventListener('click', async () => {
+      await navigator.clipboard.writeText(output.textContent);
+      const btn = document.getElementById('copy');
+      btn.textContent = 'Copied';
+      setTimeout(() => btn.textContent = 'Copy brief', 1400);
+    });
+  </script>
+</body>
+</html>
