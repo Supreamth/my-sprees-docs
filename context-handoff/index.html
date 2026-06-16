@@ -194,6 +194,8 @@ Do this next:
       <section id="validation">
         <h2>7. Model Validation — ทดสอบ Model ใหม่ก่อนใช้งานจริง</h2>
         <p class="section-kicker">ก่อนจะ trust ให้ model ใหม่ทำงานต่อจาก model เดิม ต้องรัน validation 5 ข้อนี้ก่อน ถ้าไม่ผ่านแม้แต่ข้อเดียว ห้ามใช้กับงานจริง</p>
+
+        <div class="callout warn" style="margin-top:18px"><strong>Trigger command:</strong> พิมพ์ <code>model change</code> หรือ <code>validate model</code> เพื่อเริ่ม validation flow นี้ทันที — model ใหม่จะรัน 5 ข้อ รายงานผล แล้วหยุดรอ human confirm ก่อนทำงานต่อ</div>
         <div class="flow">
           <div class="step"><span class="tag">1. Skills</span><strong>โหลด skill ก่อนทำงาน</strong><p>สั่งงานที่กระตุ้น skill เฉพาะ เช่น "ช่วยเปิด PR" "ช่วย commit" → ดูว่า model โหลด skill ที่ตรงก่อนตอบไหม ถ้าข้าม = fail</p></div>
           <div class="step"><span class="tag">2. Session</span><strong>ค้น session เก่าก่อน</strong><p>ถามเรื่องที่เคยคุย → ดูว่า model ค้น SQLite session DB ก่อน หรือถามคุณเล่าใหม่ ถ้าถามซ้ำ = fail</p></div>
@@ -211,6 +213,24 @@ Do this next:
             <tr><td>ผ่าน 0-2/5</td><td>ห้ามใช้ หา model อื่น แล้วบันทึกเหตุผลใน decision log</td></tr>
           </tbody>
         </table>
+
+        <h3>One-shot trigger command</h3>
+        <p>พิมพ์คำสั่งใดคำสั่งหนึ่งนี้เพื่อเริ่ม validation ทันที:</p>
+        <pre>model change
+หรือ
+validate model
+หรือ
+mvalidate</pre>
+
+        <h3>Behavior เมื่อ trigger</h3>
+        <p>model ใหม่จะทำตามขั้นตอนนี้แบบ deterministic:</p>
+        <ol>
+          <li>รัน 5 ข้อทดสอบ (ด้านล่าง) และรายงานผล ผ่าน/ไม่ผ่าน + หมายเหตุสั้นๆ</li>
+          <li>ถ้าผ่าน 5/5 → รายงาน PASS + ขอ human confirm ก่อนเริ่มงาน</li>
+          <li>ถ้าผ่าน 3-4/5 → รายงาน PARTIAL + flag ข้อที่ fail + ขอ human confirm + ระบุว่าต้องมี HITL ตรงไหน</li>
+          <li>ถ้าผ่าน 0-2/5 → รายงาน FAIL + หยุด + แนะนำให้หา model อื่น ไม่ทำงานต่อจนกว่า human จะ confirm override</li>
+        </ol>
+        <div class="callout warn"><strong>Hard rule:</strong> ถ้า FAIL ห้ามทำงานต่อเด็ดขาด จนกว่า human จะพิมพ์ <code>override fail: &lt;เหตุผล&gt;</code> หรือเปลี่ยน model ใหม่</div>
 
         <h3>One-shot validation command</h3>
         <p>รวม 5 ข้อเป็นคำสั่งเดียว ใช้ได้ทันทีหลังเปลี่ยน model:</p>

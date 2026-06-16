@@ -420,6 +420,19 @@ Every time a model completes meaningful work, it must update or propose an updat
 
 ก่อนจะ trust ให้ model ใหม่ทำงานต่อจาก model เดิม ต้องรัน validation 5 ข้อนี้ก่อน ถ้าไม่ผ่านแม้แต่ข้อเดียว ห้ามใช้กับงานจริง
 
+**Trigger command:** พิมพ์ `model change` หรือ `validate model` หรือ `mvalidate` เพื่อเริ่ม validation flow นี้ทันที — model ใหม่จะรัน 5 ข้อ รายงานผล แล้วหยุดรอ human confirm ก่อนทำงานต่อ
+
+### Behavior เมื่อ trigger
+
+model ใหม่จะทำตามขั้นตอนนี้แบบ deterministic:
+
+1. รัน 5 ข้อทดสอบ (ด้านล่าง) และรายงานผล ผ่าน/ไม่ผ่าน + หมายเหตุสั้นๆ
+2. ถ้าผ่าน 5/5 → รายงาน PASS + ขอ human confirm ก่อนเริ่มงาน
+3. ถ้าผ่าน 3-4/5 → รายงาน PARTIAL + flag ข้อที่ fail + ขอ human confirm + ระบุว่าต้องมี HITL ตรงไหน
+4. ถ้าผ่าน 0-2/5 → รายงาน FAIL + หยุด + แนะนำให้หา model อื่น ไม่ทำงานต่อจนกว่า human จะ confirm override
+
+**Hard rule:** ถ้า FAIL ห้ามทำงานต่อเด็ดขาด จนกว่า human จะพิมพ์ `override fail: <เหตุผล>` หรือเปลี่ยน model ใหม่
+
 ### 5 ข้อทดสอบ
 
 1. **Skills loading** — สั่งงานที่กระตุ้น skill เฉพาะ เช่น "ช่วยเปิด PR" "ช่วย commit" → ดูว่า model โหลด skill ที่ตรงก่อนตอบไหม ถ้าข้าม = fail
