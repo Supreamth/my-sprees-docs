@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>System Status</title>
+  <meta name="description" content="สถานะการเชื่อมต่อทั้งหมดของระบบ: GitHub, Pages, AI Models, External APIs">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Inter:wght@500;600;700;800&display=swap');
+    :root{color-scheme:light;--bg:#f7f3ec;--paper:#fffdf8;--panel:#fff;--ink:#17130f;--muted:#6e645a;--soft:#8b8176;--line:#e4d8c8;--accent:#2448d8;--accent-soft:#eef2ff;--ok:#126f49;--warn:#a96513;--err:#b1322a;--radius:22px;--shadow:0 24px 70px rgba(42,31,16,.10);--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-family:"Noto Sans Thai",Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:radial-gradient(circle at 7% 0%,rgba(36,72,216,.14),transparent 32rem),radial-gradient(circle at 96% 8%,rgba(221,107,52,.13),transparent 30rem),var(--bg);line-height:1.65}a{color:inherit}code,pre{font-family:var(--mono)}code{background:#f1e7da;border:1px solid #e1d3c0;border-radius:7px;padding:.08rem .34rem;font-size:.92em}.layout{display:grid;grid-template-columns:314px minmax(0,1fr);min-height:100vh}aside{position:sticky;top:0;height:100vh;overflow:auto;padding:28px 22px;border-right:1px solid var(--line);background:rgba(255,253,248,.78);backdrop-filter:blur(18px)}.brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}.mark{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:white;font-weight:800;background:linear-gradient(135deg,var(--accent),#172c84);box-shadow:0 14px 30px rgba(36,72,216,.24)}.brand strong{display:block;line-height:1.12}.brand span{color:var(--muted);font-size:.88rem}.nav-label{margin:22px 0 8px;color:var(--soft);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}nav a{display:block;text-decoration:none;color:var(--muted);padding:8px 10px;border-radius:11px;margin:1px 0;font-size:.92rem;line-height:1.35}nav a:hover,nav a:focus-visible{color:var(--ink);background:#f0e7da;outline:none}main{padding:42px min(5vw,76px) 86px}.hero,section{max-width:1180px;border:1px solid var(--line);background:rgba(255,253,248,.88);box-shadow:var(--shadow)}.hero{padding:clamp(30px,4vw,58px);border-radius:32px}section{margin-top:28px;padding:clamp(22px,3vw,38px);border-radius:var(--radius);box-shadow:0 10px 34px rgba(42,31,16,.06)}.eyebrow{color:var(--accent);font-weight:800;letter-spacing:.055em;text-transform:uppercase;font-size:.78rem}h1{margin:12px 0 14px;font-family:Inter,"Noto Sans Thai",sans-serif;font-size:clamp(2.15rem,5vw,4.8rem);line-height:1.03;letter-spacing:-.055em;text-wrap:balance}h2{margin:0 0 9px;font-family:Inter,"Noto Sans Thai",sans-serif;font-size:clamp(1.5rem,2.35vw,2.3rem);line-height:1.1;letter-spacing:-.035em}h3{margin:24px 0 8px;font-size:1.12rem}.lead,.section-kicker{color:var(--muted);max-width:900px}.lead{font-size:clamp(1.04rem,1.45vw,1.24rem);margin:0}.section-kicker{margin:0}.summary-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:20px}.sum-card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:18px}.sum-card span{color:var(--soft);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}.sum-card strong{display:block;margin-top:4px;font-size:1.6rem;font-family:Inter,sans-serif}.sum-card.ok strong{color:var(--ok)}.sum-card.warn strong{color:var(--warn)}.sum-card.err strong{color:var(--err)}.sum-card.total strong{color:var(--ink)}.conn-table{width:100%;border-collapse:collapse;margin-top:16px;border-radius:16px;overflow:hidden;font-size:.95rem}th,td{border-bottom:1px solid var(--line);padding:12px 10px;text-align:left;vertical-align:top}th{background:#f3eadf;color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.04em}tr:last-child td{border-bottom:none}tr.warn td{background:#fff8ea}tr.err td{background:#fdecea}tr.ok td{background:#f1f8f4}.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}.badge.ok{background:#dff0e6;color:#0d5c3a;border:1px solid #b5d8c2}.badge.warn{background:#fde7c6;color:#8b4a0e;border:1px solid #e9c896}.badge.err{background:#fadbd6;color:#8a2418;border:1px solid #e7b8b1}.dot{width:8px;height:8px;border-radius:50%;display:inline-block}.dot.ok{background:#1a9c5e;box-shadow:0 0 0 3px rgba(26,156,94,.18)}.dot.warn{background:#d4881a;box-shadow:0 0 0 3px rgba(212,136,26,.18)}.dot.err{background:#c0392b;box-shadow:0 0 0 3px rgba(192,57,43,.18)}.callout{margin-top:18px;padding:18px;border:1px solid #cfdaff;border-radius:18px;background:#f1f5ff}.callout strong{color:#1d369f}.warn-callout{border-color:#efd6a8;background:#fff8ea}.warn-callout strong{color:var(--warn)}.err-callout{border-color:#e7b8b1;background:#fdecea}.err-callout strong{color:var(--err)}pre{white-space:pre-wrap;word-break:break-word;background:#17130f;color:#fff8ed;border-radius:16px;padding:16px;overflow:auto;font-size:.88rem}.top-link{position:fixed;right:22px;bottom:22px;width:46px;height:46px;border-radius:999px;display:grid;place-items:center;background:var(--ink);color:white;text-decoration:none;box-shadow:var(--shadow)}@media(max-width:1080px){.layout{grid-template-columns:1fr}aside{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--line)}nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 8px}main{padding:24px 16px 70px}.summary-bar{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+  <div class="layout" id="top">
+    <aside>
+      <div class="brand"><div class="mark">STS</div><div><strong>System Status</strong><span>Connection health dashboard</span></div></div>
+      <div class="nav-label">Categories</div>
+      <nav aria-label="Page navigation">
+        <a href="#summary">1. Summary</a>
+        <a href="#github">2. GitHub</a>
+        <a href="#pages">3. GitHub Pages</a>
+        <a href="#models">4. AI Models</a>
+        <a href="#external">5. External APIs</a>
+        <a href="#how-to-update">6. How to update</a>
+        <a href="../context-handoff/">Context Handoff</a>
+        <a href="../company-playbook/">Company Playbook</a>
+        <a href="../">Back to system map</a>
+      </nav>
+    </aside>
+    <main>
+      <header class="hero">
+        <div class="eyebrow">System Status Dashboard</div>
+        <h1>เช็คการเชื่อมต่อทั้งหมดในระบบ</h1>
+        <p class="lead">ภาพรวมการเชื่อมต่อไปยัง GitHub, GitHub Pages, AI Models และ external APIs พร้อมสถานะล่าสุดและเวลาที่ตรวจครั้งสุดท้าย</p>
+        <div class="summary-bar">
+          <div class="sum-card total"><span>Total connections</span><strong>12</strong></div>
+          <div class="sum-card ok"><span>Healthy</span><strong>11</strong></div>
+          <div class="sum-card warn"><span>Degraded</span><strong>1</strong></div>
+          <div class="sum-card err"><span>Down</span><strong>0</strong></div>
+        </div>
+      </header>
+
+      <section id="summary">
+        <h2>1. Summary</h2>
+        <p class="section-kicker">ภาพรวมสถานะการเชื่อมต่อ 4 หมวด: GitHub, GitHub Pages, AI Models, External APIs</p>
+        <div class="callout"><strong>Update flow:</strong> หน้านี้เป็น cached/manual ต้องบอกผมว่า <code>update status</code> เพื่อให้ผมรัน health check จริง แล้ว commit ไฟล์นี้ใหม่</div>
+        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-16 09:15 UTC+7 (after merge #31 + model validation) — <code>ebc2c1f</code></div>
+      </section>
+
+      <section id="github">
+        <h2>2. GitHub</h2>
+        <p class="section-kicker">GitHub API, repos, SSH key และ CI</p>
+        <table class="conn-table">
+          <thead><tr><th>Connection</th><th>URL / Detail</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr class="ok"><td>GitHub API</td><td><code>api.github.com</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 09:15</td><td>reachable</td></tr>
+            <tr class="ok"><td>Main repo (private)</td><td><code>Supreamth/my-sprees</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>private, SSH key configured</td></tr>
+            <tr class="ok"><td>Docs repo (public)</td><td><code>Supreamth/my-sprees-docs</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>public, serves GitHub Pages</td></tr>
+            <tr class="ok"><td>SSH key</td><td><code>~/.ssh/id_*</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>auth for both repos</td></tr>
+            <tr class="warn"><td>gh CLI</td><td>command not found</td><td><span class="badge warn"><span class="dot warn"></span>DEGRADED</span></td><td>2026-06-16 09:15</td><td>fallback: git + curl works fine; install <code>gh</code> to enable <code>gh pr create</code>/<code>gh pr checks</code></td></tr>
+            <tr class="ok"><td>GitHub Actions</td><td><code>Supreamth/my-sprees/actions</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>latest run: completed/success on main (post #31)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="pages">
+        <h2>3. GitHub Pages</h2>
+        <p class="section-kicker">Public docs/status site</p>
+        <table class="conn-table">
+          <thead><tr><th>Connection</th><th>URL / Detail</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr class="ok"><td>Pages root</td><td><code>supreamth.github.io/my-sprees-docs/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 09:15</td><td>reachable</td></tr>
+            <tr class="ok"><td>Raw content</td><td><code>raw.githubusercontent.com/Supreamth/my-sprees-docs/main/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 09:15</td><td>latest commit <code>ebc2c1f</code> served</td></tr>
+            <tr class="ok"><td>Context Handoff page</td><td><code>/context-handoff/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 09:15</td><td>section 7 (Model Validation) live</td></tr>
+            <tr class="ok"><td>Company Playbook</td><td><code>/company-playbook/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 09:15</td><td>includes context-handoff link</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="models">
+        <h2>4. AI Models</h2>
+        <p class="section-kicker">Models ที่ใช้ในระบบ — validated models อยู่ใน Model Validation Log</p>
+        <table class="conn-table">
+          <thead><tr><th>Connection</th><th>Provider</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr class="ok"><td>MiniMax-M3</td><td>minimax-oauth (current session)</td><td><span class="badge ok"><span class="dot ok"></span>PASS 5/5</span></td><td>2026-06-16 09:15</td><td>validated: skills, session, honesty, memory, recovery — see <a href="https://github.com/Supreamth/my-sprees-docs/blob/main/model-validation-log.md">log</a></td></tr>
+            <tr class="warn"><td>Other models (Anthropic, OpenAI, Gemini, DeepSeek, Grok)</td><td>mixed</td><td><span class="badge warn"><span class="dot warn"></span>UNVALIDATED</span></td><td>—</td><td>mentioned in routing table but not yet validated in this profile. Run <code>model change</code> to validate</td></tr>
+          </tbody>
+        </table>
+        <div class="callout"><strong>Validation policy:</strong> ทุก model ใหม่ที่จะใช้กับงานจริงต้องผ่าน 5 ข้อใน <a href="../context-handoff/#validation">Model Validation</a> และบันทึกลง Model Validation Log</div>
+      </section>
+
+      <section id="external">
+        <h2>5. External APIs</h2>
+        <p class="section-kicker">Third-party APIs ที่ใช้ใน tooling/scripts</p>
+        <table class="conn-table">
+          <thead><tr><th>Connection</th><th>URL / Detail</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr class="ok"><td>PyPI (releases)</td><td><code>pypi.org</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>used for twine check; not blocking</td></tr>
+            <tr class="ok"><td>jsDelivr (Mermaid CDN)</td><td><code>cdn.jsdelivr.net</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>serves Mermaid for diagrams on home page</td></tr>
+            <tr class="ok"><td>Google Fonts</td><td><code>fonts.googleapis.com</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>serves Noto Sans Thai + Inter</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="how-to-update">
+        <h2>6. How to update this page</h2>
+        <p class="section-kicker">หน้านี้เป็น cached/manual — ไม่มี auto-refresh</p>
+        <h3>Trigger command</h3>
+        <p>พิมพ์คำสั่งใดคำสั่งหนึ่งนี้เพื่อให้ผมอัปเดต:</p>
+        <pre>update status
+หรือ
+refresh status
+หรือ
+check connections</pre>
+
+        <h3>Behavior เมื่อ trigger</h3>
+        <ol>
+          <li>ผมจะรัน health check จริงด้วย <code>curl</code> หรือ tool ที่เหมาะสม — GitHub API, Pages, external endpoints</li>
+          <li>ตรวจ SSH key, gh CLI, local repo status, GitHub Actions latest run</li>
+          <li>ตรวจ Model Validation Log ล่าสุดเพื่อ update สถานะ model</li>
+          <li>Update ตารางในไฟล์นี้ + เปลี่ยน "Last updated" timestamp</li>
+          <li>Commit + push ไป my-sprees-docs</li>
+          <li>Verify Pages อัปเดตแล้ว</li>
+        </ol>
+
+        <h3>Status legend</h3>
+        <table class="conn-table">
+          <thead><tr><th>Badge</th><th>Meaning</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr class="ok"><td><span class="badge ok"><span class="dot ok"></span>OK / 200</span></td><td>reachable + working as expected</td><td>no action</td></tr>
+            <tr class="warn"><td><span class="badge warn"><span class="dot warn"></span>DEGRADED / WARN</span></td><td>reachable but with limitation (e.g. fallback only) or unvalidated</td><td>consider improving or validating</td></tr>
+            <tr class="err"><td><span class="badge err"><span class="dot err"></span>DOWN / FAIL</span></td><td>unreachable or broken</td><td>block dependent work until fixed</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Operating rules</h3>
+        <ol>
+          <li>Update status ก่อนเริ่ม session งานใหม่ — ใช้เวลา 1-2 นาที</li>
+          <li>ถ้าเจอ DOWN → หยุดงานที่ depend on connection นั้น จนกว่าจะ resolve</li>
+          <li>ถ้าเจอ DEGRADED → ทำงานได้แต่ต้องระวัง fallback path</li>
+          <li>ถ้า model ใหม่ถูก deploy → update Models section + Model Validation Log พร้อมกัน</li>
+        </ol>
+
+        <div class="callout warn-callout"><strong>Anti-pattern:</strong> อย่า trust status เก่าเกิน 24 ชั่วโมง — ถ้าไม่แน่ใจ ให้ refresh ก่อนเริ่มงาน</div>
+      </section>
+    </main>
+  </div>
+  <a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>
