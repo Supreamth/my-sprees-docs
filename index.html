@@ -310,8 +310,8 @@
         <div class="status-grid">
           <div class="stat"><span>GitHub repo</span><strong>Supreamth/my-sprees</strong></div>
           <div class="stat"><span>Release</span><strong>0.8.0 released</strong></div>
-          <div class="stat"><span>Main HEAD</span><strong>08f7b1c</strong></div>
-          <div class="stat"><span>Final verify</span><strong>76/76 local + CI passed</strong></div>
+          <div class="stat"><span>Active PR</span><strong>#31 roadmap/release notes</strong></div>
+          <div class="stat"><span>PR verify</span><strong>77/77 local + CI passed</strong></div>
         </div>
       </header>
 
@@ -381,6 +381,7 @@
             <tr><td><code>scripts/smoke_matrix.py</code></td><td>RC source/wheel smoke matrix สำหรับ CLI contract paths</td></tr>
             <tr><td><code>README.md</code> / <code>CHANGELOG.md</code></td><td>User docs และ release notes</td></tr>
             <tr><td><code>docs/cli-contract.md</code></td><td>Pre-1.0 CLI contract audit สำหรับ RC readiness</td></tr>
+            <tr><td><code>docs/pre-1.0-roadmap.md</code></td><td>v0.9.0 → 1.0 roadmap และ release criteria</td></tr>
           </tbody>
         </table>
       </section>
@@ -494,7 +495,7 @@
         </div>
         <div class="cards">
           <div class="card"><strong>CI checks</strong><p>install package, unittest, source smoke matrix, release metadata check, build, wheel reinstall, wheel smoke matrix, twine</p></div>
-          <div class="card"><strong>Local verification</strong><p><code>76/76 tests</code>, release check, Ruff, source smoke matrix, build, wheel smoke matrix และ twine ผ่านแล้วหลัง merge #30</p></div>
+          <div class="card"><strong>Local verification</strong><p><code>77/77 tests</code>, release check, Ruff, source smoke matrix, build, wheel smoke matrix และ twine ผ่านแล้วใน PR #31</p></div>
           <div class="card"><strong>Release complete</strong><p><a href="https://github.com/Supreamth/my-sprees/releases/tag/v0.8.0">v0.8.0</a> ถูก tag, publish GitHub Release, verify และ cleanup branch แล้ว</p></div>
         </div>
       </section>
@@ -551,7 +552,7 @@
         <div class="cards">
           <div class="card"><strong>Stable CLI contract</strong><p><a href="https://github.com/Supreamth/my-sprees/blob/main/docs/cli-contract.md">docs/cli-contract.md</a> บันทึก behavior ที่จะ freeze ก่อน 1.0</p></div>
           <div class="card"><strong>Release automation</strong><p><code>scripts/check_release.py</code>, build/twine, wheel reinstall, source/wheel smoke matrix และ GitHub Actions ผ่านแล้ว</p></div>
-          <div class="card"><strong>Next RC docs</strong><p><a href="https://github.com/Supreamth/my-sprees/issues/27">#27 roadmap/release notes</a> ถัดไป เพื่อสรุป v0.9.0 scope และเส้นทางเข้า 1.0</p></div>
+          <div class="card"><strong>Current RC docs</strong><p><a href="https://github.com/Supreamth/my-sprees/pull/31">PR #31</a> สำหรับ <a href="https://github.com/Supreamth/my-sprees/issues/27">#27 roadmap/release notes</a> เปิดแล้วและ CI green เพื่อปิด milestone v0.9.0 RC readiness</p></div>
         </div>
       </section>
 
@@ -563,7 +564,7 @@
           <div class="card"><strong>Phase B: User-facing features</strong><p><code>--input-file</code>, <code>--fields</code>, <code>--no-header</code>, <code>--sample-stddev</code></p></div>
           <div class="card"><strong>Phase C: Engineering quality</strong><p>เสร็จแล้ว — Ruff checks, README badge, release checklist, split tests, tag และ GitHub Release</p></div>
           <div class="card"><strong>Phase D: Release automation/checks</strong><p>เสร็จแล้ว — เพิ่ม <code>scripts/check_release.py</code>, CI release metadata gate, tests, docs, tag และ GitHub Release</p></div>
-          <div class="card"><strong>Phase E: v0.9.0 RC readiness</strong><p><a href="https://github.com/Supreamth/my-sprees/milestone/1">Milestone #1</a> กำลังทำ — #24, #25 และ <a href="https://github.com/Supreamth/my-sprees/issues/26">#26 numeric edge cases</a> เสร็จแล้ว; เหลือ <a href="https://github.com/Supreamth/my-sprees/issues/27">#27 roadmap/release notes</a></p></div>
+          <div class="card"><strong>Phase E: v0.9.0 RC readiness</strong><p><a href="https://github.com/Supreamth/my-sprees/milestone/1">Milestone #1</a> กำลังทำ — #24, #25 และ #26 เสร็จแล้ว; <a href="https://github.com/Supreamth/my-sprees/pull/31">PR #31</a> สำหรับ <a href="https://github.com/Supreamth/my-sprees/issues/27">#27 roadmap/release notes</a> เปิดแล้วและ CI green</p></div>
         </div>
       </section>
 
@@ -572,9 +573,9 @@
         <div class="timeline">
           <div class="step"><span class="num">1</span><div><strong>Release v0.3.0 ปิดงานแล้ว</strong><br>ไม่ต้องสร้าง tag หรือ GitHub Release ซ้ำ</div></div>
           <div class="step"><span class="num">2</span><div><strong>Release v0.4.0 ปิดงานแล้ว</strong><br>ไม่ต้องสร้าง tag หรือ GitHub Release ซ้ำ</div></div>
-          <div class="step"><span class="num">3</span><div><strong>#26 numeric edge cases ปิดงานแล้ว</strong><br><a href="https://github.com/Supreamth/my-sprees/pull/30">PR #30</a> merged, issue #26 closed, main <code>08f7b1c</code>, branch cleanup แล้ว, GitHub Actions ผ่านแล้ว</div></div>
+          <div class="step"><span class="num">3</span><div><strong>#27 roadmap/release notes พร้อม merge</strong><br><a href="https://github.com/Supreamth/my-sprees/pull/31">PR #31</a>, branch <code>chore/issue-27-roadmap-release-notes</code>, commit <code>0eb90e3</code>, GitHub Actions ผ่านแล้ว</div></div>
         </div>
-        <div class="callout"><strong>คำแนะนำ:</strong> เริ่มงานถัดไป <a href="https://github.com/Supreamth/my-sprees/issues/27">#27 v0.9.0 scope: publish pre-1.0 roadmap and release notes draft</a> เพื่อปิด milestone RC readiness ก่อนเข้าสู่ 1.0</div>
+        <div class="callout"><strong>คำแนะนำ:</strong> merge <a href="https://github.com/Supreamth/my-sprees/pull/31">PR #31</a> แล้วบอกว่า “merge #31 แล้ว” เพื่อให้ sync main, verify, cleanup branch, อัปเดต docs และสรุปว่า milestone v0.9.0 RC readiness ปิดครบแล้ว</div>
       </section>
     </main>
   </div>
