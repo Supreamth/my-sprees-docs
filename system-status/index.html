@@ -34,9 +34,9 @@
         <h1>เช็คการเชื่อมต่อทั้งหมดในระบบ</h1>
         <p class="lead">ภาพรวมการเชื่อมต่อไปยัง GitHub, GitHub Pages, AI Models และ external APIs พร้อมสถานะล่าสุดและเวลาที่ตรวจครั้งสุดท้าย</p>
         <div class="summary-bar">
-          <div class="sum-card total"><span>Total connections</span><strong>12</strong></div>
+          <div class="sum-card total"><span>Total connections</span><strong>13</strong></div>
           <div class="sum-card ok"><span>Healthy</span><strong>11</strong></div>
-          <div class="sum-card warn"><span>Degraded</span><strong>1</strong></div>
+          <div class="sum-card warn"><span>Degraded</span><strong>2</strong></div>
           <div class="sum-card err"><span>Down</span><strong>0</strong></div>
         </div>
       </header>
@@ -45,7 +45,7 @@
         <h2>1. Summary</h2>
         <p class="section-kicker">ภาพรวมสถานะการเชื่อมต่อ 4 หมวด: GitHub, GitHub Pages, AI Models, External APIs</p>
         <div class="callout"><strong>Update flow:</strong> หน้านี้เป็น cached/manual ต้องบอกผมว่า <code>update status</code> เพื่อให้ผมรัน health check จริง แล้ว commit ไฟล์นี้ใหม่</div>
-        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-16 20:30 UTC+7 (refresh status — gh CLI authenticated, Actions verified) — <code>8df739c</code></div>
+        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-16 20:35 UTC+7 (refresh status — OpenAI provider checked) — <code>92ea8be</code></div>
       </section>
 
       <section id="github">
@@ -85,7 +85,8 @@
           <thead><tr><th>Connection</th><th>Provider</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
           <tbody>
             <tr class="ok"><td>MiniMax-M3</td><td>minimax-oauth (current session)</td><td><span class="badge ok"><span class="dot ok"></span>PASS 5/5</span></td><td>2026-06-16 20:25</td><td>validated today: skills, session, honesty, memory, recovery — see <a href="https://github.com/Supreamth/my-sprees-docs/blob/main/model-validation-log.md">log</a></td></tr>
-            <tr class="warn"><td>Other models (Anthropic, OpenAI, Gemini, DeepSeek, Grok)</td><td>mixed</td><td><span class="badge warn"><span class="dot warn"></span>UNVALIDATED</span></td><td>—</td><td>mentioned in routing table but not yet validated in this profile. Run <code>model change</code> to validate</td></tr>
+            <tr class="warn"><td>OpenAI provider</td><td>api.openai.com</td><td><span class="badge warn"><span class="dot warn"></span>DEGRADED</span></td><td>2026-06-16 20:35</td><td>endpoint reachable (HTTP 401 unauthenticated, status page 200) but <code>OPENAI_API_KEY</code> not set in env / <code>.env</code>; Hermes <code>providers: {}</code>; only TTS uses <code>gpt-4o-mini-tts</code> model spec. Add <code>OPENAI_API_KEY=sk-...</code> to enable</td></tr>
+            <tr class="warn"><td>Other models (Anthropic, Gemini, DeepSeek, Grok)</td><td>mixed</td><td><span class="badge warn"><span class="dot warn"></span>UNVALIDATED</span></td><td>—</td><td>mentioned in routing table but not yet validated in this profile. Run <code>model change</code> to validate</td></tr>
           </tbody>
         </table>
         <div class="callout"><strong>Validation policy:</strong> ทุก model ใหม่ที่จะใช้กับงานจริงต้องผ่าน 5 ข้อใน <a href="../context-handoff/#validation">Model Validation</a> และบันทึกลง Model Validation Log</div>
