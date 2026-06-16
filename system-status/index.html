@@ -35,8 +35,8 @@
         <p class="lead">ภาพรวมการเชื่อมต่อไปยัง GitHub, GitHub Pages, AI Models และ external APIs พร้อมสถานะล่าสุดและเวลาที่ตรวจครั้งสุดท้าย</p>
         <div class="summary-bar">
           <div class="sum-card total"><span>Total connections</span><strong>12</strong></div>
-          <div class="sum-card ok"><span>Healthy</span><strong>11</strong></div>
-          <div class="sum-card warn"><span>Degraded</span><strong>1</strong></div>
+          <div class="sum-card ok"><span>Healthy</span><strong>10</strong></div>
+          <div class="sum-card warn"><span>Degraded</span><strong>2</strong></div>
           <div class="sum-card err"><span>Down</span><strong>0</strong></div>
         </div>
       </header>
@@ -45,7 +45,7 @@
         <h2>1. Summary</h2>
         <p class="section-kicker">ภาพรวมสถานะการเชื่อมต่อ 4 หมวด: GitHub, GitHub Pages, AI Models, External APIs</p>
         <div class="callout"><strong>Update flow:</strong> หน้านี้เป็น cached/manual ต้องบอกผมว่า <code>update status</code> เพื่อให้ผมรัน health check จริง แล้ว commit ไฟล์นี้ใหม่</div>
-        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-16 09:15 UTC+7 (after merge #31 + model validation) — <code>ebc2c1f</code></div>
+        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-16 20:25 UTC+7 (refresh status — model M3 active, gh CLI upgraded) — <code>2e668e7</code> (HEAD unchanged this refresh)</div>
       </section>
 
       <section id="github">
@@ -54,12 +54,12 @@
         <table class="conn-table">
           <thead><tr><th>Connection</th><th>URL / Detail</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
           <tbody>
-            <tr class="ok"><td>GitHub API</td><td><code>api.github.com</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 09:15</td><td>reachable</td></tr>
-            <tr class="ok"><td>Main repo (private)</td><td><code>Supreamth/my-sprees</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>private, SSH key configured</td></tr>
-            <tr class="ok"><td>Docs repo (public)</td><td><code>Supreamth/my-sprees-docs</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>public, serves GitHub Pages</td></tr>
-            <tr class="ok"><td>SSH key</td><td><code>~/.ssh/id_*</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>auth for both repos</td></tr>
-            <tr class="warn"><td>gh CLI</td><td>command not found</td><td><span class="badge warn"><span class="dot warn"></span>DEGRADED</span></td><td>2026-06-16 09:15</td><td>fallback: git + curl works fine; install <code>gh</code> to enable <code>gh pr create</code>/<code>gh pr checks</code></td></tr>
-            <tr class="ok"><td>GitHub Actions</td><td><code>Supreamth/my-sprees/actions</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>latest run: completed/success on main (post #31)</td></tr>
+            <tr class="ok"><td>GitHub API</td><td><code>api.github.com</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 20:25</td><td>reachable (PAT scope: none — only public reads)</td></tr>
+            <tr class="ok"><td>Main repo (private)</td><td><code>Supreamth/my-sprees</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 20:25</td><td>reachable via SSH ls-remote → HEAD <code>281e3a1</code> (PR #29-31 merged)</td></tr>
+            <tr class="ok"><td>Docs repo (public)</td><td><code>Supreamth/my-sprees-docs</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 20:25</td><td>reachable; HEAD <code>2e668e7</code></td></tr>
+            <tr class="ok"><td>SSH key</td><td><code>~/.ssh/id_ed25519_hermes_github_sandbox</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 20:25</td><td>auth confirmed (<code>Hi Supreamth!</code> on ssh -T)</td></tr>
+            <tr class="ok"><td>gh CLI</td><td><code>/usr/bin/gh</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 20:25</td><td>v2.45.0 installed; auth not configured (no <code>gh auth login</code> yet) — still DEGRADED for Actions checks, OK for binary presence</td></tr>
+            <tr class="warn"><td>GitHub Actions</td><td><code>Supreamth/my-sprees/actions</code></td><td><span class="badge warn"><span class="dot warn"></span>UNKNOWN</span></td><td>2026-06-16 20:25</td><td>workflow <code>test.yml</code> exists; last merge on main was #31 (commit <code>281e3a1</code>) — runtime status unverified: PAT has 0 scopes, <code>gh</code> not authed. Add <code>repo</code> scope PAT or run <code>gh auth login</code> to upgrade</td></tr>
           </tbody>
         </table>
       </section>
@@ -70,10 +70,10 @@
         <table class="conn-table">
           <thead><tr><th>Connection</th><th>URL / Detail</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
           <tbody>
-            <tr class="ok"><td>Pages root</td><td><code>supreamth.github.io/my-sprees-docs/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 09:15</td><td>reachable</td></tr>
-            <tr class="ok"><td>Raw content</td><td><code>raw.githubusercontent.com/Supreamth/my-sprees-docs/main/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 09:15</td><td>latest commit <code>ebc2c1f</code> served</td></tr>
-            <tr class="ok"><td>Context Handoff page</td><td><code>/context-handoff/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 09:15</td><td>section 7 (Model Validation) live</td></tr>
-            <tr class="ok"><td>Company Playbook</td><td><code>/company-playbook/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 09:15</td><td>includes context-handoff link</td></tr>
+            <tr class="ok"><td>Pages root</td><td><code>supreamth.github.io/my-sprees-docs/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 20:25</td><td>reachable; shows <code>281e3a1</code> + <code>v0.9.0</code></td></tr>
+            <tr class="ok"><td>Raw content</td><td><code>raw.githubusercontent.com/Supreamth/my-sprees-docs/main/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 20:25</td><td>HEAD <code>2e668e7</code> served</td></tr>
+            <tr class="ok"><td>Context Handoff page</td><td><code>/context-handoff/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 20:25</td><td>section 7 (Model Validation) live</td></tr>
+            <tr class="ok"><td>Company Playbook</td><td><code>/company-playbook/</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 20:25</td><td>includes context-handoff link</td></tr>
           </tbody>
         </table>
       </section>
@@ -84,7 +84,7 @@
         <table class="conn-table">
           <thead><tr><th>Connection</th><th>Provider</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
           <tbody>
-            <tr class="ok"><td>MiniMax-M3</td><td>minimax-oauth (current session)</td><td><span class="badge ok"><span class="dot ok"></span>PASS 5/5</span></td><td>2026-06-16 09:15</td><td>validated: skills, session, honesty, memory, recovery — see <a href="https://github.com/Supreamth/my-sprees-docs/blob/main/model-validation-log.md">log</a></td></tr>
+            <tr class="ok"><td>MiniMax-M3</td><td>minimax-oauth (current session)</td><td><span class="badge ok"><span class="dot ok"></span>PASS 5/5</span></td><td>2026-06-16 20:25</td><td>validated today: skills, session, honesty, memory, recovery — see <a href="https://github.com/Supreamth/my-sprees-docs/blob/main/model-validation-log.md">log</a></td></tr>
             <tr class="warn"><td>Other models (Anthropic, OpenAI, Gemini, DeepSeek, Grok)</td><td>mixed</td><td><span class="badge warn"><span class="dot warn"></span>UNVALIDATED</span></td><td>—</td><td>mentioned in routing table but not yet validated in this profile. Run <code>model change</code> to validate</td></tr>
           </tbody>
         </table>
@@ -97,9 +97,9 @@
         <table class="conn-table">
           <thead><tr><th>Connection</th><th>URL / Detail</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
           <tbody>
-            <tr class="ok"><td>PyPI (releases)</td><td><code>pypi.org</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>used for twine check; not blocking</td></tr>
-            <tr class="ok"><td>jsDelivr (Mermaid CDN)</td><td><code>cdn.jsdelivr.net</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>serves Mermaid for diagrams on home page</td></tr>
-            <tr class="ok"><td>Google Fonts</td><td><code>fonts.googleapis.com</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 09:15</td><td>serves Noto Sans Thai + Inter</td></tr>
+            <tr class="ok"><td>PyPI (releases)</td><td><code>pypi.org</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 20:25</td><td>used for twine check; not blocking</td></tr>
+            <tr class="ok"><td>jsDelivr (Mermaid CDN)</td><td><code>cdn.jsdelivr.net</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 20:25</td><td>serves Mermaid for diagrams on home page</td></tr>
+            <tr class="ok"><td>Google Fonts</td><td><code>fonts.googleapis.com</code></td><td><span class="badge ok"><span class="dot ok"></span>200</span></td><td>2026-06-16 20:25</td><td>CSS endpoints 200 (Inter + Noto Sans Thai); root 404 is normal for Google Fonts</td></tr>
           </tbody>
         </table>
       </section>
