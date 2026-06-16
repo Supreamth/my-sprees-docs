@@ -72,14 +72,20 @@
   company/
     company-thesis.md
     operating-principles.md
+    product-development-process.md
     ai-model-roles.md
     decision-log.md
   products/
     &lt;product-name&gt;/
+      product-brief.md
       prd.md
       requirements.md
       user-flows.md
       architecture.md
+      data-model.md
+      api-contract.md
+      threat-model.md
+      release-plan.md
       context/
         project-context.md
         current-state.md
@@ -98,6 +104,7 @@
         &lt;ticket-id&gt;/
           task-brief.md
           acceptance-criteria.md
+          implementation-notes.md
           verification.md
           handoff.md</pre>
       </section>
@@ -115,10 +122,12 @@ You are acting as: [Strategist / PM / Architect / Builder / Reviewer / Security 
 
 ## Source of truth
 Read these first:
+- `docs/company/product-development-process.md`
 - `docs/products/&lt;product&gt;/prd.md`
 - `docs/products/&lt;product&gt;/context/current-state.md`
 - `docs/products/&lt;product&gt;/context/decisions.md`
 - `docs/products/&lt;product&gt;/context/model-handoff.md`
+- `docs/products/&lt;product&gt;/workstreams/&lt;name&gt;/handoff.md`
 
 ## Latest state
 - Current branch:
@@ -185,15 +194,17 @@ Do this next:
             <tr><td>Coding</td><td>task brief, acceptance criteria, architecture</td><td>Anthropic primary, DeepSeek backup</td></tr>
             <tr><td>Code review</td><td>PR diff, task brief, acceptance criteria</td><td>OpenAI primary, separate Anthropic checker</td></tr>
             <tr><td>Security review</td><td>threat model, architecture, data model</td><td>OpenAI primary, Anthropic checker</td></tr>
+            <tr><td>DevOps/release</td><td>release plan, runbook, current state</td><td>OpenAI primary, DeepSeek scripts</td></tr>
             <tr><td>Routine summary</td><td>current state, task log</td><td>MiniMax-M3</td></tr>
           </tbody>
         </table>
-        <div class="callout"><strong>First implementation:</strong> สร้าง <code>docs/context/current-state.md</code>, <code>docs/context/decisions.md</code>, <code>docs/context/model-handoff.md</code>, <code>docs/context/open-questions.md</code>, <code>docs/context/risks.md</code> ก่อนเริ่ม project จริง</div>
+        <div class="callout"><strong>First implementation:</strong> เลือกที่เก็บ context ให้ชัด — <code>docs/context/</code> สำหรับ repo เล็ก/early-stage/single-product หรือ <code>docs/products/&lt;product&gt;/context/</code> สำหรับ multi-product repo แล้วสร้าง <code>current-state.md</code>, <code>decisions.md</code>, <code>model-handoff.md</code>, <code>open-questions.md</code>, <code>risks.md</code> ใน location นั้น</div>
       </section>
 
       <section id="validation">
         <h2>7. Model Validation — ทดสอบ Model ใหม่ก่อนใช้งานจริง</h2>
-        <p class="section-kicker">ก่อนจะ trust ให้ model ใหม่ทำงานต่อจาก model เดิม ต้องรัน validation 5 ข้อนี้ก่อน ถ้าไม่ผ่านแม้แต่ข้อเดียว ห้ามใช้กับงานจริง</p>
+        <p class="section-kicker">ก่อนจะ trust ให้ model ใหม่ทำงานต่อจาก model เดิม ต้องรัน validation 5 ข้อนี้ก่อนใช้กับงานจริง</p>
+        <div class="callout"><strong>Policy:</strong> งาน production / security / release ต้องผ่าน 5/5 เท่านั้นถึงใช้ได้โดยไม่มีข้อจำกัด; ผล 3-4/5 ใช้ได้เฉพาะงาน non-critical และต้องมี human-in-the-loop; ผล 0-2/5 ให้ reject และห้ามทำงานต่อจนกว่า human จะ override เป็นลายลักษณ์อักษร</div>
 
         <div class="callout warn" style="margin-top:18px"><strong>Trigger command:</strong> พิมพ์ <code>model change</code> หรือ <code>validate model</code> เพื่อเริ่ม validation flow นี้ทันที — model ใหม่จะรัน 5 ข้อ รายงานผล แล้วหยุดรอ human confirm ก่อนทำงานต่อ</div>
         <div class="flow">
@@ -208,9 +219,9 @@ Do this next:
         <table>
           <thead><tr><th>ผลการทดสอบ</th><th>การดำเนินการ</th></tr></thead>
           <tbody>
-            <tr><td>ผ่าน 5/5</td><td>อัปเดต Handoff Packet ด้วย fingerprint ของ model ใหม่ เริ่มใช้งานได้</td></tr>
-            <tr><td>ผ่าน 3-4/5</td><td>flag ใน Handoff Packet ว่า model นี้ต้องมี human-in-the-loop สำหรับข้อที่ fail</td></tr>
-            <tr><td>ผ่าน 0-2/5</td><td>ห้ามใช้ หา model อื่น แล้วบันทึกเหตุผลใน decision log</td></tr>
+            <tr><td>ผ่าน 5/5</td><td>อัปเดต Handoff Packet ด้วย fingerprint ของ model ใหม่ ใช้กับงานจริงได้</td></tr>
+            <tr><td>ผ่าน 3-4/5</td><td>ใช้ได้เฉพาะงาน non-critical + ต้องมี human-in-the-loop และ flag ข้อที่ fail ใน Handoff Packet</td></tr>
+            <tr><td>ผ่าน 0-2/5</td><td>reject / ห้ามใช้ หา model อื่น แล้วบันทึกเหตุผลใน decision log</td></tr>
           </tbody>
         </table>
 

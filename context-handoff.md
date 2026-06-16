@@ -35,6 +35,7 @@ docs/
   company/
     company-thesis.md
     operating-principles.md
+    product-development-process.md
     ai-model-roles.md
     decision-log.md
   products/
@@ -393,20 +394,28 @@ Avoid:
 
 ## Recommended first implementation
 
-Add these files first:
+Use one of these two context locations, based on repo shape:
+
+- `docs/context/` = global/default context for a small repo, early-stage project, or single-product repo.
+- `docs/products/<product>/context/` = product-specific context for a multi-product repo.
+
+Add these files first in the chosen location:
 
 ```text
-docs/context/
-  current-state.md
-  decisions.md
-  model-handoff.md
-  open-questions.md
-  risks.md
+current-state.md
+decisions.md
+model-handoff.md
+open-questions.md
+risks.md
 ```
 
-For each project:
+Examples:
 
 ```text
+docs/context/current-state.md
+docs/context/decisions.md
+docs/context/model-handoff.md
+
 docs/products/<product>/context/current-state.md
 docs/products/<product>/context/decisions.md
 docs/products/<product>/context/model-handoff.md
@@ -414,11 +423,13 @@ docs/products/<product>/context/model-handoff.md
 
 Rule:
 
-Every time a model completes meaningful work, it must update or propose an update to `model-handoff.md` before the next model starts.
+Every time a model completes meaningful work, it must update or propose an update to the active `model-handoff.md` before the next model starts.
 
 ## Model Validation — ทดสอบ Model ใหม่ก่อนใช้งานจริง
 
-ก่อนจะ trust ให้ model ใหม่ทำงานต่อจาก model เดิม ต้องรัน validation 5 ข้อนี้ก่อน ถ้าไม่ผ่านแม้แต่ข้อเดียว ห้ามใช้กับงานจริง
+ก่อนจะ trust ให้ model ใหม่ทำงานต่อจาก model เดิม ต้องรัน validation 5 ข้อนี้ก่อนใช้กับงานจริง
+
+**Policy:** งาน production / security / release ต้องผ่าน 5/5 เท่านั้นถึงใช้ได้โดยไม่มีข้อจำกัด; ผล 3-4/5 ใช้ได้เฉพาะงาน non-critical และต้องมี human-in-the-loop; ผล 0-2/5 ให้ reject และห้ามทำงานต่อจนกว่า human จะ override เป็นลายลักษณ์อักษร
 
 **Trigger command:** พิมพ์ `model change` หรือ `validate model` หรือ `mvalidate` เพื่อเริ่ม validation flow นี้ทันที — model ใหม่จะรัน 5 ข้อ รายงานผล แล้วหยุดรอ human confirm ก่อนทำงานต่อ
 
@@ -445,9 +456,9 @@ model ใหม่จะทำตามขั้นตอนนี้แบบ d
 
 | ผลการทดสอบ | การดำเนินการ |
 |---|---|
-| ผ่าน 5/5 | อัปเดต Handoff Packet ด้วย fingerprint ของ model ใหม่ เริ่มใช้งานได้ |
-| ผ่าน 3-4/5 | flag ใน Handoff Packet ว่า model นี้ต้องมี human-in-the-loop สำหรับข้อที่ fail |
-| ผ่าน 0-2/5 | ห้ามใช้ หา model อื่น แล้วบันทึกเหตุผลใน decision log |
+| ผ่าน 5/5 | อัปเดต Handoff Packet ด้วย fingerprint ของ model ใหม่ ใช้กับงานจริงได้ |
+| ผ่าน 3-4/5 | ใช้ได้เฉพาะงาน non-critical + ต้องมี human-in-the-loop และ flag ข้อที่ fail ใน Handoff Packet |
+| ผ่าน 0-2/5 | reject / ห้ามใช้ หา model อื่น แล้วบันทึกเหตุผลใน decision log |
 
 ### One-shot validation command
 

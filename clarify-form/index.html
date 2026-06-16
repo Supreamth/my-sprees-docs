@@ -250,7 +250,7 @@
         </form>
         <div class="result-box" id="resultBox">
           <span class="mini-label">Generated output</span>
-          <pre id="output"></pre>
+          <pre id="generatedOutput"></pre>
           <div class="actions"><button type="button" id="copy">Copy brief</button></div>
         </div>
       </section>
@@ -265,7 +265,7 @@
   <a class="top-link" href="#top" aria-label="Back to top">↑</a>
   <script>
     const form = document.getElementById('clarifyForm');
-    const output = document.getElementById('output');
+    const output = document.getElementById('generatedOutput');
     const resultBox = document.getElementById('resultBox');
     const fields = ['title','requester','problem','user','evidence','impact','urgency','currentWorkflow','painPoint','desiredOutcome','successMetric','mvpScope','nonGoals','acceptance','constraints','dataRisk','integrations','failure'];
     function value(name) {
