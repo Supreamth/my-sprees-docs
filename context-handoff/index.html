@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Context Handoff System</title>
+  <meta name="description" content="ระบบเก็บ context และ handoff packet เพื่อเปลี่ยน AI model มาทำงานต่อได้โดยไม่เกิดรอยต่อ">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Inter:wght@500;600;700;800&display=swap');
+    :root{color-scheme:light;--bg:#f7f3ec;--paper:#fffdf8;--panel:#fff;--ink:#17130f;--muted:#6e645a;--soft:#8b8176;--line:#e4d8c8;--accent:#2448d8;--accent-soft:#eef2ff;--ok:#126f49;--warn:#a96513;--radius:22px;--shadow:0 24px 70px rgba(42,31,16,.10);--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-family:"Noto Sans Thai",Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:radial-gradient(circle at 7% 0%,rgba(36,72,216,.14),transparent 32rem),radial-gradient(circle at 96% 8%,rgba(221,107,52,.13),transparent 30rem),var(--bg);line-height:1.65}a{color:inherit}code,pre{font-family:var(--mono)}code{background:#f1e7da;border:1px solid #e1d3c0;border-radius:7px;padding:.08rem .34rem;font-size:.92em}.layout{display:grid;grid-template-columns:314px minmax(0,1fr);min-height:100vh}aside{position:sticky;top:0;height:100vh;overflow:auto;padding:28px 22px;border-right:1px solid var(--line);background:rgba(255,253,248,.78);backdrop-filter:blur(18px)}.brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}.mark{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:white;font-weight:800;background:linear-gradient(135deg,var(--accent),#172c84);box-shadow:0 14px 30px rgba(36,72,216,.24)}.brand strong{display:block;line-height:1.12}.brand span{color:var(--muted);font-size:.88rem}.nav-label{margin:22px 0 8px;color:var(--soft);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}nav a{display:block;text-decoration:none;color:var(--muted);padding:8px 10px;border-radius:11px;margin:1px 0;font-size:.92rem;line-height:1.35}nav a:hover,nav a:focus-visible{color:var(--ink);background:#f0e7da;outline:none}main{padding:42px min(5vw,76px) 86px}.hero,section{max-width:1180px;border:1px solid var(--line);background:rgba(255,253,248,.88);box-shadow:var(--shadow)}.hero{padding:clamp(30px,4vw,58px);border-radius:32px}section{margin-top:28px;padding:clamp(22px,3vw,38px);border-radius:var(--radius);box-shadow:0 10px 34px rgba(42,31,16,.06)}.eyebrow{color:var(--accent);font-weight:800;letter-spacing:.055em;text-transform:uppercase;font-size:.78rem}h1{margin:12px 0 14px;font-family:Inter,"Noto Sans Thai",sans-serif;font-size:clamp(2.15rem,5vw,4.8rem);line-height:1.03;letter-spacing:-.055em;text-wrap:balance}h2{margin:0 0 9px;font-family:Inter,"Noto Sans Thai",sans-serif;font-size:clamp(1.5rem,2.35vw,2.3rem);line-height:1.1;letter-spacing:-.035em}h3{margin:24px 0 8px;font-size:1.12rem}.lead,.section-kicker{color:var(--muted);max-width:900px}.lead{font-size:clamp(1.04rem,1.45vw,1.24rem);margin:0}.section-kicker{margin:0}.status-grid,.cards,.layers,.flow{display:grid;gap:12px;margin-top:20px}.status-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.layers{grid-template-columns:repeat(5,minmax(0,1fr))}.flow{grid-template-columns:repeat(3,minmax(0,1fr))}.stat,.card,.layer,.step{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:16px}.stat span,.mini-label{display:block;color:var(--soft);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}.stat strong,.card strong,.layer strong,.step strong{display:block;margin-top:4px}.card p,.layer p,.step p{color:var(--muted);margin:6px 0 0}.tag{display:inline-flex;border:1px solid #cfdaff;background:var(--accent-soft);color:#1d369f;border-radius:999px;padding:3px 9px;font-size:.78rem;font-weight:800;margin-bottom:8px}.callout{margin-top:18px;padding:18px;border:1px solid #cfdaff;border-radius:18px;background:#f1f5ff}.callout strong{color:#1d369f}.warn{border-color:#efd6a8;background:#fff8ea}.warn strong{color:var(--warn)}pre{white-space:pre-wrap;word-break:break-word;background:#17130f;color:#fff8ed;border-radius:16px;padding:16px;overflow:auto;font-size:.88rem}table{width:100%;border-collapse:collapse;margin-top:16px;border-radius:16px;overflow:hidden}th,td{border-bottom:1px solid var(--line);padding:12px 10px;text-align:left;vertical-align:top}th{background:#f3eadf;color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.04em}tr:last-child td{border-bottom:none}.top-link{position:fixed;right:22px;bottom:22px;width:46px;height:46px;border-radius:999px;display:grid;place-items:center;background:var(--ink);color:white;text-decoration:none;box-shadow:var(--shadow)}@media(max-width:1080px){.layout{grid-template-columns:1fr}aside{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--line)}nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 8px}main{padding:24px 16px 70px}.status-grid,.cards,.layers,.flow{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="layout" id="top">
+    <aside>
+      <div class="brand"><div class="mark">CTX</div><div><strong>Context Handoff</strong><span>Model continuity system</span></div></div>
+      <div class="nav-label">Continuity</div>
+      <nav aria-label="Page navigation">
+        <a href="#why">1. ทำไมต้องมี</a>
+        <a href="#layers">2. Context layers</a>
+        <a href="#structure">3. Repo structure</a>
+        <a href="#packet">4. Handoff packet</a>
+        <a href="#switching">5. Switching process</a>
+        <a href="#routing">6. Model routing</a>
+        <a href="../project-start/">Project Start Form</a>
+        <a href="../company-playbook/">Company Playbook</a>
+        <a href="../">Back to system map</a>
+      </nav>
+    </aside>
+    <main>
+      <header class="hero">
+        <div class="eyebrow">Context Handoff System</div>
+        <h1>เก็บ Context ให้ Model ใหม่ทำงานต่อได้ทันที ไม่มีรอยต่อ</h1>
+        <p class="lead">ออกแบบระบบเก็บ context ของ project แยกจาก chat เพื่อให้ Anthropic, OpenAI, Gemini, DeepSeek, Grok หรือ MiniMax-M3 เข้ามาทำงานต่อกันได้โดยไม่ต้องเล่าซ้ำและไม่เสีย token เกินจำเป็น</p>
+        <div class="status-grid">
+          <div class="stat"><span>Goal</span><strong>No context loss</strong></div>
+          <div class="stat"><span>Method</span><strong>Source files + handoff</strong></div>
+          <div class="stat"><span>Use when</span><strong>Switching models</strong></div>
+          <div class="stat"><span>Rule</span><strong>Chat is not source</strong></div>
+        </div>
+      </header>
+
+      <section id="why">
+        <h2>1. ทำไมต้องมี Context Handoff?</h2>
+        <p class="section-kicker">ถ้า context อยู่ใน chat อย่างเดียว ทุกครั้งที่เปลี่ยน model จะเกิด context loss, ต้องเล่าซ้ำ, เปลือง token และ model ใหม่อาจตีความ product ใหม่จากศูนย์</p>
+        <div class="cards">
+          <div class="card"><span class="tag">Reduce token</span><strong>อ้างอิงไฟล์แทน paste ทั้งหมด</strong><p>ให้ model โหลด source-of-truth files เฉพาะที่จำเป็น แทนการเล่าประวัติทั้ง project ใหม่</p></div>
+          <div class="card"><span class="tag">Continuity</span><strong>เปลี่ยน model ได้ทันที</strong><p>Builder, reviewer, architect, security และ PM ใช้ context เดียวกัน ไม่ตีความคนละทาง</p></div>
+          <div class="card"><span class="tag">Governance</span><strong>ตรวจสอบ decision ได้</strong><p>มี decision log, current state, risks, open questions และ handoff packet ที่ human review ได้</p></div>
+        </div>
+        <div class="callout"><strong>Core rule:</strong> อย่าให้ context อยู่ใน chat อย่างเดียว ให้เก็บเป็น source files แล้วใช้ handoff packet สั้นๆ เพื่อบอก model ใหม่ว่าต้องอ่านอะไรและทำอะไรต่อ</div>
+      </section>
+
+      <section id="layers">
+        <h2>2. Context 5 ชั้น</h2>
+        <p class="section-kicker">แยก context ตามระดับความถาวร เพื่อไม่ต้องส่งทุกอย่างให้ทุก model ทุกครั้ง</p>
+        <div class="layers">
+          <div class="layer"><span class="tag">1</span><strong>Company</strong><p>principles, model roles, process, decision log</p></div>
+          <div class="layer"><span class="tag">2</span><strong>Project</strong><p>PRD, requirements, architecture, user flows</p></div>
+          <div class="layer"><span class="tag">3</span><strong>Workstream</strong><p>goal, scope, dependencies, risks, status</p></div>
+          <div class="layer"><span class="tag">4</span><strong>Task / PR</strong><p>acceptance criteria, files touched, tests, PR state</p></div>
+          <div class="layer"><span class="tag">5</span><strong>Handoff</strong><p>short packet for the next model</p></div>
+        </div>
+      </section>
+
+      <section id="structure">
+        <h2>3. Recommended repository structure</h2>
+        <p class="section-kicker">เก็บ context เป็นไฟล์ใน repo เพื่อ version, review, diff และส่งต่อระหว่าง model ได้</p>
+        <pre>docs/
+  company/
+    company-thesis.md
+    operating-principles.md
+    ai-model-roles.md
+    decision-log.md
+  products/
+    &lt;product-name&gt;/
+      prd.md
+      requirements.md
+      user-flows.md
+      architecture.md
+      context/
+        project-context.md
+        current-state.md
+        decisions.md
+        glossary.md
+        open-questions.md
+        risks.md
+        model-handoff.md
+      workstreams/
+        &lt;workstream-name&gt;/
+          brief.md
+          status.md
+          task-log.md
+          handoff.md
+      tasks/
+        &lt;ticket-id&gt;/
+          task-brief.md
+          acceptance-criteria.md
+          verification.md
+          handoff.md</pre>
+      </section>
+
+      <section id="packet">
+        <h2>4. Model Handoff Packet</h2>
+        <p class="section-kicker">นี่คือ packet สั้นที่ส่งให้ model ใหม่ทุกครั้ง เพื่อบอกบทบาท, objective, source-of-truth, state, constraints, next action และสิ่งที่ห้ามทำ</p>
+        <pre># Model Handoff Packet
+
+## Role for next model
+You are acting as: [Strategist / PM / Architect / Builder / Reviewer / Security / SRE / Analyst]
+
+## Current objective
+[ทำอะไรต่อจากนี้แบบสั้นและชัด]
+
+## Source of truth
+Read these first:
+- `docs/products/&lt;product&gt;/prd.md`
+- `docs/products/&lt;product&gt;/context/current-state.md`
+- `docs/products/&lt;product&gt;/context/decisions.md`
+- `docs/products/&lt;product&gt;/context/model-handoff.md`
+
+## Latest state
+- Current branch:
+- Current PR:
+- Latest commit:
+- Current phase:
+- Last completed step:
+- Current blocker:
+
+## Decisions already made
+- Decision 1:
+- Decision 2:
+
+## Constraints
+- Scope:
+- Technical:
+- Security/compliance:
+- Budget/time:
+
+## Open questions
+- Question 1:
+
+## Next action
+Do this next:
+1.
+2.
+
+## Do not do
+- Do not assume:
+- Do not skip:
+
+## Verification required
+- command/review step 1
+
+## Expected output
+- summary
+- files changed
+- decisions needed
+- next handoff update</pre>
+      </section>
+
+      <section id="switching">
+        <h2>5. Process เวลาเปลี่ยน Model</h2>
+        <p class="section-kicker">ทำเป็น ceremony สั้นๆ ทุกครั้งที่เปลี่ยน model หรือเปลี่ยน role จาก maker เป็น reviewer</p>
+        <div class="flow">
+          <div class="step"><span class="tag">Before</span><strong>Update context</strong><p>อัปเดต current-state, decisions, handoff, verification และ blockers</p></div>
+          <div class="step"><span class="tag">Start</span><strong>Give packet</strong><p>ส่ง role, objective, source files, constraints, next action และ do-not-do list</p></div>
+          <div class="step"><span class="tag">After</span><strong>Save next handoff</strong><p>verify output แล้วอัปเดต handoff packet สำหรับ model ถัดไป</p></div>
+        </div>
+        <div class="callout warn"><strong>Anti-pattern:</strong> อย่า paste summary ยาวๆ โดยไม่มี source files, timestamp, decisions และ next action เพราะ model ใหม่จะไม่รู้ว่าอะไรเป็น source of truth</div>
+      </section>
+
+      <section id="routing">
+        <h2>6. Model routing with context system</h2>
+        <p class="section-kicker">เลือก model ตามงานและโหลด context เท่าที่จำเป็น</p>
+        <table>
+          <thead><tr><th>Next task</th><th>Load context files</th><th>Suggested model</th></tr></thead>
+          <tbody>
+            <tr><td>Strategy decision</td><td>company thesis, product strategy, decision log</td><td>OpenAI primary, Anthropic critic</td></tr>
+            <tr><td>PRD update</td><td>project context, requirements, user flows</td><td>Anthropic primary, OpenAI checker</td></tr>
+            <tr><td>Long transcript synthesis</td><td>interviews, current state, open questions</td><td>Gemini primary, Anthropic synthesis</td></tr>
+            <tr><td>Market/current signal</td><td>product context, competitor notes</td><td>Grok primary, Gemini synthesis</td></tr>
+            <tr><td>Architecture</td><td>PRD, requirements, data model, constraints</td><td>OpenAI primary, Anthropic review</td></tr>
+            <tr><td>Coding</td><td>task brief, acceptance criteria, architecture</td><td>Anthropic primary, DeepSeek backup</td></tr>
+            <tr><td>Code review</td><td>PR diff, task brief, acceptance criteria</td><td>OpenAI primary, separate Anthropic checker</td></tr>
+            <tr><td>Security review</td><td>threat model, architecture, data model</td><td>OpenAI primary, Anthropic checker</td></tr>
+            <tr><td>Routine summary</td><td>current state, task log</td><td>MiniMax-M3</td></tr>
+          </tbody>
+        </table>
+        <div class="callout"><strong>First implementation:</strong> สร้าง <code>docs/context/current-state.md</code>, <code>docs/context/decisions.md</code>, <code>docs/context/model-handoff.md</code>, <code>docs/context/open-questions.md</code>, <code>docs/context/risks.md</code> ก่อนเริ่ม project จริง</div>
+      </section>
+    </main>
+  </div>
+  <a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>
