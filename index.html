@@ -287,7 +287,7 @@
         <div class="mark">Σ</div>
         <div>
           <strong>sandbox-math</strong>
-          <span>System Map 0.3.0</span>
+          <span>System Map 0.8.0 · v0.9 RC</span>
         </div>
       </div>
       <nav aria-label="Page sections">
@@ -499,16 +499,17 @@
       </section>
 
       <section id="feature-map">
-        <h2>6. Current release: 0.3.0 feature map</h2>
-        <p class="section-kicker">Release 0.3.0 ครอบคลุม file input, selected fields, headerless CSV, sample stddev, output modes และ quality gates</p>
+        <h2>6. Current capability map</h2>
+        <p class="section-kicker">สถานะปัจจุบันหลัง <code>v0.8.0</code>: CLI feature set ครบสำหรับ 0.x, มี packaging/release checks และกำลังเข้าสู่ <code>v0.9.0 RC readiness</code></p>
         <div class="diagram">
           <pre class="mermaid">mindmap
-  root((sandbox-math 0.3.0))
+  root((sandbox-math 0.8.0 + v0.9 RC))
     Input
       integers
       floats
       numeric strings
       default values 1 2 3
+      --input-file
     Summary fields
       count
       total
@@ -529,23 +530,21 @@
       --json
       --csv
       --precision
+      --fields
+      --no-header
+      --sample-stddev
     Quality gates
       unittest
+      Ruff lint/format
       package metadata tests
       changelog tests
       GitHub Actions
       installed CLI smoke tests</pre>
         </div>
-      </section>
-
-      <section id="release-0-3">
-        <h2>7. Release 0.3.0 user-facing features</h2>
-        <p class="section-kicker">เพิ่ม CLI flags ใหม่ 4 ตัวที่ผู้ใช้เรียกได้โดยตรง</p>
         <div class="cards">
-          <div class="card"><strong><code>--input-file</code></strong><p>อ่าน numeric values จากไฟล์แบบ whitespace-separated และรวมกับ positional args ได้</p></div>
-          <div class="card"><strong><code>--fields</code></strong><p>เลือกและจัดลำดับ fields ที่ต้องการแสดง เช่น <code>count,mean</code></p></div>
-          <div class="card"><strong><code>--no-header</code></strong><p>ใช้กับ <code>--csv</code> เพื่อแสดงเฉพาะแถว values ไม่มี header</p></div>
-          <div class="card"><strong><code>--sample-stddev</code></strong><p>เพิ่ม field <code>sample_stddev</code> โดยใช้สูตร sample standard deviation</p></div>
+          <div class="card"><strong>Stable CLI contract</strong><p><a href="https://github.com/Supreamth/my-sprees/blob/main/docs/cli-contract.md">docs/cli-contract.md</a> บันทึก behavior ที่จะ freeze ก่อน 1.0</p></div>
+          <div class="card"><strong>Release automation</strong><p><code>scripts/check_release.py</code>, build/twine, wheel reinstall smoke และ GitHub Actions ผ่านแล้วใน <code>v0.8.0</code></p></div>
+          <div class="card"><strong>Next RC hardening</strong><p>เริ่ม <a href="https://github.com/Supreamth/my-sprees/issues/25">#25 source/wheel smoke matrix</a> แล้วตามด้วย edge cases และ roadmap</p></div>
         </div>
       </section>
 
