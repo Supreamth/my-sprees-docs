@@ -26,6 +26,44 @@
 | SRE/DevOps | CI/CD, deploy, rollback, monitoring | DevOps/SRE-capable model |
 | Analyst | metrics, feedback, cohort, support synthesis | data-analysis + reasoning model |
 
+## Concrete model assignment for current stack
+
+ใช้ชุด model ที่มีอยู่ตอนนี้ดังนี้: Anthropic, OpenAI, MiniMax-M3, Gemini, DeepSeek, Grok
+
+| Role | Primary model/provider | Checker / backup | ใช้เมื่อไหร่ |
+|---|---|---|---|
+| Strategist | OpenAI | Anthropic | company thesis, business model, pricing, high-stakes trade-offs |
+| Researcher | Grok | Gemini | current market, competitor signals, social/current discussion, fast external scan |
+| Customer Insight Synthesizer | Gemini | Anthropic | สรุป interview/transcript ยาว, หา pattern, cluster pain points |
+| Product Manager | Anthropic | OpenAI | PRD, requirements, acceptance criteria, roadmap, non-goals |
+| UX / Product Designer | Anthropic | Gemini | user journey, UX spec, copy, screen states; ใช้ Gemini review ภาพ/screenshot |
+| Solution Architect | OpenAI | Anthropic | architecture, API/data model, system trade-offs, ADRs |
+| Engineering Builder | Anthropic | DeepSeek | implementation, tests, refactor, repo-level coding tasks |
+| Cost-efficient Coding / Spike | DeepSeek | OpenAI | prototype, migration script, algorithmic/debug task, second implementation option |
+| Fast Operations Assistant | MiniMax-M3 | OpenAI | สรุปสั้น, classify ticket, draft status update, translate/copy, routine ops ที่ไม่เสี่ยงสูง |
+| Spec / Code Reviewer | OpenAI | Anthropic | spec compliance, PR review, edge cases; ต้องแยกจาก model ที่เป็น builder |
+| Security Reviewer | OpenAI | Anthropic | threat model, auth/permission, data privacy, secrets, abuse cases |
+| SRE / DevOps | OpenAI | DeepSeek | CI/CD, deployment, rollback, monitoring, runbook, incident checklist |
+| Analyst | Gemini | OpenAI | metrics, cohort, customer feedback synthesis, long-context analysis |
+| Public / Social Intelligence | Grok | OpenAI | market pulse, X/social reactions, public narrative, trend monitoring |
+
+### Default routing rules
+
+1. งานตัดสินใจระดับบริษัท: OpenAI เป็น primary, Anthropic เป็น critic
+2. งาน PRD/requirement/เอกสาร product: Anthropic เป็น primary, OpenAI เป็น critic
+3. งาน coding หลัก: Anthropic เป็น builder, OpenAI หรือ Anthropic อีก session เป็น reviewer, DeepSeek เป็น backup/spike
+4. งาน research ปัจจุบันหรือ social signal: Grok เป็น primary, Gemini เป็น long-context synthesis
+5. งานอ่าน context ยาวมากหรือ transcript หลายชุด: Gemini เป็น primary, Anthropic เป็น synthesis/checker
+6. งาน routine ราคาต่ำ/เร็ว: MiniMax-M3 ใช้ได้ แต่ห้ามใช้เป็น final approver ในเรื่อง strategy, security, architecture หรือ release
+7. งาน security/release: OpenAI primary, Anthropic checker, human final approval
+
+### Critical separation rule
+
+ถ้า Anthropic เป็น builder ของ PR หนึ่ง ห้ามให้ Anthropic session เดิมเป็น final reviewer ให้ใช้ OpenAI หรือ Anthropic session ใหม่ที่ได้รับเฉพาะ spec + diff แทน
+
+ถ้า OpenAI เป็น architect ให้ Anthropic review trade-offs และ DeepSeek ลองเสนอ simpler/cost-saving implementation option
+
+
 ## End-to-end process
 
 ### Phase 0: Company / Business Intent
@@ -46,8 +84,8 @@ Artifacts:
 - `positioning.md`
 
 Recommended model:
-- Strongest reasoning model
-- Optional: second reasoning model for critique
+- OpenAI เป็น primary
+- Anthropic เป็น critique model
 
 Human owner:
 - Founder / CEO
@@ -73,9 +111,9 @@ Artifacts:
 - `market-map.md`
 
 Recommended model:
-- Web/research model สำหรับ market/competitor
-- Long-context model สำหรับสรุป interviews
-- Reasoning model สำหรับหา pattern และ blind spots
+- Grok สำหรับ current market/social signals
+- Gemini สำหรับ long-context synthesis
+- OpenAI สำหรับหา pattern และ blind spots
 
 Human owner:
 - Founder / Product Lead
@@ -96,7 +134,7 @@ Artifacts:
 - `problem-validation-summary.md`
 
 Recommended model:
-- Strong reasoning model
+- OpenAI หรือ Anthropic สำหรับ challenge problem statement
 - Use prompt: “challenge this problem statement; identify assumptions, weak evidence, and alternative explanations.”
 
 Human owner:
@@ -118,8 +156,9 @@ Artifacts:
 - `pricing-hypothesis.md`
 
 Recommended model:
-- Reasoning model ระดับสูง
-- Multi-model debate: proposer, critic, investor/customer/operator perspective
+- OpenAI เป็น proposer
+- Anthropic เป็น critic
+- Grok/Gemini ใช้เสริม market/customer perspective
 
 Human owner:
 - Founder / Product Lead
@@ -147,7 +186,8 @@ Artifacts:
 - `assumptions-and-risks.md`
 
 Recommended model:
-- Long-context reasoning model
+- Anthropic เป็น primary สำหรับ requirements
+- OpenAI เป็น checker
 - Domain expert review ถ้าเป็น regulated industry
 
 Human owner:
@@ -181,9 +221,9 @@ Artifacts:
 - `prd.md`
 
 Recommended model:
-- Draft: reasoning + writing model
-- Critique: separate reasoning model
-- Engineering summary: fast model ได้หลัง PRD approved
+- Draft: Anthropic
+- Critique: OpenAI
+- Engineering summary: MiniMax-M3 ใช้ได้หลัง PRD approved
 
 Human owner:
 - PM
@@ -203,9 +243,9 @@ Artifacts:
 - `copy-guidelines.md`
 
 Recommended model:
-- Design/vision-capable model
-- Reasoning model สำหรับ edge states
-- Optional HTML prototype model for clickable prototype
+- Anthropic สำหรับ UX spec/copy/prototype
+- Gemini สำหรับ vision/screenshot review
+- OpenAI สำหรับ edge-state critique
 
 Human owner:
 - Product Designer / PM
@@ -226,9 +266,9 @@ Artifacts:
 - `security-assumptions.md`
 
 Recommended model:
-- Architect/reasoning model
-- Research model สำหรับ third-party APIs/libraries
-- Coding model สำหรับ proof-of-concept spike
+- OpenAI สำหรับ architecture options
+- Grok/Gemini สำหรับ third-party APIs/libraries
+- DeepSeek หรือ Anthropic สำหรับ proof-of-concept spike
 
 Human owner:
 - CTO / Tech Lead
@@ -251,10 +291,11 @@ Artifacts:
 - `deployment-architecture.md`
 
 Recommended model:
-- Architect: strong reasoning model
-- Security critique: security-focused model
-- Scale/cost critique: separate reasoning model
-- API/schema draft: coding-aware model
+- Architect: OpenAI
+- Architecture critique: Anthropic
+- Scale/cost critique: DeepSeek
+- Security critique: OpenAI + human review
+- API/schema draft: Anthropic or DeepSeek
 
 Human owner:
 - CTO / Staff Engineer / Security Lead
@@ -276,8 +317,9 @@ Artifacts:
 - `release-plan.md`
 
 Recommended model:
-- Planning/reasoning model
-- Coding-aware model สำหรับแตก technical tasks
+- Anthropic สำหรับ delivery/issue plan
+- OpenAI สำหรับ dependency/risk review
+- MiniMax-M3 สำหรับ routine ticket summaries
 
 Human owner:
 - Tech Lead / Engineering Manager / PM
@@ -310,10 +352,11 @@ Artifacts:
 - Changelog if needed
 
 Recommended model:
-- Builder: coding-specialized model
-- Tests: coding/reasoning model
-- Review: separate model, not the builder
-- Debug: reasoning + coding model
+- Builder: Anthropic
+- Backup/spike: DeepSeek
+- Tests: Anthropic or OpenAI
+- Review: OpenAI or separate Anthropic session, not the builder
+- Debug: OpenAI + coding model
 
 Human owner:
 - Engineer / Tech Lead
@@ -359,9 +402,9 @@ Artifacts:
 - `compliance-checklist.md`
 
 Recommended model:
-- QA reasoning model
-- Security-focused model
-- Coding model for automated tests
+- QA: OpenAI or Anthropic
+- Security: OpenAI primary + Anthropic checker
+- Automated tests: Anthropic/DeepSeek
 - Human expert for legal/compliance
 
 Human owner:
@@ -384,9 +427,10 @@ Artifacts:
 - `incident-playbook.md`
 
 Recommended model:
-- DevOps/SRE-capable model
-- Reasoning model for release risk
-- Fast model for release notes summary
+- SRE/DevOps: OpenAI
+- Scripts/runbooks: DeepSeek
+- Release risk: Anthropic checker
+- Release notes summary: MiniMax-M3
 
 Human owner:
 - Tech Lead / SRE / Founder
@@ -406,9 +450,10 @@ Artifacts:
 - `post-release-review.md`
 
 Recommended model:
-- Data analysis model
-- Long-context summarization model
-- Reasoning model for prioritization
+- Gemini สำหรับ long-context metrics/feedback
+- OpenAI สำหรับ prioritization
+- MiniMax-M3 สำหรับ routine summaries
+- Grok สำหรับ public/social signal
 
 Human owner:
 - PM / Founder / Growth / Support

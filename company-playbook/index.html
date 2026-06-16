@@ -458,6 +458,29 @@
           <div class="model"><strong>SRE / Analyst</strong><p>Deploy, monitoring, metrics, feedback<br><code>DevOps + data-analysis models</code></p></div>
         </div>
         <div class="warning callout"><strong>Rule:</strong> อย่าให้ model ที่สร้างงานเป็นคนอนุมัติงานตัวเอง โดยเฉพาะ code, architecture, security และ release</div>
+
+        <h3>Concrete assignment for your current stack</h3>
+        <p class="section-kicker">Stack ปัจจุบัน: Anthropic, OpenAI, MiniMax-M3, Gemini, DeepSeek, Grok</p>
+        <table>
+          <thead><tr><th>Role</th><th>Primary</th><th>Checker / backup</th><th>Use case</th></tr></thead>
+          <tbody>
+            <tr><td>Strategist</td><td>OpenAI</td><td>Anthropic</td><td>company thesis, business model, pricing, high-stakes trade-offs</td></tr>
+            <tr><td>Researcher</td><td>Grok</td><td>Gemini</td><td>current market, competitors, social/current discussion, external scan</td></tr>
+            <tr><td>Customer Insight</td><td>Gemini</td><td>Anthropic</td><td>long interview transcripts, pattern clustering, pain-point synthesis</td></tr>
+            <tr><td>Product Manager</td><td>Anthropic</td><td>OpenAI</td><td>PRD, requirements, acceptance criteria, roadmap, non-goals</td></tr>
+            <tr><td>UX / Product Designer</td><td>Anthropic</td><td>Gemini</td><td>user journey, UX spec, copy, states; Gemini for screenshot/vision review</td></tr>
+            <tr><td>Solution Architect</td><td>OpenAI</td><td>Anthropic</td><td>architecture, API/data model, trade-offs, ADRs</td></tr>
+            <tr><td>Engineering Builder</td><td>Anthropic</td><td>DeepSeek</td><td>implementation, tests, refactor, repo-level coding tasks</td></tr>
+            <tr><td>Cost-efficient Coding / Spike</td><td>DeepSeek</td><td>OpenAI</td><td>prototype, migration script, algorithm/debug task, second implementation option</td></tr>
+            <tr><td>Fast Ops Assistant</td><td>MiniMax-M3</td><td>OpenAI</td><td>ticket classification, status summaries, translation/copy, routine low-risk ops</td></tr>
+            <tr><td>Spec / Code Reviewer</td><td>OpenAI</td><td>Anthropic</td><td>spec compliance, PR review, edge cases; must be separate from builder</td></tr>
+            <tr><td>Security Reviewer</td><td>OpenAI</td><td>Anthropic</td><td>threat model, auth/permission, data privacy, secrets, abuse cases</td></tr>
+            <tr><td>SRE / DevOps</td><td>OpenAI</td><td>DeepSeek</td><td>CI/CD, deployment, rollback, monitoring, runbooks</td></tr>
+            <tr><td>Analyst</td><td>Gemini</td><td>OpenAI</td><td>metrics, cohort, customer feedback synthesis, long-context analysis</td></tr>
+            <tr><td>Public / Social Intelligence</td><td>Grok</td><td>OpenAI</td><td>market pulse, X/social reactions, public narrative, trend monitoring</td></tr>
+          </tbody>
+        </table>
+        <div class="callout"><strong>Default routing:</strong> Strategy ใช้ OpenAI → Anthropic critique, Product docs ใช้ Anthropic → OpenAI critique, Coding ใช้ Anthropic/DeepSeek → OpenAI review, Research/current signals ใช้ Grok/Gemini, Routine low-risk ops ใช้ MiniMax-M3</div>
       </section>
 
       <section id="process">
@@ -706,13 +729,13 @@
         <table>
           <thead><tr><th>Step</th><th>Deliverable</th><th>Owner</th><th>Primary model</th></tr></thead>
           <tbody>
-            <tr><td>1</td><td>Company thesis + ICP</td><td>Founder</td><td>Strong reasoning</td></tr>
-            <tr><td>2</td><td>Customer interviews + competitor matrix</td><td>Founder / PM</td><td>Research + long-context</td></tr>
-            <tr><td>3</td><td>Problem statement + MVP scope</td><td>PM</td><td>Reasoning</td></tr>
-            <tr><td>4</td><td>Requirements + acceptance criteria</td><td>PM / Domain expert</td><td>Long-context reasoning</td></tr>
-            <tr><td>5</td><td>UX flow + architecture</td><td>Designer / CTO</td><td>Design + architect models</td></tr>
-            <tr><td>6</td><td>Issue plan + implementation PRs</td><td>Tech Lead</td><td>Planning + coding models</td></tr>
-            <tr><td>7</td><td>QA/security/release readiness</td><td>QA / Security / SRE</td><td>QA + security + DevOps models</td></tr>
+            <tr><td>1</td><td>Company thesis + ICP</td><td>Founder</td><td>OpenAI → Anthropic critique</td></tr>
+            <tr><td>2</td><td>Customer interviews + competitor matrix</td><td>Founder / PM</td><td>Grok + Gemini</td></tr>
+            <tr><td>3</td><td>Problem statement + MVP scope</td><td>PM</td><td>OpenAI / Anthropic</td></tr>
+            <tr><td>4</td><td>Requirements + acceptance criteria</td><td>PM / Domain expert</td><td>Anthropic → OpenAI checker</td></tr>
+            <tr><td>5</td><td>UX flow + architecture</td><td>Designer / CTO</td><td>Anthropic/Gemini + OpenAI</td></tr>
+            <tr><td>6</td><td>Issue plan + implementation PRs</td><td>Tech Lead</td><td>Anthropic + DeepSeek</td></tr>
+            <tr><td>7</td><td>QA/security/release readiness</td><td>QA / Security / SRE</td><td>OpenAI + Anthropic + DeepSeek</td></tr>
           </tbody>
         </table>
       </section>
