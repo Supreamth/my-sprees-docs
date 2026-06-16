@@ -35,8 +35,8 @@
         <p class="lead">ภาพรวมการเชื่อมต่อไปยัง GitHub, GitHub Pages, AI Models และ external APIs พร้อมสถานะล่าสุดและเวลาที่ตรวจครั้งสุดท้าย</p>
         <div class="summary-bar">
           <div class="sum-card total"><span>Total connections</span><strong>12</strong></div>
-          <div class="sum-card ok"><span>Healthy</span><strong>10</strong></div>
-          <div class="sum-card warn"><span>Degraded</span><strong>2</strong></div>
+          <div class="sum-card ok"><span>Healthy</span><strong>11</strong></div>
+          <div class="sum-card warn"><span>Degraded</span><strong>1</strong></div>
           <div class="sum-card err"><span>Down</span><strong>0</strong></div>
         </div>
       </header>
@@ -45,7 +45,7 @@
         <h2>1. Summary</h2>
         <p class="section-kicker">ภาพรวมสถานะการเชื่อมต่อ 4 หมวด: GitHub, GitHub Pages, AI Models, External APIs</p>
         <div class="callout"><strong>Update flow:</strong> หน้านี้เป็น cached/manual ต้องบอกผมว่า <code>update status</code> เพื่อให้ผมรัน health check จริง แล้ว commit ไฟล์นี้ใหม่</div>
-        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-16 20:25 UTC+7 (refresh status — model M3 active, gh CLI upgraded) — <code>2e668e7</code> (HEAD unchanged this refresh)</div>
+        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-16 20:30 UTC+7 (refresh status — gh CLI authenticated, Actions verified) — <code>8df739c</code></div>
       </section>
 
       <section id="github">
@@ -58,8 +58,8 @@
             <tr class="ok"><td>Main repo (private)</td><td><code>Supreamth/my-sprees</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 20:25</td><td>reachable via SSH ls-remote → HEAD <code>281e3a1</code> (PR #29-31 merged)</td></tr>
             <tr class="ok"><td>Docs repo (public)</td><td><code>Supreamth/my-sprees-docs</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 20:25</td><td>reachable; HEAD <code>2e668e7</code></td></tr>
             <tr class="ok"><td>SSH key</td><td><code>~/.ssh/id_ed25519_hermes_github_sandbox</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 20:25</td><td>auth confirmed (<code>Hi Supreamth!</code> on ssh -T)</td></tr>
-            <tr class="ok"><td>gh CLI</td><td><code>/usr/bin/gh</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 20:25</td><td>v2.45.0 installed; auth not configured (no <code>gh auth login</code> yet) — still DEGRADED for Actions checks, OK for binary presence</td></tr>
-            <tr class="warn"><td>GitHub Actions</td><td><code>Supreamth/my-sprees/actions</code></td><td><span class="badge warn"><span class="dot warn"></span>UNKNOWN</span></td><td>2026-06-16 20:25</td><td>workflow <code>test.yml</code> exists; last merge on main was #31 (commit <code>281e3a1</code>) — runtime status unverified: PAT has 0 scopes, <code>gh</code> not authed. Add <code>repo</code> scope PAT or run <code>gh auth login</code> to upgrade</td></tr>
+            <tr class="ok"><td>gh CLI</td><td><code>/usr/bin/gh</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 20:30</td><td>v2.45.0 + authed as <code>Supreamth</code>; scopes: <code>repo</code>, <code>workflow</code>, <code>gist</code>, <code>read:org</code></td></tr>
+            <tr class="ok"><td>GitHub Actions</td><td><code>Supreamth/my-sprees/actions</code></td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>2026-06-16 20:30</td><td>latest <code>Tests</code> run on main: <code>completed/success</code> @ <code>281e3a1</code> (post #31 merge) — <a href="https://github.com/Supreamth/my-sprees/actions/runs/27589535909">run</a></td></tr>
           </tbody>
         </table>
       </section>
