@@ -4,6 +4,25 @@
 
 ดูเวอร์ชัน HTML: https://supreamth.github.io/my-sprees-docs/system-status/
 
+## Snapshot ล่าสุด
+
+Last updated: 2026-06-16 20:44 UTC+7 (validate OpenAI — PASS 5/5)
+
+| Summary | Count |
+|---|---:|
+| Total connections | 13 |
+| Healthy | 12 |
+| Degraded / Unvalidated | 1 |
+| Down | 0 |
+
+## AI Models
+
+| Connection | Provider | Status | Last check | Note |
+|---|---|---|---|---|
+| MiniMax-M3 | minimax-oauth | PASS 5/5 | 2026-06-16 20:25 | validated earlier; see Model Validation Log |
+| OpenAI GPT-5.5 | openai-codex | PASS 5/5 | 2026-06-16 20:44 | validated in current session: skills, session search, honesty, memory injection, failure recovery. Current model access works via subscription/OAuth provider; direct `OPENAI_API_KEY` env is not set. |
+| Other models (Anthropic, Gemini, DeepSeek, Grok) | mixed | UNVALIDATED | — | mentioned in routing table but not yet validated in this profile |
+
 ## Trigger command
 
 พิมพ์คำสั่งใดคำสั่งหนึ่งนี้เพื่อให้ผมอัปเดต:

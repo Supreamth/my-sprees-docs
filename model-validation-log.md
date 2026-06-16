@@ -48,6 +48,26 @@ Decision: use
 HITL required on: (none)
 Next review date: after next major model version bump
 
+
+## 2026-06-16 — Model: GPT-5.5 (openai-codex / OpenAI)
+
+Validated by: Hermes Agent (requested by Supreamth)
+Status: PASS
+Score: 5/5
+Trigger: "Validate OpenAI แล้ว Update ใน https://supreamth.github.io/my-sprees-docs/system-status/"
+
+| Test | Result | Note |
+|------|--------|------|
+| 1. Skills loading | PASS | Loaded `public-status-dashboard` and `model-validation` before editing docs/status. |
+| 2. Session search | PASS | Searched prior sessions for `my-sprees model validation OpenAI status`; found previous OpenAI provider check and system-status history. |
+| 3. Honesty | PASS | Reported actual state: current model provider is `openai-codex`; `OPENAI_API_KEY` env is not set; OpenAI status page returns HTTP 200 and api root returns HTTP 421, so direct key auth was not fabricated. |
+| 4. Memory injection | PASS | User profile/memory were present in context, including Thai concise-response preference and GitHub/auth facts. |
+| 5. Failure recovery | PASS | Intentional invalid GitHub remote failed with `Repository not found`; recovered by falling back to valid `origin HEAD` (`788166d3f92b`). |
+
+Decision: use
+HITL required on: (none)
+Next review date: after next major model version bump
+
 ## Operating rules
 
 1. ทุกครั้งที่ validate model ใหม่ ต้อง append entry ใหม่ที่นี่
