@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Company/Product Development Playbook</title>
+  <meta name="description" content="AI-native company and product development playbook for building real systems from discovery to 1.0 and production.">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Inter:wght@500;600;700;800&display=swap');
+
+    :root {
+      color-scheme: light;
+      --bg: #f8f5ef;
+      --paper: #fffdf8;
+      --paper-strong: #ffffff;
+      --ink: #15130f;
+      --muted: #6b6258;
+      --soft: #8a8176;
+      --line: #e4dacd;
+      --accent: #2647d8;
+      --accent-2: #dd6b34;
+      --accent-soft: #eef2ff;
+      --ok: #16724c;
+      --warn: #a75d11;
+      --danger: #a53838;
+      --code: #27231e;
+      --radius: 22px;
+      --shadow: 0 22px 70px rgba(45, 34, 18, .10);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-family: "Noto Sans Thai", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(38, 71, 216, .13), transparent 32rem),
+        radial-gradient(circle at 90% 8%, rgba(221, 107, 52, .13), transparent 30rem),
+        linear-gradient(180deg, #fbf8f2 0%, var(--bg) 48%, #f4eee5 100%);
+      line-height: 1.65;
+    }
+
+    a { color: inherit; }
+    code, pre { font-family: var(--mono); }
+    code {
+      background: #f0e8dc;
+      border: 1px solid #e2d5c3;
+      border-radius: 7px;
+      padding: .1rem .35rem;
+      font-size: .92em;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 304px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px 22px;
+      border-right: 1px solid rgba(218, 206, 190, .9);
+      background: rgba(255, 253, 248, .78);
+      backdrop-filter: blur(18px);
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #16297e);
+      box-shadow: 0 14px 30px rgba(38, 71, 216, .25);
+    }
+    .brand strong { display: block; line-height: 1.12; }
+    .brand span { color: var(--muted); font-size: .88rem; }
+
+    .nav-label {
+      margin: 22px 0 8px;
+      color: var(--soft);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    nav a {
+      display: block;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 11px;
+      margin: 1px 0;
+      font-size: .91rem;
+      line-height: 1.35;
+    }
+    nav a:hover, nav a:focus-visible {
+      color: var(--ink);
+      background: #f0e8dc;
+      outline: none;
+    }
+
+    main { padding: 42px min(5vw, 76px) 84px; }
+    .hero {
+      max-width: 1180px;
+      padding: clamp(30px, 4vw, 60px);
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 10px);
+      background: rgba(255, 253, 248, .86);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -110px -160px auto;
+      width: 380px;
+      height: 380px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(38, 71, 216, .14), transparent 66%);
+      pointer-events: none;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+      font-size: .78rem;
+    }
+    h1 {
+      margin: 12px 0 14px;
+      font-family: Inter, "Noto Sans Thai", sans-serif;
+      font-size: clamp(2.25rem, 5.2vw, 5.15rem);
+      line-height: 1.02;
+      letter-spacing: -.06em;
+      text-wrap: balance;
+    }
+    .lead {
+      max-width: 890px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 1.5vw, 1.26rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 15px;
+      border-radius: 999px;
+      text-decoration: none;
+      border: 1px solid var(--line);
+      background: var(--paper-strong);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .btn.primary { background: var(--ink); color: white; border-color: var(--ink); }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .stat {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--paper-strong);
+    }
+    .stat span { display: block; color: var(--muted); font-size: .82rem; }
+    .stat strong { display: block; margin-top: 4px; font-size: 1rem; }
+
+    section {
+      max-width: 1180px;
+      margin-top: 28px;
+      padding: clamp(22px, 3.1vw, 40px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .84);
+      box-shadow: 0 10px 34px rgba(45, 34, 18, .06);
+    }
+    section h2 {
+      margin: 0 0 9px;
+      font-family: Inter, "Noto Sans Thai", sans-serif;
+      font-size: clamp(1.55rem, 2.4vw, 2.35rem);
+      line-height: 1.1;
+      letter-spacing: -.04em;
+    }
+    section h3 { margin: 24px 0 8px; font-size: 1.12rem; }
+    .section-kicker { margin: 0; color: var(--muted); max-width: 850px; }
+
+    .principles, .cards, .models, .templates, .gates {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .principles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .models { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .templates { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .gates { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card, .principle, .model, .gate {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffaf2;
+      padding: 16px;
+    }
+    .principle strong, .card strong, .model strong, .gate strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .principle p, .card p, .model p, .gate p { margin: 0; color: var(--muted); }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #cfdaff;
+      background: var(--accent-soft);
+      color: #1d369f;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: .78rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .phase {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .phase:last-child { border-bottom: none; padding-bottom: 0; }
+    .phase-no {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: var(--ink);
+      color: white;
+      font-weight: 800;
+      font-size: 1.22rem;
+      box-shadow: 0 12px 26px rgba(21, 19, 15, .16);
+    }
+    .phase h3 { margin-top: 0; }
+    .phase-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .meta {
+      border: 1px solid #e5dacb;
+      border-radius: 14px;
+      padding: 12px;
+      background: var(--paper);
+    }
+    .meta span {
+      display: block;
+      color: var(--soft);
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 4px;
+    }
+    .meta p { margin: 0; color: var(--muted); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 18px;
+      overflow: hidden;
+      border-radius: 16px;
+      font-size: .94rem;
+    }
+    th, td { border-bottom: 1px solid var(--line); padding: 12px 10px; text-align: left; vertical-align: top; }
+    th { background: #f4ede3; color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+    tr:last-child td { border-bottom: none; }
+
+    .callout {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid #cfdaff;
+      border-radius: 18px;
+      background: #f1f5ff;
+    }
+    .callout strong { color: #1d369f; }
+    .warning { background: #fff8ea; border-color: #efd6a8; }
+    .warning strong { color: var(--warn); }
+
+    .flow {
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf8;
+      overflow: auto;
+    }
+    .flow-line {
+      min-width: 900px;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(110px, 1fr));
+      gap: 9px;
+      align-items: stretch;
+    }
+    .flow-step {
+      min-height: 74px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 1px solid #dcd0be;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffffff, #fbf6ed);
+      color: var(--code);
+      font-weight: 800;
+      padding: 8px;
+      font-size: .9rem;
+    }
+
+    .checklist {
+      columns: 2;
+      column-gap: 28px;
+      margin-top: 16px;
+    }
+    .checklist li { break-inside: avoid; margin-bottom: 8px; }
+
+    .footer-note {
+      max-width: 1180px;
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .top-link {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: var(--ink);
+      color: white;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 1080px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+      nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 8px; }
+      main { padding: 24px 16px 70px; }
+      .status-grid, .principles, .cards, .models, .templates, .gates, .phase-meta { grid-template-columns: 1fr; }
+      .phase { grid-template-columns: 1fr; }
+      .checklist { columns: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout" id="top">
+    <aside>
+      <div class="brand">
+        <div class="mark">OS</div>
+        <div>
+          <strong>Company Playbook</strong>
+          <span>AI-native product development</span>
+        </div>
+      </div>
+      <div class="nav-label">Overview</div>
+      <nav aria-label="Page navigation">
+        <a href="#principles">1. หลักการ</a>
+        <a href="#models">2. Model roles</a>
+        <a href="#process">3. End-to-end process</a>
+        <a href="#gates">4. Decision gates</a>
+        <a href="#templates">5. Required templates</a>
+        <a href="#operating-rules">6. AI operating rules</a>
+        <a href="#first-system">7. First system checklist</a>
+        <a href="../company-playbook.md">Markdown source</a>
+        <a href="../">Back to system map</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div class="eyebrow">Company/Product Development Playbook</div>
+        <h1>Process มาตรฐานก่อนสั่ง AI หรือทีม dev ให้สร้างระบบจริง</h1>
+        <p class="lead">เอกสารนี้เป็น operating system สำหรับบริษัทที่ต้องการใช้ AI อย่างเป็นระบบ ตั้งแต่ company thesis, customer discovery, requirements, PRD, UX, architecture, delivery, QA/security, release ไปจนถึง feedback loop หลัง production</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#process">เริ่มอ่าน Process</a>
+          <a class="btn" href="#models">ดูว่าใช้ Model ไหนกับงานอะไร</a>
+          <a class="btn" href="../company-playbook.md">เปิด Markdown source</a>
+        </div>
+        <div class="status-grid">
+          <div class="stat"><span>Audience</span><strong>Founder / PM / CTO</strong></div>
+          <div class="stat"><span>Scope</span><strong>Idea → Production</strong></div>
+          <div class="stat"><span>AI posture</span><strong>Maker + Checker</strong></div>
+          <div class="stat"><span>Use before</span><strong>Starting development</strong></div>
+        </div>
+      </header>
+
+      <section id="principles">
+        <h2>1. หลักการสำคัญ</h2>
+        <p class="section-kicker">ถ้าจะสร้างบริษัทจริง อย่าเริ่มจากการให้ AI เขียน code ทันที ให้เริ่มจากความชัดของปัญหา ลูกค้า และ acceptance criteria ก่อน</p>
+        <div class="principles">
+          <div class="principle"><span class="tag">01</span><strong>Problem before code</strong><p>เริ่มจากปัญหาและลูกค้า ไม่ใช่ feature list หรือ framework</p></div>
+          <div class="principle"><span class="tag">02</span><strong>Artifact-driven</strong><p>ทุก phase ต้องมีเอกสารหรือ artifact ที่ตรวจ ตัดสินใจ และส่งต่อได้</p></div>
+          <div class="principle"><span class="tag">03</span><strong>Maker ≠ Checker</strong><p>Model ที่เขียนงานไม่ควรเป็น model เดียวกับที่ approve งานตัวเอง</p></div>
+          <div class="principle"><span class="tag">04</span><strong>Human decision owner</strong><p>AI ช่วยคิดและทำ แต่ strategy, security, release และ scope ต้องมีคนรับผิดชอบ</p></div>
+          <div class="principle"><span class="tag">05</span><strong>Acceptance criteria required</strong><p>Requirement สำคัญต้องวัดได้ ทดสอบได้ หรือสังเกตได้</p></div>
+          <div class="principle"><span class="tag">06</span><strong>No release without rollback</strong><p>Production ต้องมี monitoring, incident owner และ rollback/containment plan</p></div>
+        </div>
+      </section>
+
+      <section id="models">
+        <h2>2. AI Model Roles</h2>
+        <p class="section-kicker">เลือก model ตามงาน ไม่ใช่ใช้ model เดียวทำทุกอย่าง บริษัท AI-native ที่ดีควรแยกบทบาทระหว่าง strategist, researcher, product, architect, builder, reviewer และ security</p>
+        <div class="models">
+          <div class="model"><strong>Strategist</strong><p>Company thesis, positioning, business model<br><code>strongest reasoning model</code></p></div>
+          <div class="model"><strong>Researcher</strong><p>Market, competitors, APIs, vendors<br><code>web/research-enabled model</code></p></div>
+          <div class="model"><strong>Product Manager</strong><p>PRD, requirements, scope, roadmap<br><code>long-context reasoning model</code></p></div>
+          <div class="model"><strong>UX Designer</strong><p>User flows, wireframes, copy, states<br><code>design/vision-capable model</code></p></div>
+          <div class="model"><strong>Architect</strong><p>Architecture, data model, API contracts<br><code>strong reasoning model</code></p></div>
+          <div class="model"><strong>Builder</strong><p>Implementation, tests, refactor<br><code>coding-specialized model</code></p></div>
+          <div class="model"><strong>Reviewer</strong><p>Spec compliance, code review, QA review<br><code>separate reviewer model</code></p></div>
+          <div class="model"><strong>Security Reviewer</strong><p>Threat model, auth, permission, data risk<br><code>security-focused reasoning model</code></p></div>
+          <div class="model"><strong>SRE / Analyst</strong><p>Deploy, monitoring, metrics, feedback<br><code>DevOps + data-analysis models</code></p></div>
+        </div>
+        <div class="warning callout"><strong>Rule:</strong> อย่าให้ model ที่สร้างงานเป็นคนอนุมัติงานตัวเอง โดยเฉพาะ code, architecture, security และ release</div>
+      </section>
+
+      <section id="process">
+        <h2>3. End-to-end Process</h2>
+        <p class="section-kicker">ลำดับการทำงานที่แนะนำก่อนและระหว่างการพัฒนาระบบจริง ตั้งแต่ idea จนถึง feedback loop หลัง launch</p>
+        <div class="flow" aria-label="Process flow">
+          <div class="flow-line">
+            <div class="flow-step">Idea</div>
+            <div class="flow-step">Discovery</div>
+            <div class="flow-step">Requirements</div>
+            <div class="flow-step">PRD / UX</div>
+            <div class="flow-step">Architecture</div>
+            <div class="flow-step">Build / QA</div>
+            <div class="flow-step">Release / Learn</div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">0</div>
+          <div>
+            <h3>Company / Business Intent</h3>
+            <p>นิยามว่าบริษัทนี้ควรมีอยู่ทำไม ลูกค้าเป็นใคร หาเงินจากอะไร และถ้าสำเร็จใน 12 เดือนจะหน้าตาเป็นอย่างไร</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p><code>company-thesis.md</code>, <code>business-model.md</code>, <code>initial-icp.md</code></p></div>
+              <div class="meta"><span>Model</span><p>Strongest reasoning model + critique model</p></div>
+              <div class="meta"><span>Exit gate</span><p>อธิบาย thesis ได้ใน 3-5 ประโยค และมี ICP แรก</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">1</div>
+          <div>
+            <h3>Market & Customer Discovery</h3>
+            <p>พิสูจน์ว่าปัญหามีอยู่จริง มีคนเจ็บจริง และมีเหตุผลให้จ่ายหรือเปลี่ยน workflow เดิม</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p>Interview notes, competitor matrix, pain-point ranking, market map</p></div>
+              <div class="meta"><span>Model</span><p>Web/research model + long-context summarizer + reasoning analyst</p></div>
+              <div class="meta"><span>Exit gate</span><p>มี pain point ซ้ำและรู้ current alternatives</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">2</div>
+          <div>
+            <h3>Problem Definition</h3>
+            <p>นิยาม problem ให้คม แยก symptom, root cause, target user และ desired outcome ก่อนคิด solution</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p><code>problem-statement.md</code>, current workflow, validation summary</p></div>
+              <div class="meta"><span>Model</span><p>Strong reasoning model เพื่อ challenge assumptions</p></div>
+              <div class="meta"><span>Exit gate</span><p>problem statement ชัดใน 3 ประโยค</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">3</div>
+          <div>
+            <h3>Product Strategy</h3>
+            <p>กำหนด target customer แรก, MVP scope, differentiation, pricing hypothesis, success metrics และ non-goals</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p><code>product-strategy.md</code>, <code>mvp-scope.md</code>, <code>non-goals.md</code></p></div>
+              <div class="meta"><span>Model</span><p>Reasoning model + multi-model debate</p></div>
+              <div class="meta"><span>Exit gate</span><p>MVP เล็กพอจะทำได้ แต่มีค่าพอจะทดสอบ/ขาย</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">4</div>
+          <div>
+            <h3>Requirement Discovery</h3>
+            <p>แปลง strategy เป็น business, user, functional, non-functional, compliance requirements และ out-of-scope</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p><code>requirements.md</code>, user stories, acceptance criteria, risks</p></div>
+              <div class="meta"><span>Model</span><p>Long-context reasoning model + domain expert review</p></div>
+              <div class="meta"><span>Exit gate</span><p>ทุก requirement สำคัญมี acceptance criteria</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">5</div>
+          <div>
+            <h3>PRD</h3>
+            <p>ทำเอกสารกลางที่ business, product, design, engineering และ QA อ่านตรงกัน</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p><code>prd.md</code> พร้อม goals, non-goals, journeys, requirements, acceptance criteria</p></div>
+              <div class="meta"><span>Model</span><p>Reasoning/writing model draft + separate critique model</p></div>
+              <div class="meta"><span>Exit gate</span><p>รู้ว่า build อะไร ไม่ build อะไร และวัด done ยังไง</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">6</div>
+          <div>
+            <h3>UX / Workflow Design</h3>
+            <p>ออกแบบ user journey, screen flow, wireframe, empty/loading/error/success states, admin และ permission flow</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p><code>user-flows.md</code>, wireframes, UX spec, error catalog</p></div>
+              <div class="meta"><span>Model</span><p>Design/vision model + reasoning model for edge states</p></div>
+              <div class="meta"><span>Exit gate</span><p>happy path และ major error paths ชัดก่อน dev</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">7</div>
+          <div>
+            <h3>Technical Discovery</h3>
+            <p>ตรวจ integration, data sources, auth, infrastructure, legacy constraints, scale, vendor/API risk และทำ spike ถ้ามี unknown ใหญ่</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p>Technical discovery, integration inventory, spike results</p></div>
+              <div class="meta"><span>Model</span><p>Architect model + research model + coding model for spike</p></div>
+              <div class="meta"><span>Exit gate</span><p>unknown ใหญ่ถูกพิสูจน์หรือมี mitigation plan</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">8</div>
+          <div>
+            <h3>Architecture & System Design</h3>
+            <p>กำหนด system architecture, data model, API contract, auth/permission, observability, deployment, security และ rollback posture</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p><code>architecture.md</code>, ADRs, API contract, threat model, observability plan</p></div>
+              <div class="meta"><span>Model</span><p>Strong reasoning architect + security/scale/cost reviewers</p></div>
+              <div class="meta"><span>Exit gate</span><p>architecture ผ่าน review ก่อนเริ่ม implementation ใหญ่</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">9</div>
+          <div>
+            <h3>Delivery Planning</h3>
+            <p>แตกงานเป็น epic, milestone, issue และ PR เล็กๆ พร้อม acceptance criteria, test plan, dependencies และ Definition of Done</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p><code>delivery-plan.md</code>, implementation plan, issue backlog, test plan</p></div>
+              <div class="meta"><span>Model</span><p>Planning/reasoning model + coding-aware model</p></div>
+              <div class="meta"><span>Exit gate</span><p>ไม่มี issue กว้างแบบ “build dashboard”</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">10</div>
+          <div>
+            <h3>Implementation</h3>
+            <p>พัฒนาแบบ controlled: branch from main, TDD where practical, small PRs, CI, review, merge, post-merge verification</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p>Code, tests, PR, review notes, CI result, changelog</p></div>
+              <div class="meta"><span>Model</span><p>Coding model as builder + separate reviewer model</p></div>
+              <div class="meta"><span>Exit gate</span><p>tests pass, criteria covered, review approved</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">11</div>
+          <div>
+            <h3>QA / Security / Compliance</h3>
+            <p>พิสูจน์ว่าระบบพร้อมใช้งานจริง ครอบคลุม unit/integration/E2E/performance/accessibility/security/compliance</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p>QA report, security review, risk register, compliance checklist</p></div>
+              <div class="meta"><span>Model</span><p>QA model + security-focused model + human expert</p></div>
+              <div class="meta"><span>Exit gate</span><p>known risks accepted by human owner</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">12</div>
+          <div>
+            <h3>Release / Operations</h3>
+            <p>ปล่อยระบบโดยควบคุม risk ด้วย deployment plan, rollback, monitoring, alerts, runbook และ incident playbook</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p>Release checklist, rollback plan, runbook, monitoring dashboard</p></div>
+              <div class="meta"><span>Model</span><p>DevOps/SRE model + reasoning model for release risk</p></div>
+              <div class="meta"><span>Exit gate</span><p>deploy, monitoring, alert, rollback และ owner ชัด</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-no">13</div>
+          <div>
+            <h3>Feedback Loop / Iteration</h3>
+            <p>เก็บ usage analytics, conversion, retention, error rate, support tickets, sales feedback และ churn reasons เพื่อวาง iteration ถัดไป</p>
+            <div class="phase-meta">
+              <div class="meta"><span>Artifacts</span><p>Analytics report, feedback summary, next iteration backlog</p></div>
+              <div class="meta"><span>Model</span><p>Data-analysis model + long-context summarizer + prioritization model</p></div>
+              <div class="meta"><span>Exit gate</span><p>next iteration ผูกกับ metric หรือ customer learning</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="gates">
+        <h2>4. Decision Gates</h2>
+        <p class="section-kicker">ใช้ gate เหล่านี้เป็นจุดห้ามข้าม ถ้ายังไม่ผ่าน อย่าเร่งให้ dev หรือ AI เริ่มสร้างระบบจริง</p>
+        <div class="gates">
+          <div class="gate"><strong>Start discovery</strong><p>มี ICP draft และ interview plan</p></div>
+          <div class="gate"><strong>Start PRD</strong><p>มี validated problem และ customer evidence</p></div>
+          <div class="gate"><strong>Start design</strong><p>มี PRD draft และ primary workflows</p></div>
+          <div class="gate"><strong>Start architecture</strong><p>มี PRD, UX flow และ technical constraints</p></div>
+          <div class="gate"><strong>Start implementation</strong><p>มี approved PRD, architecture, acceptance criteria และ test plan</p></div>
+          <div class="gate"><strong>Merge PR</strong><p>tests, review และ criteria coverage ผ่าน</p></div>
+          <div class="gate"><strong>Release</strong><p>QA, security, rollback และ monitoring พร้อม</p></div>
+          <div class="gate"><strong>Iterate</strong><p>มี analytics/feedback และ prioritized learning</p></div>
+        </div>
+      </section>
+
+      <section id="templates">
+        <h2>5. Required Templates</h2>
+        <p class="section-kicker">สำหรับ startup ระยะแรก ให้มีเอกสารขั้นต่ำชุดนี้ก่อนเริ่มระบบจริงทุกระบบ</p>
+        <div class="templates">
+          <div class="card"><strong>Business / Product</strong><p><code>company-thesis.md</code><br><code>problem-statement.md</code><br><code>product-strategy.md</code><br><code>prd.md</code><br><code>requirements.md</code></p></div>
+          <div class="card"><strong>Design / Engineering</strong><p><code>user-flows.md</code><br><code>architecture.md</code><br><code>delivery-plan.md</code><br><code>test-plan.md</code><br><code>release-checklist.md</code></p></div>
+          <div class="card"><strong>Risk / Governance</strong><p><code>security-checklist.md</code><br><code>decision-log.md</code><br><code>risk-register.md</code><br><code>compliance-checklist.md</code></p></div>
+          <div class="card"><strong>Recommended repo layout</strong><p><code>docs/company/</code> for operating model<br><code>docs/product/</code> for PRD and requirements<br><code>docs/engineering/</code> for architecture and runbooks</p></div>
+        </div>
+      </section>
+
+      <section id="operating-rules">
+        <h2>6. AI Operating Rules</h2>
+        <p class="section-kicker">กฎสำหรับใช้ AI ในบริษัทจริงเพื่อให้ได้ velocity โดยไม่เสีย control</p>
+        <ol class="checklist">
+          <li><strong>Separate maker and checker:</strong> builder model เขียน, reviewer model ตรวจ, human approve เรื่องสำคัญ</li>
+          <li><strong>Use model by task:</strong> strategy ใช้ reasoning, research ใช้ web, code ใช้ coding, security ใช้ security-focused</li>
+          <li><strong>Never skip artifacts:</strong> ถ้าไม่เขียนเป็นเอกสาร ทีมจะไม่ aligned</li>
+          <li><strong>No production without rollback:</strong> ทุก release ต้องมีทางถอยหรือ containment plan</li>
+          <li><strong>No requirement without acceptance criteria:</strong> ถ้าวัดไม่ได้ ยังไม่พร้อม implement</li>
+          <li><strong>Record decisions:</strong> ใช้ ADRs และ decision log เพื่อไม่ต้องถกเรื่องเดิมซ้ำ</li>
+          <li><strong>Small PRs:</strong> ลด risk, review ง่าย, rollback ง่าย</li>
+          <li><strong>Human owns risk:</strong> AI ช่วยเสนอ แต่คนรับผิดชอบ security, legal, release และ pricing</li>
+        </ol>
+      </section>
+
+      <section id="first-system">
+        <h2>7. First System Checklist</h2>
+        <p class="section-kicker">ก่อนเริ่มสั่งพัฒนาระบบแรกของบริษัท ให้สร้าง docs repository หรือ folder มาตรฐาน แล้วบังคับทุก product idea ผ่าน flow นี้</p>
+        <div class="callout"><strong>Recommended sequence:</strong> Idea → Discovery → Problem → Strategy → Requirements → PRD → UX → Architecture → Delivery Plan → Implementation → QA/Security → Release → Feedback</div>
+        <table>
+          <thead><tr><th>Step</th><th>Deliverable</th><th>Owner</th><th>Primary model</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Company thesis + ICP</td><td>Founder</td><td>Strong reasoning</td></tr>
+            <tr><td>2</td><td>Customer interviews + competitor matrix</td><td>Founder / PM</td><td>Research + long-context</td></tr>
+            <tr><td>3</td><td>Problem statement + MVP scope</td><td>PM</td><td>Reasoning</td></tr>
+            <tr><td>4</td><td>Requirements + acceptance criteria</td><td>PM / Domain expert</td><td>Long-context reasoning</td></tr>
+            <tr><td>5</td><td>UX flow + architecture</td><td>Designer / CTO</td><td>Design + architect models</td></tr>
+            <tr><td>6</td><td>Issue plan + implementation PRs</td><td>Tech Lead</td><td>Planning + coding models</td></tr>
+            <tr><td>7</td><td>QA/security/release readiness</td><td>QA / Security / SRE</td><td>QA + security + DevOps models</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <p class="footer-note">This page is a web version of <a href="../company-playbook.md"><code>company-playbook.md</code></a>. Keep the Markdown as the reviewable source and this page as the easy-to-read web document.</p>
+    </main>
+  </div>
+  <a class="top-link" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>
