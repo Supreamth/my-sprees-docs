@@ -6,7 +6,7 @@
 
 ## Snapshot ล่าสุด
 
-Last updated: 2026-06-17 14:12 UTC+7 (show 1/7/15/30-day token usage)
+Last updated: 2026-06-17 14:51 UTC+7 (clarify OpenRouter optional/not connected)
 
 | Summary | Count |
 |---|---:|
@@ -43,7 +43,7 @@ python3 scripts/check_model_credit_usage.py --days 30 --format markdown
 | Provider / Source | Method | Status | Note |
 |---|---|---|---|
 | Hermes local usage | `hermes insights --days 30` | READY | session/token usage ในเครื่อง ไม่ใช่ provider billing |
-| OpenRouter | `OPENROUTER_API_KEY` → `/api/v1/credits` | READY | credit/usage/remaining |
+| OpenRouter | `OPENROUTER_API_KEY` → `/api/v1/credits` | OPTIONAL / NOT CONNECTED | ตอนนี้ไม่มี key; เป็น capability เผื่อเปิดใช้ภายหลัง ไม่ใช่ connection ปัจจุบัน |
 | DeepSeek | `DEEPSEEK_API_KEY` → `/user/balance` | READY | balance by currency |
 | OpenAI API | `OPENAI_ADMIN_KEY` หรือ `OPENAI_API_KEY` → costs endpoint | KEY-DEPENDENT | Codex/OAuth subscription อาจไม่มี billing API |
 | Anthropic, Gemini, xAI/Grok, MiniMax OAuth | provider console / admin API | MANUAL | ต้องเช็คผ่าน portal หรือเพิ่ม admin API ภายหลัง |

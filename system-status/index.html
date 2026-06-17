@@ -46,7 +46,7 @@
         <h2>1. Summary</h2>
         <p class="section-kicker">ภาพรวมสถานะการเชื่อมต่อ 5 หมวด: GitHub, GitHub Pages, AI Models, Model Credit & Usage, External APIs</p>
         <div class="callout"><strong>Update flow:</strong> หน้านี้เป็น cached/manual ต้องบอกผมว่า <code>update status</code> เพื่อให้ผมรัน health check จริง แล้ว commit ไฟล์นี้ใหม่</div>
-        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-17 14:12 UTC+7 (show 1/7/15/30-day token usage)</div>
+        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-17 14:51 UTC+7 (clarify OpenRouter optional/not connected)</div>
       </section>
 
       <section id="github">
@@ -103,7 +103,7 @@
           <thead><tr><th>Provider / Source</th><th>Check method</th><th>Status</th><th>Safe output</th><th>Note</th></tr></thead>
           <tbody>
             <tr class="ok"><td>Hermes local usage</td><td><code>hermes insights --days 30</code></td><td><span class="badge ok"><span class="dot ok"></span>READY</span></td><td>token/session usage summary</td><td>ใช้ดู usage จาก session DB ภายในเครื่อง ไม่ใช่ billing credit ของ provider</td></tr>
-            <tr class="ok"><td>OpenRouter</td><td><code>OPENROUTER_API_KEY</code> → <code>/api/v1/credits</code></td><td><span class="badge ok"><span class="dot ok"></span>READY</span></td><td>total credits, total usage, remaining</td><td>เหมาะสุดสำหรับ credit API แบบตรงไปตรงมา</td></tr>
+            <tr class="warn"><td>OpenRouter</td><td><code>OPENROUTER_API_KEY</code> → <code>/api/v1/credits</code></td><td><span class="badge warn"><span class="dot warn"></span>OPTIONAL / NOT CONNECTED</span></td><td>total credits, total usage, remaining เมื่อมี key</td><td>ตอนนี้ไม่มี <code>OPENROUTER_API_KEY</code>; แสดงไว้เป็น capability เผื่อเปิดใช้ภายหลัง ไม่ใช่ connection ปัจจุบัน</td></tr>
             <tr class="ok"><td>DeepSeek</td><td><code>DEEPSEEK_API_KEY</code> → <code>/user/balance</code></td><td><span class="badge ok"><span class="dot ok"></span>READY</span></td><td>balance by currency</td><td>แสดงยอดคงเหลือโดยไม่เปิดเผย key</td></tr>
             <tr class="warn"><td>OpenAI API</td><td><code>OPENAI_ADMIN_KEY</code> หรือ <code>OPENAI_API_KEY</code> → costs endpoint</td><td><span class="badge warn"><span class="dot warn"></span>KEY-DEPENDENT</span></td><td>cost usage window</td><td>Codex/OAuth subscription อาจใช้ model ได้ แต่ไม่จำเป็นต้องมี billing API key</td></tr>
             <tr class="warn"><td>Anthropic, Gemini, xAI/Grok, MiniMax OAuth</td><td>provider console / admin API / OAuth portal</td><td><span class="badge warn"><span class="dot warn"></span>MANUAL</span></td><td>manual status note</td><td>ยังไม่มี credit endpoint ที่ปลอดภัยและตั้งค่าไว้ใน profile นี้</td></tr>
