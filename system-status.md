@@ -6,7 +6,7 @@
 
 ## Snapshot ล่าสุด
 
-Last updated: 2026-06-17 13:25 UTC+7 (added Model Credit & Usage function)
+Last updated: 2026-06-17 14:06 UTC+7 (show Hermes usage numbers)
 
 | Summary | Count |
 |---|---:|
@@ -52,11 +52,19 @@ python3 scripts/check_model_credit_usage.py --days 30 --format markdown
 
 | Provider | Status | Credit remaining | Usage | Note |
 |---|---|---:|---:|---|
-| Hermes local usage | OK | — | available via `hermes insights --days 30` | verified 2026-06-17 13:28 UTC+7 |
+| Hermes local usage | OK | — | 40 sessions / 5,274 messages / 193,562,417 total tokens over Jun 13–17 | verified 2026-06-17 14:06 UTC+7 via `hermes insights --days 30` |
 | OpenRouter | MISSING_KEY | — | — | `OPENROUTER_API_KEY` not set in this runtime |
 | OpenAI API | MISSING_KEY | — | — | Current OpenAI access is Codex/OAuth; billing API key not set |
 | DeepSeek | MISSING_KEY | — | — | `DEEPSEEK_API_KEY` not set in this runtime |
 | Anthropic, Gemini, xAI/Grok, MiniMax OAuth | MANUAL | — | — | ต้องเช็คผ่าน provider console หรือเพิ่ม admin API ในอนาคต |
+
+### Hermes usage by model (last 30 days)
+
+| Model | Sessions | Tokens | Note |
+|---|---:|---:|---|
+| gpt-5.5 | 34 | 187,504,080 | local Hermes session/token usage, not provider billing credit |
+| MiniMax-M3 | 4 | 6,058,337 | local Hermes session/token usage, not provider billing credit |
+| claude-sonnet-4-6 | 2 | 0 | session count recorded; token count unavailable/zero in local insights |
 
 ## Trigger command
 

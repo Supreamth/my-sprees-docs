@@ -46,7 +46,7 @@
         <h2>1. Summary</h2>
         <p class="section-kicker">ภาพรวมสถานะการเชื่อมต่อ 5 หมวด: GitHub, GitHub Pages, AI Models, Model Credit & Usage, External APIs</p>
         <div class="callout"><strong>Update flow:</strong> หน้านี้เป็น cached/manual ต้องบอกผมว่า <code>update status</code> เพื่อให้ผมรัน health check จริง แล้ว commit ไฟล์นี้ใหม่</div>
-        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-17 13:25 UTC+7 (added Model Credit & Usage function)</div>
+        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-17 14:06 UTC+7 (show Hermes usage numbers)</div>
       </section>
 
       <section id="github">
@@ -114,11 +114,21 @@
         <table class="conn-table">
           <thead><tr><th>Provider</th><th>Status</th><th>Credit remaining</th><th>Usage</th><th>Note</th></tr></thead>
           <tbody>
-            <tr class="ok"><td>Hermes local usage</td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>—</td><td>available via <code>hermes insights --days 30</code></td><td>verified 2026-06-17 13:28 UTC+7</td></tr>
+            <tr class="ok"><td>Hermes local usage</td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>—</td><td>40 sessions / 5,274 messages / 193,562,417 total tokens over Jun 13–17</td><td>verified 2026-06-17 14:06 UTC+7 via <code>hermes insights --days 30</code></td></tr>
             <tr class="warn"><td>OpenRouter</td><td><span class="badge warn"><span class="dot warn"></span>MISSING_KEY</span></td><td>—</td><td>—</td><td><code>OPENROUTER_API_KEY</code> not set in this runtime</td></tr>
             <tr class="warn"><td>OpenAI API</td><td><span class="badge warn"><span class="dot warn"></span>MISSING_KEY</span></td><td>—</td><td>—</td><td>Current OpenAI access is Codex/OAuth; billing API key not set</td></tr>
             <tr class="warn"><td>DeepSeek</td><td><span class="badge warn"><span class="dot warn"></span>MISSING_KEY</span></td><td>—</td><td>—</td><td><code>DEEPSEEK_API_KEY</code> not set in this runtime</td></tr>
             <tr class="warn"><td>Anthropic, Gemini, xAI/Grok, MiniMax OAuth</td><td><span class="badge warn"><span class="dot warn"></span>MANUAL</span></td><td>—</td><td>—</td><td>ต้องเช็คผ่าน provider console หรือเพิ่ม admin API ในอนาคต</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Hermes usage by model (last 30 days)</h3>
+        <table class="conn-table">
+          <thead><tr><th>Model</th><th>Sessions</th><th>Tokens</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr class="ok"><td>gpt-5.5</td><td>34</td><td>187,504,080</td><td>local Hermes session/token usage, not provider billing credit</td></tr>
+            <tr class="ok"><td>MiniMax-M3</td><td>4</td><td>6,058,337</td><td>local Hermes session/token usage, not provider billing credit</td></tr>
+            <tr class="warn"><td>claude-sonnet-4-6</td><td>2</td><td>0</td><td>session count recorded; token count unavailable/zero in local insights</td></tr>
           </tbody>
         </table>
         <h3>Run command</h3>
