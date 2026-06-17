@@ -21,8 +21,9 @@
         <a href="#github">2. GitHub</a>
         <a href="#pages">3. GitHub Pages</a>
         <a href="#models">4. AI Models</a>
-        <a href="#external">5. External APIs</a>
-        <a href="#how-to-update">6. How to update</a>
+        <a href="#model-credit-usage">5. Model Credit & Usage</a>
+        <a href="#external">6. External APIs</a>
+        <a href="#how-to-update">7. How to update</a>
         <a href="../context-handoff/">Context Handoff</a>
         <a href="../company-playbook/">Company Playbook</a>
         <a href="../">Back to system map</a>
@@ -32,7 +33,7 @@
       <header class="hero">
         <div class="eyebrow">System Status Dashboard</div>
         <h1>เช็คการเชื่อมต่อทั้งหมดในระบบ</h1>
-        <p class="lead">ภาพรวมการเชื่อมต่อไปยัง GitHub, GitHub Pages, AI Models และ external APIs พร้อมสถานะล่าสุดและเวลาที่ตรวจครั้งสุดท้าย</p>
+        <p class="lead">ภาพรวมการเชื่อมต่อไปยัง GitHub, GitHub Pages, AI Models, Model Credit & Usage และ external APIs พร้อมสถานะล่าสุดและเวลาที่ตรวจครั้งสุดท้าย</p>
         <div class="summary-bar">
           <div class="sum-card total"><span>Total connections</span><strong>13</strong></div>
           <div class="sum-card ok"><span>Healthy</span><strong>12</strong></div>
@@ -43,9 +44,9 @@
 
       <section id="summary">
         <h2>1. Summary</h2>
-        <p class="section-kicker">ภาพรวมสถานะการเชื่อมต่อ 4 หมวด: GitHub, GitHub Pages, AI Models, External APIs</p>
+        <p class="section-kicker">ภาพรวมสถานะการเชื่อมต่อ 5 หมวด: GitHub, GitHub Pages, AI Models, Model Credit & Usage, External APIs</p>
         <div class="callout"><strong>Update flow:</strong> หน้านี้เป็น cached/manual ต้องบอกผมว่า <code>update status</code> เพื่อให้ผมรัน health check จริง แล้ว commit ไฟล์นี้ใหม่</div>
-        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-16 20:44 UTC+7 (validate OpenAI — PASS 5/5, openai-codex subscription/OAuth)</div>
+        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-17 13:25 UTC+7 (added Model Credit & Usage function)</div>
       </section>
 
       <section id="github">
@@ -92,8 +93,42 @@
         <div class="callout"><strong>Validation policy:</strong> ทุก model ใหม่ที่จะใช้กับงานจริงต้องผ่าน 5 ข้อใน <a href="../context-handoff/#validation">Model Validation</a> และบันทึกลง Model Validation Log</div>
       </section>
 
+
+
+      <section id="model-credit-usage">
+        <h2>5. Model Credit &amp; Usage</h2>
+        <p class="section-kicker">Function สำหรับเช็คเครดิตคงเหลือและ usage ของ model providers แบบไม่เอา secret ไปฝังใน GitHub Pages</p>
+        <div class="callout warn-callout"><strong>Security rule:</strong> หน้านี้เป็น static public site จึงห้ามใส่ API key / OAuth token ใน HTML หรือ JavaScript ฝั่ง browser ให้รัน checker จากเครื่อง/Actions ที่มี secrets แล้วอัปเดตเฉพาะผลลัพธ์ที่ปลอดภัย</div>
+        <table class="conn-table">
+          <thead><tr><th>Provider / Source</th><th>Check method</th><th>Status</th><th>Safe output</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr class="ok"><td>Hermes local usage</td><td><code>hermes insights --days 30</code></td><td><span class="badge ok"><span class="dot ok"></span>READY</span></td><td>token/session usage summary</td><td>ใช้ดู usage จาก session DB ภายในเครื่อง ไม่ใช่ billing credit ของ provider</td></tr>
+            <tr class="ok"><td>OpenRouter</td><td><code>OPENROUTER_API_KEY</code> → <code>/api/v1/credits</code></td><td><span class="badge ok"><span class="dot ok"></span>READY</span></td><td>total credits, total usage, remaining</td><td>เหมาะสุดสำหรับ credit API แบบตรงไปตรงมา</td></tr>
+            <tr class="ok"><td>DeepSeek</td><td><code>DEEPSEEK_API_KEY</code> → <code>/user/balance</code></td><td><span class="badge ok"><span class="dot ok"></span>READY</span></td><td>balance by currency</td><td>แสดงยอดคงเหลือโดยไม่เปิดเผย key</td></tr>
+            <tr class="warn"><td>OpenAI API</td><td><code>OPENAI_ADMIN_KEY</code> หรือ <code>OPENAI_API_KEY</code> → costs endpoint</td><td><span class="badge warn"><span class="dot warn"></span>KEY-DEPENDENT</span></td><td>cost usage window</td><td>Codex/OAuth subscription อาจใช้ model ได้ แต่ไม่จำเป็นต้องมี billing API key</td></tr>
+            <tr class="warn"><td>Anthropic, Gemini, xAI/Grok, MiniMax OAuth</td><td>provider console / admin API / OAuth portal</td><td><span class="badge warn"><span class="dot warn"></span>MANUAL</span></td><td>manual status note</td><td>ยังไม่มี credit endpoint ที่ปลอดภัยและตั้งค่าไว้ใน profile นี้</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Latest safe run</h3>
+        <table class="conn-table">
+          <thead><tr><th>Provider</th><th>Status</th><th>Credit remaining</th><th>Usage</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr class="ok"><td>Hermes local usage</td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>—</td><td>available via <code>hermes insights --days 30</code></td><td>verified 2026-06-17 13:28 UTC+7</td></tr>
+            <tr class="warn"><td>OpenRouter</td><td><span class="badge warn"><span class="dot warn"></span>MISSING_KEY</span></td><td>—</td><td>—</td><td><code>OPENROUTER_API_KEY</code> not set in this runtime</td></tr>
+            <tr class="warn"><td>OpenAI API</td><td><span class="badge warn"><span class="dot warn"></span>MISSING_KEY</span></td><td>—</td><td>—</td><td>Current OpenAI access is Codex/OAuth; billing API key not set</td></tr>
+            <tr class="warn"><td>DeepSeek</td><td><span class="badge warn"><span class="dot warn"></span>MISSING_KEY</span></td><td>—</td><td>—</td><td><code>DEEPSEEK_API_KEY</code> not set in this runtime</td></tr>
+            <tr class="warn"><td>Anthropic, Gemini, xAI/Grok, MiniMax OAuth</td><td><span class="badge warn"><span class="dot warn"></span>MANUAL</span></td><td>—</td><td>—</td><td>ต้องเช็คผ่าน provider console หรือเพิ่ม admin API ในอนาคต</td></tr>
+          </tbody>
+        </table>
+        <h3>Run command</h3>
+        <pre>cd /root/my-sprees-docs
+python3 scripts/check_model_credit_usage.py --days 30 --format markdown</pre>
+        <div class="callout"><strong>Update policy:</strong> เมื่อพิมพ์ <code>check model credits</code> หรือ <code>update status</code> ให้รันสคริปต์นี้, เก็บ output เฉพาะ summary ที่ไม่มี secret, แล้วอัปเดต section นี้พร้อม timestamp</div>
+      </section>
+
       <section id="external">
-        <h2>5. External APIs</h2>
+        <h2>6. External APIs</h2>
         <p class="section-kicker">Third-party APIs ที่ใช้ใน tooling/scripts</p>
         <table class="conn-table">
           <thead><tr><th>Connection</th><th>URL / Detail</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
@@ -106,7 +141,7 @@
       </section>
 
       <section id="how-to-update">
-        <h2>6. How to update this page</h2>
+        <h2>7. How to update this page</h2>
         <p class="section-kicker">หน้านี้เป็น cached/manual — ไม่มี auto-refresh</p>
         <h3>Trigger command</h3>
         <p>พิมพ์คำสั่งใดคำสั่งหนึ่งนี้เพื่อให้ผมอัปเดต:</p>
@@ -114,13 +149,16 @@
 หรือ
 refresh status
 หรือ
-check connections</pre>
+check connections
+หรือ
+check model credits</pre>
 
         <h3>Behavior เมื่อ trigger</h3>
         <ol>
           <li>ผมจะรัน health check จริงด้วย <code>curl</code> หรือ tool ที่เหมาะสม — GitHub API, Pages, external endpoints</li>
           <li>ตรวจ SSH key, gh CLI, local repo status, GitHub Actions latest run</li>
           <li>ตรวจ Model Validation Log ล่าสุดเพื่อ update สถานะ model</li>
+          <li>รัน <code>python3 scripts/check_model_credit_usage.py --days 30</code> เพื่อเช็ค credit/usage ที่เช็คได้อย่างปลอดภัย</li>
           <li>Update ตารางในไฟล์นี้ + เปลี่ยน "Last updated" timestamp</li>
           <li>Commit + push ไป my-sprees-docs</li>
           <li>Verify Pages อัปเดตแล้ว</li>
