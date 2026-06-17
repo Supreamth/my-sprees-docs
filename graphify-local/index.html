@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Graphify Local Pilot</title>
+  <style>
+    body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f6f3ee; color: #171511; line-height: 1.7; }
+    main { max-width: 900px; margin: 0 auto; padding: 48px 22px 72px; }
+    section { background: #fffaf2; border: 1px solid #e4dacb; border-radius: 22px; padding: 28px; box-shadow: 0 14px 36px rgba(35, 28, 17, .08); }
+    h1 { margin-top: 0; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.08; letter-spacing: -.04em; }
+    h2 { margin-top: 30px; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    code { background: #eee5d8; border: 1px solid #dfd2c0; border-radius: 7px; padding: .08rem .35rem; }
+    pre { overflow: auto; background: #24211c; color: #fffaf2; border-radius: 16px; padding: 16px; }
+    .warn { border-left: 5px solid #e66a35; background: #fff3e8; padding: 12px 16px; border-radius: 12px; }
+    a { color: #3157d5; }
+  </style>
+</head>
+<body>
+  <main>
+    <p><a href="../">← Back to system map</a></p>
+    <section>
+      <h1>Graphify Local Pilot</h1>
+      <p>Graphify is approved for local pilot use only. Use it to understand code, docs, schemas, and project relationships, but keep generated output out of git until a human reviews it for sensitive data.</p>
+
+      <h2>Current policy</h2>
+      <ol>
+        <li><code>graphify-out/</code> is local-only and ignored by git.</li>
+        <li>Do not commit or publish <code>graphify-out/</code> by default.</li>
+        <li>Review <code>GRAPH_REPORT.md</code>, <code>graph.json</code>, and <code>graph.html</code> before sharing externally.</li>
+        <li>Mixed or docs-only repositories require an LLM backend/API key for semantic extraction. Code-only repositories can be graphed without an LLM key.</li>
+        <li>Rollout to every project should wait until pilot quality, security review, and backend choice are settled.</li>
+      </ol>
+
+      <h2>Local command</h2>
+      <pre><code>export PATH="$HOME/.local/bin:$PATH"
+graphify .</code></pre>
+
+      <p>Expected output:</p>
+      <pre><code>graphify-out/
+├── graph.html
+├── GRAPH_REPORT.md
+└── graph.json</code></pre>
+
+      <div class="warn"><strong>Backend note:</strong> Hermes subscription/OAuth model access is not automatically exposed to the standalone Graphify CLI as provider API keys. For docs-heavy repositories, choose a direct provider key or a local/OpenAI-compatible backend before rollout.</div>
+
+      <h2>Pilot result so far</h2>
+      <ul>
+        <li><code>my-sprees</code> code-only pilot succeeded with Graphify 0.8.40.</li>
+        <li>Generated 131 nodes, 150 links, 9 communities, and used 0 LLM tokens.</li>
+        <li>No obvious sensitive pattern hits were found in the generated output scan.</li>
+        <li><code>my-sprees-docs</code> is docs-only, so full extraction is blocked until an LLM backend/API key is configured.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
