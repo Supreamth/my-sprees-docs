@@ -6,13 +6,13 @@
 
 ## Snapshot ล่าสุด
 
-Last updated: 2026-06-17 14:51 UTC+7 (clarify OpenRouter optional/not connected)
+Last updated: 2026-06-17 15:10 UTC+7 (grok-4.3 validated)
 
 | Summary | Count |
 |---|---:|
 | Total connections | 13 |
 | Healthy | 12 |
-| Degraded / Unvalidated | 1 |
+| Degraded / Unvalidated | 0 |
 | Down | 0 |
 
 ## AI Models
@@ -21,7 +21,7 @@ Last updated: 2026-06-17 14:51 UTC+7 (clarify OpenRouter optional/not connected)
 |---|---|---|---|---|
 | MiniMax-M3 | minimax-oauth | PASS 5/5 | 2026-06-16 20:25 | validated earlier; see Model Validation Log |
 | OpenAI GPT-5.5 | openai-codex | PASS 5/5 | 2026-06-16 20:44 | validated in current session: skills, session search, honesty, memory injection, failure recovery. Current model access works via subscription/OAuth provider; direct `OPENAI_API_KEY` env is not set. |
-| Other models (Anthropic, Gemini, DeepSeek, Grok) | mixed | UNVALIDATED | — | mentioned in routing table but not yet validated in this profile |
+| Grok-4.3 | xai-oauth | PASS 5/5 | 2026-06-17 15:10 | validated (skills loading, session search, honesty, memory injection, failure recovery) |
 
 ## Model Credit & Usage Function
 
