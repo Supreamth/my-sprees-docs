@@ -46,7 +46,7 @@
         <h2>1. Summary</h2>
         <p class="section-kicker">ภาพรวมสถานะการเชื่อมต่อ 5 หมวด: GitHub, GitHub Pages, AI Models, Model Credit & Usage, External APIs</p>
         <div class="callout"><strong>Update flow:</strong> หน้านี้เป็น cached/manual ต้องบอกผมว่า <code>update status</code> เพื่อให้ผมรัน health check จริง แล้ว commit ไฟล์นี้ใหม่</div>
-        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-17 14:06 UTC+7 (show Hermes usage numbers)</div>
+        <div class="callout warn-callout"><strong>Last updated:</strong> 2026-06-17 14:12 UTC+7 (show 1/7/15/30-day token usage)</div>
       </section>
 
       <section id="github">
@@ -114,7 +114,7 @@
         <table class="conn-table">
           <thead><tr><th>Provider</th><th>Status</th><th>Credit remaining</th><th>Usage</th><th>Note</th></tr></thead>
           <tbody>
-            <tr class="ok"><td>Hermes local usage</td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>—</td><td>40 sessions / 5,274 messages / 193,562,417 total tokens over Jun 13–17</td><td>verified 2026-06-17 14:06 UTC+7 via <code>hermes insights --days 30</code></td></tr>
+            <tr class="ok"><td>Hermes local usage</td><td><span class="badge ok"><span class="dot ok"></span>OK</span></td><td>—</td><td>1d: 38,324,125 tokens; 7d/15d/30d: 194,004,490 tokens</td><td>verified 2026-06-17 14:12 UTC+7 via <code>hermes insights --days 1/7/15/30</code></td></tr>
             <tr class="warn"><td>OpenRouter</td><td><span class="badge warn"><span class="dot warn"></span>MISSING_KEY</span></td><td>—</td><td>—</td><td><code>OPENROUTER_API_KEY</code> not set in this runtime</td></tr>
             <tr class="warn"><td>OpenAI API</td><td><span class="badge warn"><span class="dot warn"></span>MISSING_KEY</span></td><td>—</td><td>—</td><td>Current OpenAI access is Codex/OAuth; billing API key not set</td></tr>
             <tr class="warn"><td>DeepSeek</td><td><span class="badge warn"><span class="dot warn"></span>MISSING_KEY</span></td><td>—</td><td>—</td><td><code>DEEPSEEK_API_KEY</code> not set in this runtime</td></tr>
@@ -122,15 +122,17 @@
           </tbody>
         </table>
 
-        <h3>Hermes usage by model (last 30 days)</h3>
+        <h3>Hermes token usage by period</h3>
         <table class="conn-table">
-          <thead><tr><th>Model</th><th>Sessions</th><th>Tokens</th><th>Note</th></tr></thead>
+          <thead><tr><th>Period</th><th>Sessions</th><th>Messages</th><th>Total tokens</th><th>gpt-5.5</th><th>MiniMax-M3</th><th>claude-sonnet-4-6</th></tr></thead>
           <tbody>
-            <tr class="ok"><td>gpt-5.5</td><td>34</td><td>187,504,080</td><td>local Hermes session/token usage, not provider billing credit</td></tr>
-            <tr class="ok"><td>MiniMax-M3</td><td>4</td><td>6,058,337</td><td>local Hermes session/token usage, not provider billing credit</td></tr>
-            <tr class="warn"><td>claude-sonnet-4-6</td><td>2</td><td>0</td><td>session count recorded; token count unavailable/zero in local insights</td></tr>
+            <tr class="ok"><td>1 วัน</td><td>10</td><td>1,155</td><td>38,324,125</td><td>32,284,926</td><td>6,039,199</td><td>—</td></tr>
+            <tr class="ok"><td>7 วัน</td><td>40</td><td>5,290</td><td>194,004,490</td><td>187,946,153</td><td>6,058,337</td><td>0</td></tr>
+            <tr class="ok"><td>15 วัน</td><td>40</td><td>5,290</td><td>194,004,490</td><td>187,946,153</td><td>6,058,337</td><td>0</td></tr>
+            <tr class="ok"><td>1 เดือน</td><td>40</td><td>5,290</td><td>194,004,490</td><td>187,946,153</td><td>6,058,337</td><td>0</td></tr>
           </tbody>
         </table>
+        <div class="callout"><strong>Note:</strong> 7/15/30 วันเท่ากัน เพราะใน local Hermes session DB ตอนนี้มี activity อยู่ในช่วง Jun 13–17 เท่านั้น</div>
         <h3>Run command</h3>
         <pre>cd /root/my-sprees-docs
 python3 scripts/check_model_credit_usage.py --days 30 --format markdown</pre>
