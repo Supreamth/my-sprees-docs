@@ -79,11 +79,12 @@
     form { display: grid; gap: 18px; margin-top: 18px; }
     fieldset { border: 1px solid var(--line); border-radius: 20px; padding: 18px; background: var(--panel); }
     legend { padding: 0 8px; font-weight: 800; color: var(--ink); }
-    .field { display: grid; gap: 7px; margin: 14px 0; }
+    .field { display: grid; gap: 7px; margin: 14px 0; position: relative; }
     label { font-weight: 700; }
     .hint { color: var(--muted); font-size: .9rem; }
-    input, textarea, select { width: 100%; min-height: 44px; border: 1px solid #d9cbbb; border-radius: 13px; padding: 10px 12px; background: #fffdf8; color: var(--ink); font-size: 1rem; font-family: inherit; }
+    input, textarea, select { width: 100%; min-height: 44px; border: 1px solid #d9cbbb; border-radius: 13px; padding: 10px 12px; background: #fffdf8; color: var(--ink); font-size: 1rem; font-family: inherit; transition: border-color .15s; }
     textarea { min-height: 92px; resize: vertical; }
+    input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
     .grid-2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
     .choice-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-top: 8px; }
     .choice { display: flex; gap: 8px; align-items: start; border: 1px solid var(--line); border-radius: 14px; padding: 10px; background: #fffaf2; }
@@ -91,6 +92,9 @@
     .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
     button, .btn { min-height: 44px; border-radius: 999px; padding: 10px 16px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font-weight: 800; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
     button.primary, .btn.primary { background: var(--ink); color: white; border-color: var(--ink); }
+    button.execute-btn { background: var(--ok); color: white; border-color: var(--ok); font-size: 1rem; padding: 12px 22px; }
+    button.execute-btn:hover { background: #0e5a3c; }
+    button.execute-btn:disabled { opacity: .5; cursor: not-allowed; }
     .result-box { margin-top: 18px; display: none; }
     .result-box.show { display: block; }
     pre { white-space: pre-wrap; word-break: break-word; background: #17130f; color: #fff8ed; border-radius: 16px; padding: 16px; overflow: auto; }
@@ -99,7 +103,52 @@
     th { background: #f3eadf; color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
     tr:last-child td { border-bottom: none; }
     .top-link { position: fixed; right: 22px; bottom: 22px; width: 46px; height: 46px; border-radius: 999px; display: grid; place-items: center; background: var(--ink); color: white; text-decoration: none; box-shadow: var(--shadow); }
-    @media (max-width:1080px) { .layout { grid-template-columns: 1fr; } aside { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--line); } nav { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 2px 8px; } main { padding: 24px 16px 70px; } .status-grid,.cards,.grid-2,.choice-grid { grid-template-columns: 1fr; } }
+
+    /* Validation styles */
+    .field-error-msg { color: var(--danger); font-size: .84rem; font-weight: 700; display: none; }
+    .field-ok-icon { color: var(--ok); font-size: .84rem; font-weight: 700; display: none; position: absolute; right: 14px; top: 38px; pointer-events: none; }
+    .field.has-error input, .field.has-error textarea { border-color: var(--danger); background: #fff5f5; }
+    .field.has-error .field-error-msg { display: block; }
+    .field.has-ok .field-ok-icon { display: block; }
+    .field.has-ok input, .field.has-ok textarea { border-color: var(--ok); padding-right: 36px; }
+
+    #validationPanel {
+      display: none; margin-bottom: 22px; padding: 18px 22px;
+      border: 2px solid var(--danger); border-radius: 18px;
+      background: #fff5f5; color: var(--danger);
+    }
+    #validationPanel.show { display: block; }
+    #validationPanel strong { display: block; margin-bottom: 8px; font-size: 1rem; }
+    #validationPanel ul { margin: 0; padding-left: 18px; }
+    #validationPanel li { margin: 3px 0; font-size: .92rem; }
+
+    /* Success / error dispatch panels */
+    #dispatchSuccess, #dispatchError {
+      display: none; margin-top: 18px; padding: 18px 22px; border-radius: 18px;
+    }
+    #dispatchSuccess { border: 2px solid var(--ok); background: #f0faf5; color: #0b5233; }
+    #dispatchSuccess.show, #dispatchError.show { display: block; }
+    #dispatchError { border: 2px solid var(--danger); background: #fff5f5; color: var(--danger); }
+    #dispatchSuccess strong, #dispatchError strong { display: block; margin-bottom: 6px; }
+
+    /* DEV token panel */
+    #devTokenPanel {
+      margin-bottom: 18px; padding: 14px 18px;
+      border: 2px dashed #f0a830; border-radius: 16px; background: #fffbef;
+    }
+    #devTokenPanel summary { cursor: pointer; font-weight: 800; color: var(--warn); font-size: .9rem; }
+    #devTokenPanel .dev-inner { margin-top: 10px; display: grid; gap: 6px; }
+    #devTokenPanel label { font-size: .88rem; color: var(--warn); font-weight: 700; }
+    #devTokenPanel input { min-height: 36px; font-size: .88rem; border-color: #f0a830; background: #fffdf8; }
+    #devTokenPanel .dev-hint { font-size: .78rem; color: var(--soft); }
+
+    @media (max-width:1080px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+      nav { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 2px 8px; }
+      main { padding: 24px 16px 70px; }
+      .status-grid,.cards,.grid-2,.choice-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -134,7 +183,7 @@
         <h2>1. ก่อนกรอก: กติกาเริ่ม Project</h2>
         <p class="section-kicker">ฟอร์มนี้ไม่ได้มีไว้เก็บ idea เฉยๆ แต่มีไว้ตัดสินใจว่า Project พร้อมจะเข้า process ต่อหรือยัง</p>
         <div class="cards">
-          <div class="card"><span class="tag">Rule 1</span><strong>เริ่มจากปัญหา ไม่ใช่ solution</strong><p>อย่าเริ่มด้วย “ทำ app/ทำ dashboard/ทำ AI” ให้บอกก่อนว่าปัญหาคืออะไร ใครเจอ และมีหลักฐานอะไร</p></div>
+          <div class="card"><span class="tag">Rule 1</span><strong>เริ่มจากปัญหา ไม่ใช่ solution</strong><p>อย่าเริ่มด้วย "ทำ app/ทำ dashboard/ทำ AI" ให้บอกก่อนว่าปัญหาคืออะไร ใครเจอ และมีหลักฐานอะไร</p></div>
           <div class="card"><span class="tag">Rule 2</span><strong>ต้องมี owner</strong><p>ทุก project ต้องมีคนรับผิดชอบ business outcome, product scope และ final decision</p></div>
           <div class="card"><span class="tag">Rule 3</span><strong>ต้องมี acceptance criteria</strong><p>ถ้าวัดไม่ได้ว่าเสร็จและดีขึ้นจริง ยังไม่ควรเริ่ม development</p></div>
         </div>
@@ -142,56 +191,175 @@
 
       <section id="form">
         <h2>2. Project Start Form</h2>
-        <p class="section-kicker">กรอกเท่าที่รู้ ถ้าช่อง critical ว่าง ระบบจะ mark ว่ายังไม่พร้อมเข้า implementation</p>
+        <p class="section-kicker">กรอกเท่าที่รู้ ถ้าช่อง critical ว่าง ระบบจะ block ก่อน dispatch — ต้องกรอกให้ครบก่อน Execute</p>
+
+        <!-- Validation error panel — shown above form when critical fields are missing -->
+        <div id="validationPanel" role="alert">
+          <strong>⚠ กรุณากรอกข้อมูลที่จำเป็นให้ครบก่อน</strong>
+          <ul id="validationList"></ul>
+        </div>
+
+        <!-- DEV ONLY: GitHub PAT input stored in sessionStorage -->
+        <details id="devTokenPanel">
+          <summary>🔑 DEV ONLY — GitHub PAT (session only, never saved to disk)</summary>
+          <div class="dev-inner">
+            <label for="devToken">Fine-grained PAT for Supreamth/my-sprees (contents:write + issues:write)</label>
+            <input type="password" id="devToken" placeholder="github_pat_…" autocomplete="off" spellcheck="false">
+            <div class="dev-hint">
+              Stored in <code>sessionStorage</code> only — cleared when you close the tab. Never use <code>localStorage</code>.<br>
+              To generate: GitHub → Settings → Developer settings → Fine-grained personal access tokens → New token.<br>
+              Required scopes on <strong>Supreamth/my-sprees</strong>: <code>contents: read</code>, <code>issues: write</code>, <code>metadata: read</code>.
+            </div>
+          </div>
+        </details>
+
         <form id="projectForm">
           <fieldset>
             <legend>A. Project Identity</legend>
             <div class="grid-2">
-              <div class="field"><label for="projectName">1. Project name</label><input id="projectName" name="projectName" placeholder="เช่น Sales Report Automation"></div>
-              <div class="field"><label for="requester">2. Requester / team</label><input id="requester" name="requester" placeholder="ชื่อคน/ทีมที่ขอ"></div>
+              <div class="field" id="field-projectName">
+                <label for="projectName">1. Project name <span style="color:var(--danger)">*</span></label>
+                <input id="projectName" name="projectName" placeholder="เช่น Sales Report Automation">
+                <span class="field-error-msg">กรุณาใส่ชื่อ Project</span>
+                <span class="field-ok-icon">✓</span>
+              </div>
+              <div class="field" id="field-requester">
+                <label for="requester">2. Requester / team</label>
+                <input id="requester" name="requester" placeholder="ชื่อคน/ทีมที่ขอ">
+                <span class="field-ok-icon">✓</span>
+              </div>
             </div>
             <div class="grid-2">
-              <div class="field"><label for="businessOwner">3. Business owner</label><input id="businessOwner" name="businessOwner" placeholder="คนตัดสินใจ business outcome"></div>
-              <div class="field"><label for="targetDate">4. Target date / deadline</label><input id="targetDate" name="targetDate" placeholder="เช่น Q1, 2026-08-01, no fixed date"></div>
+              <div class="field" id="field-businessOwner">
+                <label for="businessOwner">3. Business owner <span style="color:var(--danger)">*</span></label>
+                <input id="businessOwner" name="businessOwner" placeholder="คนตัดสินใจ business outcome">
+                <span class="field-error-msg">กรุณาใส่ Business owner</span>
+                <span class="field-ok-icon">✓</span>
+              </div>
+              <div class="field" id="field-targetDate">
+                <label for="targetDate">4. Target date / deadline</label>
+                <input id="targetDate" name="targetDate" placeholder="เช่น Q1, 2026-08-01, no fixed date">
+                <span class="field-ok-icon">✓</span>
+              </div>
             </div>
-            <div class="field"><label for="oneLine">5. One-line summary</label><input id="oneLine" name="oneLine" placeholder="Project นี้แก้ปัญหาอะไรให้ใครใน 1 ประโยค"></div>
+            <div class="field" id="field-oneLine">
+              <label for="oneLine">5. One-line summary</label>
+              <input id="oneLine" name="oneLine" placeholder="Project นี้แก้ปัญหาอะไรให้ใครใน 1 ประโยค">
+              <span class="field-ok-icon">✓</span>
+            </div>
           </fieldset>
 
           <fieldset>
-            <legend>B. Problem & Evidence</legend>
-            <div class="field"><label for="problem">6. ปัญหาที่พบคืออะไร?</label><textarea id="problem" name="problem" placeholder="อธิบายปัญหาโดยยังไม่เสนอ solution"></textarea></div>
-            <div class="field"><label for="who">7. ใครเจอปัญหานี้?</label><textarea id="who" name="who" placeholder="user, customer segment, internal team, buyer/decision maker"></textarea></div>
-            <div class="field"><label for="evidence">8. หลักฐานที่มี</label><textarea id="evidence" name="evidence" placeholder="interview, support tickets, screenshots, metrics, sales feedback, competitor proof"></textarea></div>
-            <div class="field"><label for="impact">9. Impact / cost</label><textarea id="impact" name="impact" placeholder="เสียเวลา/เงิน/โอกาสเท่าไหร่ เกิดบ่อยแค่ไหน severity แค่ไหน"></textarea></div>
+            <legend>B. Problem &amp; Evidence</legend>
+            <div class="field" id="field-problem">
+              <label for="problem">6. ปัญหาที่พบคืออะไร? <span style="color:var(--danger)">*</span></label>
+              <textarea id="problem" name="problem" placeholder="อธิบายปัญหาโดยยังไม่เสนอ solution"></textarea>
+              <span class="field-error-msg">กรุณาอธิบายปัญหา</span>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-who">
+              <label for="who">7. ใครเจอปัญหานี้? <span style="color:var(--danger)">*</span></label>
+              <textarea id="who" name="who" placeholder="user, customer segment, internal team, buyer/decision maker"></textarea>
+              <span class="field-error-msg">กรุณาระบุกลุ่มผู้ใช้/ลูกค้า</span>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-evidence">
+              <label for="evidence">8. หลักฐานที่มี <span style="color:var(--danger)">*</span></label>
+              <textarea id="evidence" name="evidence" placeholder="interview, support tickets, screenshots, metrics, sales feedback, competitor proof"></textarea>
+              <span class="field-error-msg">กรุณาใส่หลักฐานที่มี</span>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-impact">
+              <label for="impact">9. Impact / cost <span style="color:var(--danger)">*</span></label>
+              <textarea id="impact" name="impact" placeholder="เสียเวลา/เงิน/โอกาสเท่าไหร่ เกิดบ่อยแค่ไหน severity แค่ไหน"></textarea>
+              <span class="field-error-msg">กรุณาระบุ impact</span>
+              <span class="field-ok-icon">✓</span>
+            </div>
           </fieldset>
 
           <fieldset>
             <legend>C. Goal, Scope, Non-goals</legend>
-            <div class="field"><label for="goal">10. Project goal</label><textarea id="goal" name="goal" placeholder="ผลลัพธ์ที่อยากได้ ไม่ใช่ feature list"></textarea></div>
-            <div class="field"><label for="successMetrics">11. Success metrics</label><textarea id="successMetrics" name="successMetrics" placeholder="เช่น ลดเวลาจาก 2 ชม. เหลือ 10 นาที, error -50%, conversion +10%"></textarea></div>
-            <div class="field"><label for="mvp">12. MVP scope</label><textarea id="mvp" name="mvp" placeholder="สิ่งที่ต้องมีใน version แรกเท่านั้น"></textarea></div>
-            <div class="field"><label for="nonGoals">13. Non-goals / out of scope</label><textarea id="nonGoals" name="nonGoals" placeholder="สิ่งที่ไม่ทำใน version แรก เพื่อกัน scope creep"></textarea></div>
+            <div class="field" id="field-goal">
+              <label for="goal">10. Project goal <span style="color:var(--danger)">*</span></label>
+              <textarea id="goal" name="goal" placeholder="ผลลัพธ์ที่อยากได้ ไม่ใช่ feature list"></textarea>
+              <span class="field-error-msg">กรุณาระบุ goal ของ project</span>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-successMetrics">
+              <label for="successMetrics">11. Success metrics</label>
+              <textarea id="successMetrics" name="successMetrics" placeholder="เช่น ลดเวลาจาก 2 ชม. เหลือ 10 นาที, error -50%, conversion +10%"></textarea>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-mvp">
+              <label for="mvp">12. MVP scope <span style="color:var(--danger)">*</span></label>
+              <textarea id="mvp" name="mvp" placeholder="สิ่งที่ต้องมีใน version แรกเท่านั้น"></textarea>
+              <span class="field-error-msg">กรุณาระบุ MVP scope</span>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-nonGoals">
+              <label for="nonGoals">13. Non-goals / out of scope <span style="color:var(--danger)">*</span></label>
+              <textarea id="nonGoals" name="nonGoals" placeholder="สิ่งที่ไม่ทำใน version แรก เพื่อกัน scope creep"></textarea>
+              <span class="field-error-msg">กรุณาระบุ non-goals</span>
+              <span class="field-ok-icon">✓</span>
+            </div>
           </fieldset>
 
           <fieldset>
-            <legend>D. Workflow & Users</legend>
-            <div class="field"><label for="currentWorkflow">14. Workflow ปัจจุบัน</label><textarea id="currentWorkflow" name="currentWorkflow" placeholder="step-by-step ก่อนมีระบบใหม่"></textarea></div>
-            <div class="field"><label for="futureWorkflow">15. Workflow ที่ต้องการหลังทำ Project</label><textarea id="futureWorkflow" name="futureWorkflow" placeholder="step-by-step หลังระบบช่วยแล้ว"></textarea></div>
-            <div class="field"><label for="roles">16. User roles / permissions</label><textarea id="roles" name="roles" placeholder="ใครดูได้ แก้ได้ approve ได้ export ได้"></textarea></div>
+            <legend>D. Workflow &amp; Users</legend>
+            <div class="field" id="field-currentWorkflow">
+              <label for="currentWorkflow">14. Workflow ปัจจุบัน</label>
+              <textarea id="currentWorkflow" name="currentWorkflow" placeholder="step-by-step ก่อนมีระบบใหม่"></textarea>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-futureWorkflow">
+              <label for="futureWorkflow">15. Workflow ที่ต้องการหลังทำ Project</label>
+              <textarea id="futureWorkflow" name="futureWorkflow" placeholder="step-by-step หลังระบบช่วยแล้ว"></textarea>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-roles">
+              <label for="roles">16. User roles / permissions</label>
+              <textarea id="roles" name="roles" placeholder="ใครดูได้ แก้ได้ approve ได้ export ได้"></textarea>
+              <span class="field-ok-icon">✓</span>
+            </div>
           </fieldset>
 
           <fieldset>
             <legend>E. Data, Integration, Risk</legend>
-            <div class="field"><label for="data">17. Data ที่เกี่ยวข้อง</label><textarea id="data" name="data" placeholder="แหล่งข้อมูล schema โดยคร่าว sensitive data มีไหม"></textarea></div>
-            <div class="field"><label for="integrations">18. Integrations / systems</label><textarea id="integrations" name="integrations" placeholder="CRM, ERP, payment, email, warehouse, internal APIs"></textarea></div>
-            <div class="field"><label for="security">19. Security / compliance concerns</label><textarea id="security" name="security" placeholder="PII, payment, financial, health, PDPA/GDPR, audit log, retention"></textarea></div>
-            <div class="field"><label for="failureModes">20. Failure modes ที่รับไม่ได้</label><textarea id="failureModes" name="failureModes" placeholder="เช่น ข้อมูลรั่ว, คิดเงินผิด, downtime, ส่ง email ผิดคน"></textarea></div>
+            <div class="field" id="field-data">
+              <label for="data">17. Data ที่เกี่ยวข้อง</label>
+              <textarea id="data" name="data" placeholder="แหล่งข้อมูล schema โดยคร่าว sensitive data มีไหม"></textarea>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-integrations">
+              <label for="integrations">18. Integrations / systems</label>
+              <textarea id="integrations" name="integrations" placeholder="CRM, ERP, payment, email, warehouse, internal APIs"></textarea>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-security">
+              <label for="security">19. Security / compliance concerns</label>
+              <textarea id="security" name="security" placeholder="PII, payment, financial, health, PDPA/GDPR, audit log, retention"></textarea>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-failureModes">
+              <label for="failureModes">20. Failure modes ที่รับไม่ได้</label>
+              <textarea id="failureModes" name="failureModes" placeholder="เช่น ข้อมูลรั่ว, คิดเงินผิด, downtime, ส่ง email ผิดคน"></textarea>
+              <span class="field-ok-icon">✓</span>
+            </div>
           </fieldset>
 
           <fieldset>
-            <legend>F. Acceptance & Routing</legend>
-            <div class="field"><label for="acceptance">21. Acceptance criteria</label><textarea id="acceptance" name="acceptance" placeholder="bullet หรือ Given/When/Then ที่พิสูจน์ว่าเสร็จจริง"></textarea></div>
-            <div class="field"><label for="constraints">22. Constraints / dependencies</label><textarea id="constraints" name="constraints" placeholder="budget, deadline, people, vendor, legal, data availability, tech stack"></textarea></div>
+            <legend>F. Acceptance &amp; Routing</legend>
+            <div class="field" id="field-acceptance">
+              <label for="acceptance">21. Acceptance criteria <span style="color:var(--danger)">*</span></label>
+              <textarea id="acceptance" name="acceptance" placeholder="bullet หรือ Given/When/Then ที่พิสูจน์ว่าเสร็จจริง"></textarea>
+              <span class="field-error-msg">กรุณาระบุ acceptance criteria</span>
+              <span class="field-ok-icon">✓</span>
+            </div>
+            <div class="field" id="field-constraints">
+              <label for="constraints">22. Constraints / dependencies</label>
+              <textarea id="constraints" name="constraints" placeholder="budget, deadline, people, vendor, legal, data availability, tech stack"></textarea>
+              <span class="field-ok-icon">✓</span>
+            </div>
             <div class="field"><label>23. Requested next phase</label><div class="choice-grid">
               <label class="choice"><input type="radio" name="route" value="Discovery" checked> Discovery</label>
               <label class="choice"><input type="radio" name="route" value="PRD"> PRD</label>
@@ -204,7 +372,7 @@
 
           <div class="actions">
             <button class="primary" type="button" id="generate">Generate Project Start Brief</button>
-            <button type="reset">Clear</button>
+            <button type="reset" id="clearBtn">Clear</button>
             <a class="btn" href="../company-playbook/">Open Company Playbook</a>
           </div>
         </form>
@@ -212,7 +380,22 @@
         <div class="result-box" id="resultBox">
           <span class="mini-label">Generated output</span>
           <pre id="output"></pre>
-          <div class="actions"><button type="button" id="copy">Copy brief</button></div>
+          <div class="actions">
+            <button type="button" id="copy">Copy brief</button>
+            <button type="button" class="execute-btn" id="executeBtn" style="display:none"></button>
+          </div>
+        </div>
+
+        <!-- Dispatch success panel -->
+        <div id="dispatchSuccess">
+          <strong>✅ Brief submitted successfully</strong>
+          <div id="dispatchSuccessBody"></div>
+        </div>
+
+        <!-- Dispatch error panel -->
+        <div id="dispatchError">
+          <strong>❌ Dispatch failed</strong>
+          <div id="dispatchErrorBody"></div>
         </div>
       </section>
 
@@ -236,54 +419,244 @@
   </div>
   <a class="top-link" href="#top" aria-label="Back to top">↑</a>
   <script>
+    // ─── constants ───────────────────────────────────────────────
+    const DISPATCH_REPO = 'Supreamth/my-sprees';
+    const DISPATCH_EVENT = 'project-start-intake';
+
+    const critical = ['projectName','businessOwner','problem','who','evidence','impact','goal','mvp','nonGoals','acceptance'];
+
+    const FIELD_LABELS = {
+      projectName: 'Project name',
+      businessOwner: 'Business owner',
+      problem: 'Problem',
+      who: 'User / customer',
+      evidence: 'Evidence',
+      impact: 'Impact / cost',
+      goal: 'Project goal',
+      mvp: 'MVP scope',
+      nonGoals: 'Non-goals',
+      acceptance: 'Acceptance criteria',
+    };
+
+    // ─── form helpers ─────────────────────────────────────────────
     const form = document.getElementById('projectForm');
     const output = document.getElementById('output');
     const resultBox = document.getElementById('resultBox');
+    const executeBtn = document.getElementById('executeBtn');
+
     function value(name) {
       const el = form.elements[name];
       if (!el) return '';
       if (el instanceof RadioNodeList) return el.value || '';
       return (el.value || '').trim();
     }
-    const critical = ['projectName','businessOwner','problem','who','evidence','impact','goal','mvp','nonGoals','acceptance'];
-    function missingCritical() { return critical.filter((name) => !value(name)); }
+
+    function missingCritical() {
+      return critical.filter((name) => !value(name));
+    }
+
     function readinessText(missing) {
       if (missing.length) return 'Not ready for implementation. Missing critical fields: ' + missing.join(', ');
       if (value('route') === 'Implementation') return 'Candidate for implementation after PM/Founder approval and issue-level delivery planning.';
       return 'Ready to move to selected next phase: ' + value('route') + ', subject to human approval.';
     }
+
+    // ─── validation UI ────────────────────────────────────────────
+    function markField(name, isError) {
+      const wrapper = document.getElementById('field-' + name);
+      if (!wrapper) return;
+      wrapper.classList.toggle('has-error', isError);
+      wrapper.classList.toggle('has-ok', !isError && !!value(name));
+    }
+
+    function showValidationPanel(missing) {
+      const panel = document.getElementById('validationPanel');
+      const list = document.getElementById('validationList');
+      if (!missing.length) {
+        panel.classList.remove('show');
+        return;
+      }
+      list.innerHTML = missing.map(n => `<li>${FIELD_LABELS[n] || n}</li>`).join('');
+      panel.classList.add('show');
+    }
+
+    function clearFieldStates() {
+      critical.forEach(name => {
+        const w = document.getElementById('field-' + name);
+        if (w) { w.classList.remove('has-error', 'has-ok'); }
+      });
+      document.getElementById('validationPanel').classList.remove('show');
+    }
+
+    // Live feedback: mark fields as user types/leaves
+    critical.forEach(name => {
+      const el = form.elements[name];
+      if (!el || el instanceof RadioNodeList) return;
+      el.addEventListener('input', () => markField(name, false));
+      el.addEventListener('blur', () => {
+        if (el.value.trim()) markField(name, false);
+      });
+    });
+
+    // ─── dev-only PAT (sessionStorage) ───────────────────────────
+    const devTokenInput = document.getElementById('devToken');
+
+    // Restore from sessionStorage on load
+    const storedToken = sessionStorage.getItem('_dev_github_pat');
+    if (storedToken) devTokenInput.value = storedToken;
+
+    devTokenInput.addEventListener('input', () => {
+      const t = devTokenInput.value.trim();
+      if (t) sessionStorage.setItem('_dev_github_pat', t);
+      else sessionStorage.removeItem('_dev_github_pat');
+    });
+
+    // ─── brief generation ─────────────────────────────────────────
     document.getElementById('generate').addEventListener('click', () => {
       const missing = missingCritical();
-      const brief = `# Project Start Brief\n\n` +
-`## Project identity\n- Project name: ${value('projectName') || '[missing]'}\n- Requester/team: ${value('requester') || '[missing]'}\n- Business owner: ${value('businessOwner') || '[missing]'}\n- Target date: ${value('targetDate') || '[not specified]'}\n- Requested next phase: ${value('route')}\n\n` +
-`## One-line summary\n${value('oneLine') || '[missing]'}\n\n` +
-`## Problem\n${value('problem') || '[missing]'}\n\n` +
-`## User / customer\n${value('who') || '[missing]'}\n\n` +
-`## Evidence\n${value('evidence') || '[missing]'}\n\n` +
-`## Impact / cost\n${value('impact') || '[missing]'}\n\n` +
-`## Goal\n${value('goal') || '[missing]'}\n\n` +
-`## Success metrics\n${value('successMetrics') || '[missing]'}\n\n` +
-`## MVP scope\n${value('mvp') || '[missing]'}\n\n` +
-`## Non-goals / out of scope\n${value('nonGoals') || '[missing]'}\n\n` +
-`## Current workflow\n${value('currentWorkflow') || '[missing]'}\n\n` +
-`## Future workflow\n${value('futureWorkflow') || '[missing]'}\n\n` +
-`## User roles / permissions\n${value('roles') || '[missing]'}\n\n` +
-`## Data\n${value('data') || '[missing]'}\n\n` +
-`## Integrations\n${value('integrations') || '[missing]'}\n\n` +
-`## Security / compliance\n${value('security') || '[missing]'}\n\n` +
-`## Unacceptable failure modes\n${value('failureModes') || '[missing]'}\n\n` +
-`## Acceptance criteria\n${value('acceptance') || '[missing]'}\n\n` +
-`## Constraints / dependencies\n${value('constraints') || '[missing]'}\n\n` +
-`## Readiness check\n${readinessText(missing)}\n`;
+
+      // Mark every critical field
+      critical.forEach(name => markField(name, missing.includes(name)));
+      showValidationPanel(missing);
+
+      if (missing.length) {
+        // Scroll to first error
+        const firstError = document.querySelector('.field.has-error');
+        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Hide execute button and success/error panels
+        executeBtn.style.display = 'none';
+        document.getElementById('dispatchSuccess').classList.remove('show');
+        document.getElementById('dispatchError').classList.remove('show');
+        return;
+      }
+
+      // All critical fields filled — generate brief
+      const route = value('route');
+      const brief =
+`# Project Start Brief\n\n` +
+`## Project identity\n- Project name: ${value('projectName')}\n- Requester/team: ${value('requester') || '[not specified]'}\n- Business owner: ${value('businessOwner')}\n- Target date: ${value('targetDate') || '[not specified]'}\n- Requested next phase: ${route}\n\n` +
+`## One-line summary\n${value('oneLine') || '[not specified]'}\n\n` +
+`## Problem\n${value('problem')}\n\n` +
+`## User / customer\n${value('who')}\n\n` +
+`## Evidence\n${value('evidence')}\n\n` +
+`## Impact / cost\n${value('impact')}\n\n` +
+`## Goal\n${value('goal')}\n\n` +
+`## Success metrics\n${value('successMetrics') || '[not specified]'}\n\n` +
+`## MVP scope\n${value('mvp')}\n\n` +
+`## Non-goals / out of scope\n${value('nonGoals')}\n\n` +
+`## Current workflow\n${value('currentWorkflow') || '[not specified]'}\n\n` +
+`## Future workflow\n${value('futureWorkflow') || '[not specified]'}\n\n` +
+`## User roles / permissions\n${value('roles') || '[not specified]'}\n\n` +
+`## Data\n${value('data') || '[not specified]'}\n\n` +
+`## Integrations\n${value('integrations') || '[not specified]'}\n\n` +
+`## Security / compliance\n${value('security') || '[not specified]'}\n\n` +
+`## Unacceptable failure modes\n${value('failureModes') || '[not specified]'}\n\n` +
+`## Acceptance criteria\n${value('acceptance')}\n\n` +
+`## Constraints / dependencies\n${value('constraints') || '[not specified]'}\n\n` +
+`## Readiness check\n${readinessText([])}\n`;
+
       output.textContent = brief;
       resultBox.classList.add('show');
+
+      // Show execute button with route label
+      executeBtn.textContent = `Execute → ${route}`;
+      executeBtn.style.display = '';
+      executeBtn.dataset.brief = brief;
+      executeBtn.dataset.route = route;
+      executeBtn.disabled = false;
+
+      // Clear any prior dispatch feedback
+      document.getElementById('dispatchSuccess').classList.remove('show');
+      document.getElementById('dispatchError').classList.remove('show');
+
       resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+
+    // ─── copy brief ───────────────────────────────────────────────
     document.getElementById('copy').addEventListener('click', async () => {
       await navigator.clipboard.writeText(output.textContent);
       const btn = document.getElementById('copy');
       btn.textContent = 'Copied';
-      setTimeout(() => btn.textContent = 'Copy brief', 1400);
+      setTimeout(() => { btn.textContent = 'Copy brief'; }, 1400);
+    });
+
+    // ─── clear form ───────────────────────────────────────────────
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      clearFieldStates();
+      resultBox.classList.remove('show');
+      executeBtn.style.display = 'none';
+      document.getElementById('dispatchSuccess').classList.remove('show');
+      document.getElementById('dispatchError').classList.remove('show');
+    });
+
+    // ─── dispatch ─────────────────────────────────────────────────
+    async function dispatchBrief(briefMarkdown, route) {
+      // Read PAT from sessionStorage (set via the DEV ONLY panel above)
+      const pat = sessionStorage.getItem('_dev_github_pat') || '';
+      if (!pat) {
+        throw new Error('No GitHub PAT set. Open the DEV ONLY panel above and enter your fine-grained PAT.');
+      }
+
+      const body = {
+        event_type: DISPATCH_EVENT,
+        client_payload: {
+          route: route,
+          brief_markdown: briefMarkdown,
+          requester: value('requester') || '',
+          submitted_at: new Date().toISOString(),
+        },
+      };
+
+      const resp = await fetch(`https://api.github.com/repos/${DISPATCH_REPO}/dispatches`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/vnd.github+json',
+          'Authorization': `Bearer ${pat}`,
+          'X-GitHub-Api-Version': '2022-11-28',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!resp.ok) {
+        let detail = '';
+        try { detail = await resp.text(); } catch (_) {}
+        throw new Error(`HTTP ${resp.status}: ${detail || resp.statusText}`);
+      }
+      return resp.status; // 204 on success
+    }
+
+    executeBtn.addEventListener('click', async () => {
+      const brief = executeBtn.dataset.brief;
+      const route = executeBtn.dataset.route;
+
+      executeBtn.disabled = true;
+      executeBtn.textContent = 'Sending…';
+
+      const successPanel = document.getElementById('dispatchSuccess');
+      const errorPanel = document.getElementById('dispatchError');
+      successPanel.classList.remove('show');
+      errorPanel.classList.remove('show');
+
+      try {
+        await dispatchBrief(brief, route);
+        document.getElementById('dispatchSuccessBody').innerHTML =
+          `<p>Brief dispatched to <code>${DISPATCH_REPO}</code> as event <code>${DISPATCH_EVENT}</code> with route <strong>${route}</strong>.</p>` +
+          `<p>A GitHub Action will create an Issue with label <code>project-start:${route}</code>.</p>` +
+          `<p>After ~5 min cron, project appears in tracker dashboard: ` +
+          `<a href="http://127.0.0.1:8765" target="_blank" rel="noopener">http://127.0.0.1:8765</a></p>`;
+        successPanel.classList.add('show');
+        successPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        document.getElementById('dispatchErrorBody').innerHTML =
+          `<p>${err.message}</p>` +
+          `<p style="font-size:.85rem;color:var(--soft)">Make sure your PAT is set in the DEV ONLY panel and has <code>issues:write</code> on <code>${DISPATCH_REPO}</code>.</p>`;
+        errorPanel.classList.add('show');
+        errorPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } finally {
+        executeBtn.disabled = false;
+        executeBtn.textContent = `Execute → ${route}`;
+      }
     });
   </script>
 </body>
