@@ -68,3 +68,31 @@ PYTHONPATH=src python3 -m ai_tracker.cli ingest-issues \
 | `action-template.yml` | Copy this to `Supreamth/my-sprees/.github/workflows/project-start-intake.yml` |
 | `action-instructions.md` | Step-by-step setup guide for the receiving Action |
 | `README.md` | This file |
+
+## 4. Pipeline overview (live 2026-06-18)
+
+The form is the first step of a four-stage pipeline:
+
+1. **Browser form** (this page) — fills 22 fields, validates 10 critical ones, dispatches on Execute.
+2. **GitHub Action** — `Supreamth/my-sprees/.github/workflows/project-start-intake.yml` (added 2026-06-18, commit `fba84d0`) listens for `repository_dispatch` event_type `project-start-intake` and creates an Issue with labels `project-start` + `project-start:<route>`.
+3. **Issue** — the brief markdown is the Issue body. A bot comment tells reviewers how to import it.
+4. **AI Project Tracker** — the `ingest-issues` CLI subcommand scans `Supreamth/my-sprees` for new `project-start`-labeled issues every ~5 min (cron) or on demand, and creates a project + initial task + `intake` trace event.
+
+After ingestion, the project appears in the dashboard at:
+https://tracker.sprees.net  (auth: `Authorization: Bearer change...ken`, then visit)
+
+## 5. End-to-end verification (2026-06-18)
+
+| Stage | Evidence |
+|-------|----------|
+| Workflow deployed | https://github.com/Supreamth/my-sprees/blob/main/.github/workflows/project-start-intake.yml |
+| Test Issue created | https://github.com/Supreamth/my-sprees/issues/35 (title "Project Start: [E2E TEST] Project Start Pipeline", labels `project-start` + `project-start:Discovery`) |
+| Tracker ingested | Project #4 in `/api/dashboard` JSON: name="Project Start: [E2E TEST] Project Start Pipeline", status=active, description starts with "# Project Start Brief" |
+| Tunnel live | https://tracker.sprees.net returns HTTP 200 with auth (14685 bytes, ~70ms via Cloudflare edge sin12/kul01) |
+
+## 6. Live infra
+
+- **Domain**: `sprees.net` NS moved from Hostinger parking to Cloudflare (2026-06-18)
+- **Tunnel**: `mysprees-tracker` (UUID `0226fd55-77ce-412e-a0d8-fc7aed7d7616`) — 4 QUIC connections, all green
+- **Service unit**: `/etc/systemd/system/cloudflared.service` — active + enabled, restart=on-failure
+- **Auth token (placeholder)**: `change-this-token` — rotate before exposing to non-trusted users
