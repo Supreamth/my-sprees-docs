@@ -102,18 +102,31 @@
         <p class="section-kicker">หน้าที่ของแต่ละ AI ในระบบ และ model ที่ใช้</p>
         <p>แต่ละ AI ในระบบมีหน้าที่ต่างกัน และใช้ model ต่างกัน ดังนี้:</p>
         <table class="conn-table">
-          <thead><tr><th>AI</th><th>Role / หน้าที่</th><th>Model</th><th>Auth</th><th>Note</th></tr></thead>
+          <thead><tr><th>AI</th><th>Role / หน้าที่</th><th>Model</th><th>Auth</th><th>Trace / Tracking</th><th>Note</th></tr></thead>
           <tbody>
-            <tr class="ok"><td><strong>Hermes (main)</strong></td><td>แชท/วางแผน/ตอบคำถาม/อ่านไฟล์/route งาน</td><td>MiniMax-M3</td><td>minimax-oauth</td><td>Anthropic-compatible API (<code>https://api.minimax.io/anthropic</code>)</td></tr>
-            <tr class="ok"><td><strong>Claude Code</strong></td><td>เขียน code ทั้งหมด (write files, refactor, implement, fix bugs)</td><td>claude-sonnet-4-6</td><td>claude.ai OAuth (Pro/Max)</td><td>CLI v2.1.177, account supree@colourdoctor.co.th, called via <code>claude -p '...' --allowedTools 'Read,Edit,Write' --max-turns N</code></td></tr>
-            <tr class="ok"><td><strong>Codex</strong></td><td>(สำรอง) coding agent</td><td>gpt-5.5</td><td>openai-codex OAuth</td><td>ใช้ Claude Code เป็น default แล้ว Codex เป็น fallback</td></tr>
-            <tr class="ok"><td><strong>xAI / Grok</strong></td><td>web search / X (Twitter) research</td><td>grok-4.3</td><td>xai-oauth</td><td>X search ผ่าน xAI built-in tool</td></tr>
-            <tr class="ok"><td><strong>Vision (auxiliary)</strong></td><td>วิเคราะห์ภาพเมื่อ main ไม่รองรับ vision</td><td>(auto)</td><td>provider=auto</td><td>fallback model เลือกอัตโนมัติ</td></tr>
-            <tr class="ok"><td><strong>Nous-managed tools</strong></td><td>Firecrawl web, FAL image gen, OpenAI TTS (via Nous sub), Whisper STT</td><td>various</td><td>Nous subscription</td><td>active by default; ไม่ต้องตั้ง API key เอง</td></tr>
+            <tr class="ok"><td><strong>Hermes (main)</strong></td><td>แชท/วางแผน/ตอบคำถาม/อ่านไฟล์/route งาน</td><td>MiniMax-M3</td><td>minimax-oauth</td><td><a href='../model-validation-log/'>model-validation-log</a> + <a href='../context-handoff/'>context-handoff</a> (any model switch → validation log; cross-session continuity → context handoff)</td><td>Anthropic-compatible API (<code>https://api.minimax.io/anthropic</code>)</td></tr>
+            <tr class="ok"><td><strong>Claude Code</strong></td><td>เขียน code ทั้งหมด (write files, refactor, implement, fix bugs)</td><td>claude-sonnet-4-6</td><td>claude.ai OAuth (Pro/Max)</td><td><a href='../model-validation-log/'>model-validation-log</a> (subsystem; sessions tracked via <code>~/.claude/sessions/</code> + <code>history.jsonl</code>)</td><td>CLI v2.1.177, account supree@colourdoctor.co.th, called via <code>claude -p '...' --allowedTools 'Read,Edit,Write' --max-turns N</code></td></tr>
+            <tr class="ok"><td><strong>Codex</strong></td><td>(สำรอง) coding agent</td><td>gpt-5.5</td><td>openai-codex OAuth</td><td><a href='../model-validation-log/'>model-validation-log</a> (validated 2026-06-16 20:44)</td><td>ใช้ Claude Code เป็น default แล้ว Codex เป็น fallback</td></tr>
+            <tr class="ok"><td><strong>xAI / Grok</strong></td><td>web search / X (Twitter) research</td><td>grok-4.3</td><td>xai-oauth</td><td><a href='../model-validation-log/'>model-validation-log</a> (validated 2026-06-17 15:10)</td><td>X search ผ่าน xAI built-in tool</td></tr>
+            <tr class="ok"><td><strong>Vision (auxiliary)</strong></td><td>วิเคราะห์ภาพเมื่อ main ไม่รองรับ vision</td><td>(auto)</td><td>provider=auto</td><td>(no dedicated log; uses main model log)</td><td>fallback model เลือกอัตโนมัติ</td></tr>
+            <tr class="ok"><td><strong>Nous-managed tools</strong></td><td>Firecrawl web, FAL image gen, OpenAI TTS (via Nous sub), Whisper STT</td><td>various</td><td>Nous subscription</td><td><a href='../system-status/'>system-status</a> (active by default, monitored via 'API Keys' section)</td><td>active by default; ไม่ต้องตั้ง API key เอง</td></tr>
           </tbody>
         </table>
         <h3>Routing rule</h3>
         <p>ตาม user preference (ตั้งใน memory): งาน <strong>เขียน code จริง</strong> ต้อง delegate ไป Claude Code เสมอ — Hermes (main) จะไม่เขียน code เองผ่าน <code>execute_code</code> หรือ tool call แต่ใช้ <code>terminal</code> รัน <code>claude -p</code> แทน Read-only inspection (search_files, read_file, git/gh status) ทำใน Hermes ได้ปกติ</p>
+        <h3>AI Trace &amp; Tracking</h3>
+        <p>หน้า pages ที่ track การทำงานของ AI ในระบบ:</p>
+        <ul>
+          <li><a href='../model-validation-log/'>Model Validation Log</a> — log การ validate models ทุกตัว (skills loading, session search, honesty, memory injection, failure recovery)</li>
+          <li><a href='../context-handoff/'>Context Handoff</a> — workflow ส่งงานระหว่าง AI agents / sessions</li>
+          <li><a href='../system-status/'>System Status</a> — connection health + API keys + AI roles (หน้านี้)</li>
+        </ul>
+        <p><strong>Per-tool storage</strong> (นอกเหนือจาก docs):</p>
+        <ul>
+          <li>Claude Code sessions: <code>~/.claude/sessions/</code> + <code>history.jsonl</code></li>
+          <li>Hermes Kanban: ingest ผ่าน skill <code>ai-work-tracking-systems</code></li>
+          <li>Local session DB: <code>~/.hermes/sessions.db</code> (FTS5 search)</li>
+        </ul>
         <h3>API keys summary</h3>
         <ul>
           <li><strong>Set</strong>: GITHUB_TOKEN, ANTHROPIC_TOKEN, ANTHROPIC_API_KEY (3 ตัว — ไม่มี OPENAI_API_KEY)</li>

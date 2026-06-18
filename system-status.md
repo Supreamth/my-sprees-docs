@@ -27,18 +27,32 @@ Last updated: 2026-06-18 02:42 UTC+7 (MiniMax-M3 re-validated)
 
 แต่ละ AI ในระบบมีหน้าที่ต่างกัน และใช้ model ต่างกัน ดังนี้:
 
-| AI | Role / หน้าที่ | Model | Auth | Note |
-|---|---|---|---|---|
-| **Hermes (main)** | แชท/วางแผน/ตอบคำถาม/อ่านไฟล์/route งาน | MiniMax-M3 | minimax-oauth | Anthropic-compatible API (https://api.minimax.io/anthropic) |
-| **Claude Code** | เขียน code ทั้งหมด (write files, refactor, implement, fix bugs) | claude-sonnet-4-6 | claude.ai OAuth (Pro/Max) | CLI v2.1.177, account supree@colourdoctor.co.th, called via `claude -p '...' --allowedTools 'Read,Edit,Write' --max-turns N` |
-| **Codex** | (สำรอง) coding agent | gpt-5.5 | openai-codex OAuth | ใช้ Claude Code เป็น default แล้ว Codex เป็น fallback |
-| **xAI / Grok** | web search / X (Twitter) research | grok-4.3 | xai-oauth | X search ผ่าน xAI built-in tool |
-| **Vision (auxiliary)** | วิเคราะห์ภาพเมื่อ main ไม่รองรับ vision | (auto) | provider=auto | fallback model เลือกอัตโนมัติ |
-| **Nous-managed tools** | Firecrawl web, FAL image gen, OpenAI TTS (via Nous sub), Whisper STT | various | Nous subscription | active by default; ไม่ต้องตั้ง API key เอง |
+| AI | Role / หน้าที่ | Model | Auth | Trace / Tracking | Note |
+|---|---|---|---|---|---|
+| **Hermes (main)** | แชท/วางแผน/ตอบคำถาม/อ่านไฟล์/route งาน | MiniMax-M3 | minimax-oauth | [model-validation-log](../model-validation-log/) + [context-handoff](../context-handoff/) (any model switch → validation log; cross-session continuity → context handoff) | Anthropic-compatible API (https://api.minimax.io/anthropic) |
+| **Claude Code** | เขียน code ทั้งหมด (write files, refactor, implement, fix bugs) | claude-sonnet-4-6 | claude.ai OAuth (Pro/Max) | [model-validation-log](../model-validation-log/) (subsystem; sessions tracked via `~/.claude/sessions/` + `history.jsonl`) | CLI v2.1.177, account supree@colourdoctor.co.th, called via `claude -p '...' --allowedTools 'Read,Edit,Write' --max-turns N` |
+| **Codex** | (สำรอง) coding agent | gpt-5.5 | openai-codex OAuth | [model-validation-log](../model-validation-log/) (validated 2026-06-16 20:44) | ใช้ Claude Code เป็น default แล้ว Codex เป็น fallback |
+| **xAI / Grok** | web search / X (Twitter) research | grok-4.3 | xai-oauth | [model-validation-log](../model-validation-log/) (validated 2026-06-17 15:10) | X search ผ่าน xAI built-in tool |
+| **Vision (auxiliary)** | วิเคราะห์ภาพเมื่อ main ไม่รองรับ vision | (auto) | provider=auto | (no dedicated log; uses main model log) | fallback model เลือกอัตโนมัติ |
+| **Nous-managed tools** | Firecrawl web, FAL image gen, OpenAI TTS (via Nous sub), Whisper STT | various | Nous subscription | [system-status](../system-status/) (active by default, monitored via 'API Keys' section) | active by default; ไม่ต้องตั้ง API key เอง |
 
 ### Routing rule
 
 ตาม user preference (ตั้งใน memory): งาน **เขียน code จริง** ต้อง delegate ไป Claude Code เสมอ — Hermes (main) จะไม่เขียน code เองผ่าน `execute_code` หรือ tool call แต่ใช้ `terminal` รัน `claude -p` แทน Read-only inspection (search_files, read_file, git/gh status) ทำใน Hermes ได้ปกติ
+
+### AI Trace & Tracking
+
+หน้า pages ที่ track การทำงานของ AI ในระบบ:
+
+- [Model Validation Log](../model-validation-log/) — log การ validate models ทุกตัว (skills loading, session search, honesty, memory injection, failure recovery)
+- [Context Handoff](../context-handoff/) — workflow ส่งงานระหว่าง AI agents / sessions
+- [System Status](../system-status/) — connection health + API keys + AI roles (หน้านี้)
+
+**Per-tool storage** (นอกเหนือจาก docs):
+
+- Claude Code sessions: `~/.claude/sessions/` + `history.jsonl`
+- Hermes Kanban: ingest ผ่าน skill `ai-work-tracking-systems`
+- Local session DB: `~/.hermes/sessions.db` (FTS5 search)
 
 ### API keys summary
 
