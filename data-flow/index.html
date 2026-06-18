@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>E2E Data Flow · Project Start → Tracker</title>
+  <meta name="description" content="End-to-end data flow diagram ตั้งแต่กรอก Project Start Form บน GitHub Pages จนถึง Issue บน GitHub และ row ใน AI Project Tracker dashboard">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Inter:wght@500;600;700;800&display=swap');
+
+    :root {
+      color-scheme: light;
+      --bg: #f7f3ec;
+      --paper: #fffdf8;
+      --panel: #ffffff;
+      --ink: #17130f;
+      --muted: #6e645a;
+      --soft: #8b8176;
+      --line: #e4d8c8;
+      --accent: #2448d8;
+      --accent-2: #dd6b34;
+      --accent-soft: #eef2ff;
+      --ok: #126f49;
+      --warn: #a96513;
+      --danger: #a43c38;
+      --code: #17130f;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(42, 31, 16, .10);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-family: "Noto Sans Thai", Inter, ui-sans-serif, system-ui, -appleOS, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 7% 0%, rgba(36, 72, 216, .14), transparent 32rem),
+        radial-gradient(circle at 96% 8%, rgba(221, 107, 52, .13), transparent 30rem),
+        var(--bg);
+      line-height: 1.65;
+    }
+    a { color: inherit; }
+    code, pre { font-family: var(--mono); }
+    code { background: #f1e7da; border: 1px solid #e1d3c0; border-radius: 7px; padding: .08rem .34rem; font-size: .92em; }
+    pre { background: var(--code); color: #fff8ed; border-radius: 16px; padding: 16px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+
+    .layout { display: grid; grid-template-columns: 314px minmax(0, 1fr); min-height: 100vh; }
+
+    aside {
+      position: sticky; top: 0; height: 100vh; overflow: auto; padding: 28px 22px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 253, 248, .78);
+      backdrop-filter: blur(18px);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+    .mark {
+      width: 46px; height: 46px; border-radius: 15px; display: grid; place-items: center;
+      color: white; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #172c84);
+      box-shadow: 0 14px 30px rgba(36,72,216,.24);
+    }
+    .brand strong { display: block; line-height: 1.12; }
+    .brand span { color: var(--muted); font-size: .88rem; }
+
+    .nav-label { margin: 22px 0 8px; color: var(--soft); font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    nav a {
+      display: block; text-decoration: none; color: var(--muted);
+      padding: 8px 10px; border-radius: 11px; margin: 1px 0;
+      font-size: .92rem; line-height: 1.35;
+    }
+    nav a:hover, nav a:focus-visible { color: var(--ink); background: #f0e7da; outline: none; }
+    nav a.current { background: var(--accent-soft); color: #1d369f; font-weight: 700; }
+
+    main { padding: 42px min(5vw, 76px) 86px; }
+    .hero, section {
+      max-width: 1180px;
+      border: 1px solid var(--line);
+      background: rgba(255,253,248,.88);
+      box-shadow: var(--shadow);
+    }
+    .hero { padding: clamp(30px,4vw,58px); border-radius: 32px; }
+    section { margin-top: 28px; padding: clamp(22px,3vw,38px); border-radius: var(--radius); }
+
+    .eyebrow { color: var(--accent); font-weight: 800; letter-spacing: .055em; text-transform: uppercase; font-size: .78rem; }
+    h1 { margin: 12px 0 14px; font-family: Inter,"Noto Sans Thai",sans-serif; font-size: clamp(2.15rem,5vw,4.6rem); line-height: 1.03; letter-spacing: -.055em; text-wrap: balance; }
+    h2 { margin: 0 0 9px; font-family: Inter,"Noto Sans Thai",sans-serif; font-size: clamp(1.5rem,2.35vw,2.2rem); line-height: 1.1; letter-spacing: -.035em; }
+    h3 { margin: 24px 0 8px; font-size: 1.08rem; }
+    .lead, .section-kicker { color: var(--muted); max-width: 920px; }
+    .lead { font-size: clamp(1.04rem,1.45vw,1.22rem); margin: 0; }
+    .section-kicker { margin: 0 0 4px; font-weight: 700; color: var(--soft); font-size: .82rem; letter-spacing: .05em; text-transform: uppercase; }
+
+    .status-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin-top: 22px; }
+    .stat { border: 1px solid var(--line); border-radius: 18px; background: var(--panel); padding: 16px; }
+    .stat span { display: block; color: var(--soft); font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+    .stat strong { display: block; margin-top: 4px; font-size: 1rem; }
+    .stat code { font-size: .82rem; }
+
+    .diagram-wrap {
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+      padding: 18px;
+      overflow-x: auto;
+    }
+    .diagram-wrap svg { display: block; max-width: 100%; height: auto; min-width: 720px; }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; font-size: .9rem; }
+    .legend-item { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: #fffaf2; }
+    .swatch { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+
+    .layer-grid { display: grid; gap: 14px; margin-top: 22px; grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .layer {
+      border: 1px solid var(--line); border-radius: 18px; background: var(--panel);
+      padding: 18px;
+    }
+    .layer h3 { margin-top: 0; display: flex; align-items: center; gap: 10px; }
+    .step-num {
+      width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center;
+      background: var(--accent-soft); color: #1d369f; font-weight: 800; font-size: .95rem;
+    }
+    .layer p { color: var(--muted); margin: 6px 0 10px; }
+    .layer .field-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+    .layer .field-list li { display: flex; gap: 8px; align-items: baseline; font-size: .92rem; }
+    .layer .field-list li code { flex-shrink: 0; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; border-radius: 14px; overflow: hidden; }
+    th, td { border-bottom: 1px solid var(--line); padding: 11px 10px; text-align: left; vertical-align: top; font-size: .95rem; }
+    th { background: #f3eadf; color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+    tr:last-child td { border-bottom: none; }
+    td code { font-size: .85rem; }
+
+    .callout { margin-top: 16px; padding: 16px; border: 1px solid #cfdaff; border-radius: 16px; background: #f1f5ff; }
+    .callout strong { color: #1d369f; }
+    .warn { border-color: #efd6a8; background: #fff8ea; }
+    .warn strong { color: var(--warn); }
+    .danger { border-color: #efc8c5; background: #fcefee; }
+    .danger strong { color: var(--danger); }
+    .ok { border-color: #c9e4d3; background: #ecf8f1; }
+    .ok strong { color: var(--ok); }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .btn {
+      min-height: 44px; border-radius: 999px; padding: 10px 16px; border: 1px solid var(--line);
+      background: var(--panel); color: var(--ink); font-weight: 800; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn.primary { background: var(--ink); color: white; border-color: var(--ink); }
+
+    @media (max-width: 960px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+      .status-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .layer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <div class="brand">
+        <div class="mark">↯</div>
+        <div>
+          <strong>E2E Data Flow</strong>
+          <span>Project Start → Tracker</span>
+        </div>
+      </div>
+      <div class="nav-label">Sections</div>
+      <nav aria-label="Page sections">
+        <a href="#overview">1. ภาพรวม</a>
+        <a href="#diagram">2. E2E Diagram</a>
+        <a href="#layers">3. 4 ชั้นของ Pipeline</a>
+        <a href="#payload">4. Payload contract</a>
+        <a href="#verify">5. Verification probes</a>
+        <a href="#status">6. สถานะปัจจุบัน</a>
+        <a href="#next">7. ขั้นต่อไป</a>
+      </nav>
+      <div class="nav-label">Related</div>
+      <nav aria-label="Related pages">
+        <a href="https://supreamth.github.io/my-sprees-docs/">← System Map</a>
+        <a href="https://supreamth.github.io/my-sprees-docs/project-start/">Project Start Form</a>
+        <a href="https://supreamth.github.io/my-sprees-docs/company-playbook/">Company Playbook</a>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div class="eyebrow">E2E Data Flow · my-sprees ecosystem</div>
+        <h1>จากฟอร์มบน Pages → Issue บน GitHub → Row บน Tracker</h1>
+        <p class="lead">
+          Pipeline นี้เชื่อม static form บน GitHub Pages เข้ากับ AI Project Tracker dashboard
+          โดยไม่ต้องมี backend hosting ใช้ <code>repository_dispatch</code> + GitHub Action
+          + cron importer เป็น 4 ชั้นหลัก ข้อมูลทุกชั้น idempotent — รันซ้ำได้ไม่ซ้ำ row
+        </p>
+        <div class="status-grid">
+          <div class="stat">
+            <span>Endpoint</span>
+            <strong><code>/dispatches</code></strong>
+          </div>
+          <div class="stat">
+            <span>Event type</span>
+            <strong><code>project-start-intake</code></strong>
+          </div>
+          <div class="stat">
+            <span>Target repo</span>
+            <strong><code>Supreamth/my-sprees</code></strong>
+          </div>
+          <div class="stat">
+            <span>Tracker</span>
+            <strong><code>http://127.0.0.1:8765</code></strong>
+          </div>
+        </div>
+      </header>
+
+      <section id="overview">
+        <p class="section-kicker">1. ภาพรวม</p>
+        <h2>ทำไมต้องมี pipeline นี้</h2>
+        <p>
+          Project Start Form รันบน GitHub Pages ซึ่งเป็น static host เท่านั้น — ไม่มี server-side code
+          แต่ requester ต้องส่งข้อมูล project ไปยัง issue tracker ที่อยู่ใน GitHub Issues และ dashboard
+          ที่รันบนเครื่อง dev การเชื่อมทั้งสองฝั่งต้องไม่ต้องเปิด firewall ไม่ต้อง host API และ token ที่ใช้
+          ต้องจำกัดขอบเขตให้แคบที่สุด Pipeline นี้ใช้ <code>repository_dispatch</code> เป็นตัวกลาง
+          โดย PAT ของผู้ใช้มี scope แค่ trigger dispatch เท่านั้น ส่วนการเขียน Issue จริงใช้
+          <code>GITHUB_TOKEN</code> ของ Action ที่ GitHub หมุนเวียนให้อัตโนมัติ
+        </p>
+        <div class="callout">
+          <strong>หลักคิด:</strong> Static form ฝั่ง browser ไม่เคยถือ token ที่เขียนได้
+          ทุกการ write ผ่าน Action เท่านั้น — เปลี่ยน blast radius จาก "ทุกคนที่เปิดหน้านี้"
+          เป็น "คนที่ trigger dispatch ได้"
+        </div>
+      </section>
+
+      <section id="diagram">
+        <p class="section-kicker">2. End-to-end Diagram</p>
+        <h2>จากผู้ใช้ในเบราว์เซอร์ถึง row ใน Dashboard</h2>
+        <div class="diagram-wrap" role="img" aria-label="End-to-end data flow diagram">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1140 720" font-family="Inter, 'Noto Sans Thai', sans-serif">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#2448d8"/>
+              </marker>
+              <marker id="arrow-soft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#a96513"/>
+              </marker>
+              <linearGradient id="layerBg" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#fffdf8"/>
+                <stop offset="100%" stop-color="#fffaf2"/>
+              </linearGradient>
+              <filter id="card-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity=".12"/>
+              </filter>
+            </defs>
+
+            <!-- Title -->
+            <text x="570" y="32" text-anchor="middle" font-size="20" font-weight="800" fill="#17130f">Project Start E2E Pipeline</text>
+            <text x="570" y="54" text-anchor="middle" font-size="13" fill="#6e645a">Browser → GitHub Pages → Dispatch → Action → Issue → Tracker → Dashboard</text>
+
+            <!-- =================== LAYER 1: BROWSER =================== -->
+            <rect x="30" y="80" width="1080" height="118" rx="16" fill="url(#layerBg)" stroke="#e4d8c8"/>
+            <text x="50" y="106" font-size="12" font-weight="800" fill="#2448d8" letter-spacing="1">LAYER 1 · BROWSER</text>
+            <text x="50" y="124" font-size="11" fill="#6e645a">ผู้ใช้กรอกฟอร์ม + ใส่ PAT ใน sessionStorage</text>
+
+            <!-- Form card -->
+            <g filter="url(#card-shadow)">
+              <rect x="60" y="138" width="240" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="76" y="158" font-size="13" font-weight="700" fill="#17130f">Project Start Form</text>
+              <text x="76" y="174" font-size="11" fill="#6e645a">23 fields · 9 critical (validated)</text>
+            </g>
+
+            <!-- PAT card -->
+            <g filter="url(#card-shadow)">
+              <rect x="340" y="138" width="200" height="46" rx="11" fill="#ffffff" stroke="#efd6a8"/>
+              <text x="356" y="158" font-size="13" font-weight="700" fill="#17130f">🔑 Fine-grained PAT</text>
+              <text x="356" y="174" font-size="11" fill="#6e645a">sessionStorage only · scope: dispatch</text>
+            </g>
+
+            <!-- Brief markdown card -->
+            <g filter="url(#card-shadow)">
+              <rect x="580" y="138" width="220" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="596" y="158" font-size="13" font-weight="700" fill="#17130f">Generate Brief</text>
+              <text x="596" y="174" font-size="11" fill="#6e645a">Markdown output · route selector</text>
+            </g>
+
+            <!-- Execute card -->
+            <g filter="url(#card-shadow)">
+              <rect x="840" y="138" width="240" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="856" y="158" font-size="13" font-weight="700" fill="#17130f">Execute</text>
+              <text x="856" y="174" font-size="11" fill="#6e645a">fetch() POST → /dispatches</text>
+            </g>
+
+            <!-- =================== LAYER 2: GITHUB =================== -->
+            <rect x="30" y="218" width="1080" height="180" rx="16" fill="url(#layerBg)" stroke="#e4d8c8"/>
+            <text x="50" y="244" font-size="12" font-weight="800" fill="#2448d8" letter-spacing="1">LAYER 2 · GITHUB  (api.github.com + Supreamth/my-sprees)</text>
+            <text x="50" y="262" font-size="11" fill="#6e645a">PAT → dispatch endpoint → Action receiver → Issue</text>
+
+            <!-- Dispatch endpoint -->
+            <g filter="url(#card-shadow)">
+              <rect x="60" y="276" width="240" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="76" y="296" font-size="12" font-weight="700" fill="#17130f">POST /dispatches</text>
+              <text x="76" y="312" font-size="11" fill="#6e645a">Authorization: Bearer &lt;PAT&gt;</text>
+            </g>
+
+            <!-- Event type -->
+            <g filter="url(#card-shadow)">
+              <rect x="340" y="276" width="200" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="356" y="296" font-size="12" font-weight="700" fill="#17130f">event_type</text>
+              <text x="356" y="312" font-size="11" fill="#6e645a" font-family="ui-monospace,monospace">project-start-intake</text>
+            </g>
+
+            <!-- client_payload -->
+            <g filter="url(#card-shadow)">
+              <rect x="580" y="276" width="220" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="596" y="296" font-size="12" font-weight="700" fill="#17130f">client_payload</text>
+              <text x="596" y="312" font-size="11" fill="#6e645a">route · brief · requester · ts</text>
+            </g>
+
+            <!-- Action workflow -->
+            <g filter="url(#card-shadow)">
+              <rect x="840" y="276" width="240" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="856" y="296" font-size="12" font-weight="700" fill="#17130f">GitHub Action</text>
+              <text x="856" y="312" font-size="11" fill="#6e645a">on: repository_dispatch</text>
+            </g>
+
+            <!-- github-script -->
+            <g filter="url(#card-shadow)">
+              <rect x="60" y="338" width="320" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="76" y="358" font-size="12" font-weight="700" fill="#17130f">actions/github-script@v7</text>
+              <text x="76" y="374" font-size="11" fill="#6e645a">parse payload → create issue → add comment</text>
+            </g>
+
+            <!-- Issue title format -->
+            <g filter="url(#card-shadow)">
+              <rect x="420" y="338" width="380" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="436" y="358" font-size="12" font-weight="700" fill="#17130f">title = "Project Start: &lt;name&gt;"</text>
+              <text x="436" y="374" font-size="11" fill="#6e645a">labels: [project-start, project-start:&lt;route&gt;]</text>
+            </g>
+
+            <!-- Issue comment -->
+            <g filter="url(#card-shadow)">
+              <rect x="840" y="338" width="240" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="856" y="358" font-size="12" font-weight="700" fill="#17130f">Tracker import hint</text>
+              <text x="856" y="374" font-size="11" fill="#6e645a">comment with manual ingest command</text>
+            </g>
+
+            <!-- =================== LAYER 3: HOST =================== -->
+            <rect x="30" y="418" width="1080" height="118" rx="16" fill="url(#layerBg)" stroke="#e4d8c8"/>
+            <text x="50" y="444" font-size="12" font-weight="800" fill="#2448d8" letter-spacing="1">LAYER 3 · HOST  (server ที่รัน AI Project Tracker)</text>
+            <text x="50" y="462" font-size="11" fill="#6e645a">Cron loop → CLI ingest → SQLite</text>
+
+            <!-- Cron -->
+            <g filter="url(#card-shadow)">
+              <rect x="60" y="476" width="220" height="46" rx="11" fill="#ffffff" stroke="#efd6a8"/>
+              <text x="76" y="496" font-size="12" font-weight="700" fill="#17130f">Cron */5 * * * *</text>
+              <text x="76" y="512" font-size="11" fill="#6e645a">/etc/cron.d/ai-tracker-intake</text>
+            </g>
+
+            <!-- CLI -->
+            <g filter="url(#card-shadow)">
+              <rect x="320" y="476" width="280" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="336" y="496" font-size="12" font-weight="700" fill="#17130f">ai_tracker.cli ingest-issues</text>
+              <text x="336" y="512" font-size="11" fill="#6e645a">--label project-start --target-repo ...</text>
+            </g>
+
+            <!-- gh list -->
+            <g filter="url(#card-shadow)">
+              <rect x="640" y="476" width="200" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="656" y="496" font-size="12" font-weight="700" fill="#17130f">gh issue list</text>
+              <text x="656" y="512" font-size="11" fill="#6e645a">--label project-start</text>
+            </g>
+
+            <!-- Idempotent -->
+            <g filter="url(#card-shadow)">
+              <rect x="880" y="476" width="200" height="46" rx="11" fill="#ffffff" stroke="#c9e4d3"/>
+              <text x="896" y="496" font-size="12" font-weight="700" fill="#126f49">Idempotency check</text>
+              <text x="896" y="512" font-size="11" fill="#6e645a">external_id + external_source</text>
+            </g>
+
+            <!-- =================== LAYER 4: STORAGE =================== -->
+            <rect x="30" y="556" width="1080" height="118" rx="16" fill="url(#layerBg)" stroke="#e4d8c8"/>
+            <text x="50" y="582" font-size="12" font-weight="800" fill="#2448d8" letter-spacing="1">LAYER 4 · STORAGE  (SQLite + Dashboard)</text>
+            <text x="50" y="600" font-size="11" fill="#6e645a">projects / tasks / trace events → web UI</text>
+
+            <!-- SQLite -->
+            <g filter="url(#card-shadow)">
+              <rect x="60" y="614" width="220" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="76" y="634" font-size="12" font-weight="700" fill="#17130f">SQLite</text>
+              <text x="76" y="650" font-size="11" fill="#6e645a">data/tracker.db</text>
+            </g>
+
+            <!-- Dashboard -->
+            <g filter="url(#card-shadow)">
+              <rect x="320" y="614" width="280" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="336" y="634" font-size="12" font-weight="700" fill="#17130f">ai_tracker.server</text>
+              <text x="336" y="650" font-size="11" fill="#6e645a">127.0.0.1:8765 · Bearer auth</text>
+            </g>
+
+            <!-- Public -->
+            <g filter="url(#card-shadow)">
+              <rect x="640" y="614" width="200" height="46" rx="11" fill="#ffffff" stroke="#efd6a8"/>
+              <text x="656" y="634" font-size="12" font-weight="700" fill="#17130f">Cloudflare Tunnel</text>
+              <text x="656" y="650" font-size="11" fill="#6e645a">tracker.sprees.net (pending)</text>
+            </g>
+
+            <!-- Web -->
+            <g filter="url(#card-shadow)">
+              <rect x="880" y="614" width="200" height="46" rx="11" fill="#ffffff" stroke="#cfdaff"/>
+              <text x="896" y="634" font-size="12" font-weight="700" fill="#17130f">Dashboard UI</text>
+              <text x="896" y="650" font-size="11" fill="#6e645a">projects / tasks / timeline</text>
+            </g>
+
+            <!-- =================== ARROWS =================== -->
+            <!-- Vertical connectors down layers -->
+            <line x1="960" y1="184" x2="960" y2="274" stroke="#2448d8" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="0"/>
+            <line x1="180" y1="184" x2="180" y2="276" stroke="#2448d8" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="180" y1="322" x2="180" y2="338" stroke="#2448d8" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="220" y1="384" x2="220" y2="476" stroke="#2448d8" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="460" y1="522" x2="460" y2="614" stroke="#2448d8" stroke-width="2" marker-end="url(#arrow)"/>
+
+            <!-- Cross-layer horizontal arrows with labels -->
+            <line x1="300" y1="161" x2="340" y2="161" stroke="#a96513" stroke-width="1.4" marker-end="url(#arrow-soft)" stroke-dasharray="3 3"/>
+            <text x="320" y="156" text-anchor="middle" font-size="9" fill="#a96513">PAT</text>
+
+            <line x1="540" y1="161" x2="580" y2="161" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="560" y="156" text-anchor="middle" font-size="9" fill="#2448d8">validate</text>
+
+            <line x1="800" y1="161" x2="840" y2="161" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="820" y="156" text-anchor="middle" font-size="9" fill="#2448d8">click</text>
+
+            <line x1="300" y1="299" x2="340" y2="299" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="320" y="294" text-anchor="middle" font-size="9" fill="#2448d8">auth</text>
+
+            <line x1="540" y1="299" x2="580" y2="299" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="560" y="294" text-anchor="middle" font-size="9" fill="#2448d8">type</text>
+
+            <line x1="800" y1="299" x2="840" y2="299" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="820" y="294" text-anchor="middle" font-size="9" fill="#2448d8">route</text>
+
+            <line x1="280" y1="361" x2="420" y2="361" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="350" y="356" text-anchor="middle" font-size="9" fill="#2448d8">parse</text>
+
+            <line x1="800" y1="361" x2="840" y2="361" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="820" y="356" text-anchor="middle" font-size="9" fill="#2448d8">post</text>
+
+            <line x1="280" y1="499" x2="320" y2="499" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="300" y="494" text-anchor="middle" font-size="9" fill="#2448d8">tick</text>
+
+            <line x1="600" y1="499" x2="640" y2="499" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="620" y="494" text-anchor="middle" font-size="9" fill="#2448d8">gh</text>
+
+            <line x1="840" y1="499" x2="880" y2="499" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="860" y="494" text-anchor="middle" font-size="9" fill="#2448d8">skip dup</text>
+
+            <line x1="280" y1="637" x2="320" y2="637" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="300" y="632" text-anchor="middle" font-size="9" fill="#2448d8">write</text>
+
+            <line x1="600" y1="637" x2="640" y2="637" stroke="#a96513" stroke-width="1.4" marker-end="url(#arrow-soft)" stroke-dasharray="3 3"/>
+            <text x="620" y="632" text-anchor="middle" font-size="9" fill="#a96513">public</text>
+
+            <line x1="840" y1="637" x2="880" y2="637" stroke="#2448d8" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <text x="860" y="632" text-anchor="middle" font-size="9" fill="#2448d8">render</text>
+
+            <!-- =================== LEGEND =================== -->
+            <g transform="translate(30, 695)">
+              <rect x="0" y="0" width="1080" height="20" rx="6" fill="#fffdf8" stroke="#e4d8c8"/>
+              <text x="14" y="14" font-size="10" font-weight="700" fill="#6e645a">Legend:</text>
+              <line x1="68" y1="10" x2="98" y2="10" stroke="#2448d8" stroke-width="2" marker-end="url(#arrow)"/>
+              <text x="104" y="14" font-size="10" fill="#6e645a">primary flow</text>
+              <line x1="200" y1="10" x2="230" y2="10" stroke="#a96513" stroke-width="1.4" marker-end="url(#arrow-soft)" stroke-dasharray="3 3"/>
+              <text x="236" y="14" font-size="10" fill="#6e645a">credential · public tunnel</text>
+              <rect x="380" y="3" width="14" height="14" rx="3" fill="#c9e4d3" stroke="#126f49"/>
+              <text x="400" y="14" font-size="10" fill="#6e645a">idempotency guard</text>
+              <rect x="540" y="3" width="14" height="14" rx="3" fill="#efd6a8" stroke="#a96513"/>
+              <text x="560" y="14" font-size="10" fill="#6e645a">pending / optional</text>
+              <rect x="700" y="3" width="14" height="14" rx="3" fill="#cfdaff" stroke="#2448d8"/>
+              <text x="720" y="14" font-size="10" fill="#6e645a">live / deployed</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="legend">
+          <span class="legend-item"><span class="swatch" style="background:#cfdaff;border:1px solid #2448d8"></span>Deployed &amp; live</span>
+          <span class="legend-item"><span class="swatch" style="background:#efd6a8;border:1px solid #a96513"></span>Pending / optional</span>
+          <span class="legend-item"><span class="swatch" style="background:#c9e4d3;border:1px solid #126f49"></span>Idempotency guard</span>
+          <span class="legend-item"><span class="swatch" style="background:#efc8c5;border:1px solid #a43c38"></span>Failure / blocked</span>
+        </div>
+      </section>
+
+      <section id="layers">
+        <p class="section-kicker">3. Pipeline Layers</p>
+        <h2>4 ชั้นหลักของ Pipeline</h2>
+        <div class="layer-grid">
+          <div class="layer">
+            <h3><span class="step-num">1</span>Form layer</h3>
+            <p>Project Start Form บน GitHub Pages — static HTML + JS</p>
+            <ul class="field-list">
+              <li><code>23 fields</code> · 6 หมวด (Identity / Problem / Goal / Workflow / Data / Acceptance)</li>
+              <li><code>9 critical</code> บังคับกรอก — client-side validate block dispatch</li>
+              <li><code>sessionStorage</code> เก็บ PAT (clear ตอนปิด tab)</li>
+              <li><code>fetch()</code> POST → <code>api.github.com/repos/.../dispatches</code></li>
+              <li><code>route selector</code> เลือก Discovery / PRD / UX / Architecture / Delivery / Planning / Implementation</li>
+            </ul>
+          </div>
+
+          <div class="layer">
+            <h3><span class="step-num">2</span>Dispatch layer</h3>
+            <p>API ของ GitHub — fire-and-forget authenticated event</p>
+            <ul class="field-list">
+              <li><code>event_type</code> = <code>project-start-intake</code></li>
+              <li><code>client_payload</code> ≤ 10 KB (brief markdown + route + requester + ts)</li>
+              <li>Rate limit: <code>5000 dispatches / repo / hour</code></li>
+              <li>PAT scope: <code>contents:read</code> + <code>metadata:read</code> เท่านั้น</li>
+              <li>ไม่มี return data — ไม่รู้ผลจาก form ต้องรอ Action สร้าง Issue แล้วเช็คที่ issue list</li>
+            </ul>
+          </div>
+
+          <div class="layer">
+            <h3><span class="step-num">3</span>Action receiver</h3>
+            <p><code>.github/workflows/project-start-intake.yml</code> บน <code>Supreamth/my-sprees</code></p>
+            <ul class="field-list">
+              <li>Trigger: <code>repository_dispatch: [project-start-intake]</code></li>
+              <li>Permissions: <code>issues: write</code>, <code>contents: read</code></li>
+              <li>Parse <code>client_payload</code> → ดึง <code>Project name:</code> ด้วย regex</li>
+              <li>Create Issue: title = <code>Project Start: &lt;name&gt;</code></li>
+              <li>Labels: <code>[project-start, project-start:&lt;route&gt;]</code></li>
+              <li>Post comment พร้อมคำสั่ง ingest แบบ manual</li>
+            </ul>
+          </div>
+
+          <div class="layer">
+            <h3><span class="step-num">4</span>Tracker layer</h3>
+            <p>Cron importer + SQLite + local web dashboard</p>
+            <ul class="field-list">
+              <li>Cron: <code>*/5 * * * *</code> — ยังไม่ได้ติดตั้ง (ทำ manual ได้)</li>
+              <li>CLI: <code>ai_tracker.cli ingest-issues --label project-start</code></li>
+              <li>Source: <code>gh issue list --label project-start --state open --json</code></li>
+              <li>Idempotency: <code>external_source='github_issue'</code> + <code>external_id=str(number)</code></li>
+              <li>Server: <code>ai_tracker.server</code> port <code>8765</code> + Bearer auth</li>
+              <li>Tunnel: <code>tracker.sprees.net</code> via Cloudflare (pending login)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="payload">
+        <p class="section-kicker">4. Payload Contract</p>
+        <h2>ข้อมูลที่ไหลผ่านแต่ละชั้น</h2>
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Type</th><th>ตัวอย่าง</th><th>กฎ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>event_type</code></td><td>string</td><td><code>project-start-intake</code></td><td>ต้องตรงกับ <code>on.repository_dispatch.types</code> ใน workflow</td></tr>
+            <tr><td><code>client_payload.route</code></td><td>string</td><td><code>Architecture</code></td><td>ใช้เป็น suffix ของ label <code>project-start:&lt;route&gt;</code></td></tr>
+            <tr><td><code>client_payload.brief_markdown</code></td><td>string</td><td>9 critical fields + เพิ่มเติม</td><td>≤ 10 KB — first line ต้องขึ้นต้นด้วย <code>- Project name: ...</code></td></tr>
+            <tr><td><code>client_payload.requester</code></td><td>string</td><td><code>supreamth</code></td><td>GitHub username (ไม่มี space) — ถ้าใส่จะ assign issue ให้</td></tr>
+            <tr><td><code>client_payload.submitted_at</code></td><td>ISO 8601</td><td><code>2026-06-18T07:30:00Z</code></td><td>ใช้แสดงใน issue body เป็น audit trail</td></tr>
+          </tbody>
+        </table>
+        <h3>Issue body ที่ Action สร้าง</h3>
+        <pre>Project Start: &lt;name ที่ parse จาก brief&gt;
+
+&lt;full brief_markdown&gt;
+
+---
+&gt; Submitted via Project Start Form · 2026-06-18T07:30:00Z
+&gt; Route: **Architecture**
+&gt; Requester: `supreamth`
+
+&gt; After ~5 min, this issue is imported into the AI Project Tracker dashboard:
+&gt; http://127.0.0.1:8765</pre>
+      </section>
+
+      <section id="verify">
+        <p class="section-kicker">5. Verification probes</p>
+        <h2>เช็คแต่ละชั้นแบบ manual</h2>
+        <table>
+          <thead>
+            <tr><th>#</th><th>ชั้น</th><th>คำสั่ง</th><th>ผลที่คาดหวัง</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Form HTML</td>
+              <td><code>curl -s https://supreamth.github.io/my-sprees-docs/project-start/ | grep -E 'id="(generate|executeBtn)"'</code></td>
+              <td>เจอทั้ง 2 id</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Dispatch endpoint</td>
+              <td><code>gh api repos/Supreamth/my-sprees/dispatches -X POST --input /dev/null</code></td>
+              <td>HTTP 422 (auth + URL ถูก)</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Workflow exists</td>
+              <td><code>gh workflow list --repo Supreamth/my-sprees | grep project-start-intake</code></td>
+              <td>เจอ 1 entry</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Last dispatch run</td>
+              <td><code>gh run list --workflow project-start-intake.yml --repo Supreamth/my-sprees --limit 1</code></td>
+              <td>conclusion = success</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Issue created</td>
+              <td><code>gh issue list --repo Supreamth/my-sprees --label project-start --state open</code></td>
+              <td>เห็น issue ใหม่พร้อม label</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>Tracker server</td>
+              <td><code>curl -H "Authorization: Bearer change-this-token" http://127.0.0.1:8765/api/health</code></td>
+              <td>HTTP 200</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>Manual ingest</td>
+              <td><code>cd /root/ai-project-tracker &amp;&amp; PYTHONPATH=src python3 -m ai_tracker.cli ingest-issues --label project-start --target-repo Supreamth/my-sprees --db data/tracker.db</code></td>
+              <td>imported=1, skipped=0</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td>Re-run idempotent</td>
+              <td>(รันคำสั่งเดิมซ้ำ)</td>
+              <td>imported=0, skipped=1</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <strong>End-to-end test:</strong> กรอกฟอร์ม → Execute → รอ ~30s → รัน ingest → เปิด <code>http://127.0.0.1:8765</code> → เห็น project row ใหม่ใน dashboard
+        </div>
+      </section>
+
+      <section id="status">
+        <p class="section-kicker">6. สถานะปัจจุบัน</p>
+        <h2>ชั้นไหน deploy แล้ว / ยังขาด</h2>
+        <table>
+          <thead>
+            <tr><th>ชั้น</th><th>ที่อยู่</th><th>สถานะ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Form HTML</td><td><code>supreamth.github.io/my-sprees-docs/project-start/</code></td><td><span class="ok" style="padding:2px 8px;border-radius:999px;background:#ecf8f1;border:1px solid #c9e4d3;color:#126f49;font-weight:700">live</span></td></tr>
+            <tr><td>Action receiver</td><td><code>Supreamth/my-sprees/.github/workflows/project-start-intake.yml</code></td><td><span class="ok" style="padding:2px 8px;border-radius:999px;background:#ecf8f1;border:1px solid #c9e4d3;color:#126f49;font-weight:700">deployed</span> (commit <code>ca6568d</code>)</td></tr>
+            <tr><td>Tracker server</td><td><code>127.0.0.1:8765</code> (PID 97891)</td><td><span class="ok" style="padding:2px 8px;border-radius:999px;background:#ecf8f1;border:1px solid #c9e4d3;color:#126f49;font-weight:700">running</span></td></tr>
+            <tr><td>Tracker CLI</td><td><code>/root/ai-project-tracker/src/ai_tracker/cli.py</code></td><td><span class="ok" style="padding:2px 8px;border-radius:999px;background:#ecf8f1;border:1px solid #c9e4d3;color:#126f49;font-weight:700">working</span> — <code>ingest-issues</code> subcommand พร้อม</td></tr>
+            <tr><td>Cron loop</td><td><code>/etc/cron.d/ai-tracker-intake</code></td><td><span class="warn" style="padding:2px 8px;border-radius:999px;background:#fff8ea;border:1px solid #efd6a8;color:#a96513;font-weight:700">pending</span> — รัน manual ได้</td></tr>
+            <tr><td>Cloudflare tunnel</td><td><code>tracker.sprees.net</code></td><td><span class="warn" style="padding:2px 8px;border-radius:999px;background:#fff8ea;border:1px solid #efd6a8;color:#a96513;font-weight:700">pending login</span> — รอ user click Authorize</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="next">
+        <p class="section-kicker">7. ขั้นต่อไป</p>
+        <h2>ปิด loop ที่เหลือ</h2>
+        <ol>
+          <li><strong>ติดตั้ง cron ingest-issues</strong> — เพิ่ม <code>/etc/cron.d/ai-tracker-intake</code> เพื่อ poll ทุก 5 นาทีอัตโนมัติ (ตอนนี้ต้องรัน manual)</li>
+          <li><strong>Authorize cloudflared</strong> — เปิด callback URL แล้ว click Authorize เพื่อสร้าง <code>tracker.sprees.net</code> แบบ public</li>
+          <li><strong>รัน E2E test ครบรอบ</strong> ตาม verification probes #1-#8 เพื่อยืนยันว่าทุกชั้นต่อกันจริง</li>
+          <li><strong>Trigger จริงจากฟอร์ม</strong> — กรอกฟอร์มบน Pages → Execute → ดู issue ใหม่ → ดู row ใน dashboard ภายใน 5 นาที</li>
+          <li><strong>Update status page</strong> — เมื่อ pipeline live ครบ ให้แก้ <code>system-status/</code> ให้บอกว่า "intake loop: closed"</li>
+        </ol>
+        <div class="actions">
+          <a class="btn primary" href="https://supreamth.github.io/my-sprees-docs/project-start/">→ เปิด Project Start Form</a>
+          <a class="btn" href="https://supreamth.github.io/my-sprees-docs/">System Map</a>
+          <a class="btn" href="https://github.com/Supreamth/my-sprees/blob/main/.github/workflows/project-start-intake.yml">ดู workflow.yml บน GitHub</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
