@@ -49,4 +49,30 @@ Requester เลือก next phase ได้:
 - Delivery Planning
 - Implementation
 
-แต่ถ้าช่อง critical ยังว่าง ระบบจะ mark ว่า Not ready for implementation
+แต่ถ้าช่อง critical ยังว่าง ระบบจะ block และ highlight ช่องที่ขาด — ต้องกรอกให้ครบก่อนจึงจะ Execute ได้
+
+## Execute Flow
+
+เมื่อ critical fields ครบ ปุ่ม **Execute → \<Route\>** จะปรากฏใต้ brief output การไหลของข้อมูลมี 3 ขั้น:
+
+1. **Browser → GitHub API**  
+   ฟอร์มทำ `POST https://api.github.com/repos/Supreamth/my-sprees/dispatches` พร้อม `event_type: project-start-intake` และ `client_payload` ที่มี brief markdown, route, requester, และ timestamp
+
+2. **GitHub Action → Issue**  
+   Workflow `project-start-intake.yml` ใน `Supreamth/my-sprees` รับ event แล้วสร้าง Issue:
+   - Title: `Project Start: <projectName>`
+   - Body: brief markdown ทั้งหมด
+   - Labels: `project-start` และ `project-start:<route>` เช่น `project-start:Implementation`
+   - Assignee: requester (ถ้าเป็น GitHub username ที่ไม่มี space)
+
+3. **AI Project Tracker → Dashboard**  
+   Cron บนเครื่อง host รัน `ingest-issues` command ทุก ~5 นาที:
+   ```bash
+   PYTHONPATH=src python3 -m ai_tracker.cli ingest-issues \
+     --label project-start \
+     --target-repo Supreamth/my-sprees \
+     --db data/tracker.db
+   ```
+   Issue ถูก import เป็น project + first task ใน SQLite แล้วแสดงใน dashboard ที่ http://127.0.0.1:8765
+
+Brief ที่ submit ผ่านฟอร์มนี้จะ land ใน `Supreamth/my-sprees` Issues พร้อม label `project-start:<route>` และ `/root/ai-project-tracker` จะ poll และ import เข้า dashboard โดยอัตโนมัติ

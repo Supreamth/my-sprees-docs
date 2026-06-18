@@ -1,0 +1,80 @@
+name: Project Start Intake
+
+on:
+  repository_dispatch:
+    types: [project-start-intake]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create project start issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const payload = context.payload.client_payload;
+            const route    = payload.route        || 'Discovery';
+            const brief    = payload.brief_markdown || '(no brief provided)';
+            const requester = payload.requester   || '';
+            const submittedAt = payload.submitted_at || new Date().toISOString();
+
+            // Extract project name from the first "Project name:" line in the brief
+            const nameMatch = brief.match(/^-\s*Project name:\s*(.+)$/m);
+            const projectName = nameMatch ? nameMatch[1].trim() : 'Unnamed Project';
+
+            const title = `Project Start: ${projectName}`;
+
+            const body = [
+              brief,
+              '',
+              '---',
+              `> Submitted via Project Start Form · ${submittedAt}`,
+              `> Route: **${route}**`,
+              requester ? `> Requester: \`${requester}\`` : '',
+              '',
+              '> After ~5 min, this issue is imported into the AI Project Tracker dashboard:',
+              '> http://127.0.0.1:8765',
+            ].filter(line => line !== undefined).join('\n');
+
+            const labels = ['project-start', `project-start:${route}`];
+
+            const issueOpts = {
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              title,
+              body,
+              labels,
+            };
+
+            // Assign to requester only if it looks like a GitHub username (no spaces)
+            if (requester && !/\s/.test(requester)) {
+              issueOpts.assignees = [requester];
+            }
+
+            const { data: issue } = await github.rest.issues.create(issueOpts);
+            console.log(`Created issue #${issue.number}: ${issue.html_url}`);
+
+            // Add a comment pointing to the tracker
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: issue.number,
+              body: [
+                '🤖 **AI Project Tracker** will import this issue on the next cron cycle (~5 min).',
+                '',
+                'To import immediately, run on the tracker host:',
+                '```bash',
+                'cd /root/ai-project-tracker',
+                `PYTHONPATH=src python3 -m ai_tracker.cli ingest-issues \\`,
+                '  --label project-start \\',
+                '  --target-repo Supreamth/my-sprees \\',
+                '  --db data/tracker.db',
+                '```',
+                '',
+                'Then open: http://127.0.0.1:8765',
+              ].join('\n'),
+            });
