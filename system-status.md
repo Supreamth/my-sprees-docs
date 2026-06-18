@@ -6,7 +6,7 @@
 
 ## Snapshot ล่าสุด
 
-Last updated: 2026-06-17 15:10 UTC+7 (grok-4.3 validated)
+Last updated: 2026-06-18 02:42 UTC+7 (MiniMax-M3 re-validated)
 
 | Summary | Count |
 |---|---:|
@@ -19,7 +19,7 @@ Last updated: 2026-06-17 15:10 UTC+7 (grok-4.3 validated)
 
 | Connection | Provider | Status | Last check | Note |
 |---|---|---|---|---|
-| MiniMax-M3 | minimax-oauth | PASS 5/5 | 2026-06-16 20:25 | validated earlier; see Model Validation Log |
+| MiniMax-M3 | minimax-oauth (current session) | PASS 5/5 | 2026-06-18 02:42 | re-validated today via `model change`: skills (github-pr-workflow loaded), session search (SQLite hit on yesterday's sessions), honesty (clone fail admitted), memory injection (cross-session recall verified), failure recovery (2-layer diagnose). See Model Validation Log |
 | OpenAI GPT-5.5 | openai-codex | PASS 5/5 | 2026-06-16 20:44 | validated in current session: skills, session search, honesty, memory injection, failure recovery. Current model access works via subscription/OAuth provider; direct `OPENAI_API_KEY` env is not set. |
 | Grok-4.3 | xai-oauth | PASS 5/5 | 2026-06-17 15:10 | validated (skills loading, session search, honesty, memory injection, failure recovery) |
 
