@@ -79,7 +79,7 @@ The form is the first step of a four-stage pipeline:
 4. **AI Project Tracker** — the `ingest-issues` CLI subcommand scans `Supreamth/my-sprees` for new `project-start`-labeled issues every ~5 min (cron) or on demand, and creates a project + initial task + `intake` trace event.
 
 After ingestion, the project appears in the dashboard at:
-https://tracker.sprees.net  (auth: `Authorization: Bearer change...ken`, then visit)
+https://tracker.sprees.net  (auth: `Authorization: Bearer *** change-this-token`)
 
 ## 5. End-to-end verification (2026-06-18)
 
