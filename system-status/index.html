@@ -21,9 +21,10 @@
         <a href="#github">2. GitHub</a>
         <a href="#pages">3. GitHub Pages</a>
         <a href="#models">4. AI Models</a>
-        <a href="#model-credit-usage">5. Model Credit & Usage</a>
-        <a href="#external">6. External APIs</a>
-        <a href="#how-to-update">7. How to update</a>
+        <a href="#ai-roles">5. AI Roles &amp; Models</a>
+        <a href="#model-credit-usage">6. Model Credit &amp; Usage</a>
+        <a href="#external">7. External APIs</a>
+        <a href="#how-to-update">8. How to update</a>
         <a href="../context-handoff/">Context Handoff</a>
         <a href="../company-playbook/">Company Playbook</a>
         <a href="../">Back to system map</a>
@@ -33,7 +34,7 @@
       <header class="hero">
         <div class="eyebrow">System Status Dashboard</div>
         <h1>เช็คการเชื่อมต่อทั้งหมดในระบบ</h1>
-        <p class="lead">ภาพรวมการเชื่อมต่อไปยัง GitHub, GitHub Pages, AI Models, Model Credit & Usage และ external APIs พร้อมสถานะล่าสุดและเวลาที่ตรวจครั้งสุดท้าย</p>
+        <p class="lead">ภาพรวมการเชื่อมต่อไปยัง GitHub, GitHub Pages, AI Models, AI Roles, Model Credit &amp; Usage และ external APIs พร้อมสถานะล่าสุดและเวลาที่ตรวจครั้งสุดท้าย</p>
         <div class="summary-bar">
           <div class="sum-card total"><span>Total connections</span><strong>13</strong></div>
           <div class="sum-card ok"><span>Healthy</span><strong>12</strong></div>
@@ -96,8 +97,33 @@
 
 
 
+      <section id="ai-roles">
+        <h2>5. AI Roles &amp; Models</h2>
+        <p class="section-kicker">หน้าที่ของแต่ละ AI ในระบบ และ model ที่ใช้</p>
+        <p>แต่ละ AI ในระบบมีหน้าที่ต่างกัน และใช้ model ต่างกัน ดังนี้:</p>
+        <table class="conn-table">
+          <thead><tr><th>AI</th><th>Role / หน้าที่</th><th>Model</th><th>Auth</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr class="ok"><td><strong>Hermes (main)</strong></td><td>แชท/วางแผน/ตอบคำถาม/อ่านไฟล์/route งาน</td><td>MiniMax-M3</td><td>minimax-oauth</td><td>Anthropic-compatible API (<code>https://api.minimax.io/anthropic</code>)</td></tr>
+            <tr class="ok"><td><strong>Claude Code</strong></td><td>เขียน code ทั้งหมด (write files, refactor, implement, fix bugs)</td><td>claude-sonnet-4-6</td><td>claude.ai OAuth (Pro/Max)</td><td>CLI v2.1.177, account supree@colourdoctor.co.th, called via <code>claude -p '...' --allowedTools 'Read,Edit,Write' --max-turns N</code></td></tr>
+            <tr class="ok"><td><strong>Codex</strong></td><td>(สำรอง) coding agent</td><td>gpt-5.5</td><td>openai-codex OAuth</td><td>ใช้ Claude Code เป็น default แล้ว Codex เป็น fallback</td></tr>
+            <tr class="ok"><td><strong>xAI / Grok</strong></td><td>web search / X (Twitter) research</td><td>grok-4.3</td><td>xai-oauth</td><td>X search ผ่าน xAI built-in tool</td></tr>
+            <tr class="ok"><td><strong>Vision (auxiliary)</strong></td><td>วิเคราะห์ภาพเมื่อ main ไม่รองรับ vision</td><td>(auto)</td><td>provider=auto</td><td>fallback model เลือกอัตโนมัติ</td></tr>
+            <tr class="ok"><td><strong>Nous-managed tools</strong></td><td>Firecrawl web, FAL image gen, OpenAI TTS (via Nous sub), Whisper STT</td><td>various</td><td>Nous subscription</td><td>active by default; ไม่ต้องตั้ง API key เอง</td></tr>
+          </tbody>
+        </table>
+        <h3>Routing rule</h3>
+        <p>ตาม user preference (ตั้งใน memory): งาน <strong>เขียน code จริง</strong> ต้อง delegate ไป Claude Code เสมอ — Hermes (main) จะไม่เขียน code เองผ่าน <code>execute_code</code> หรือ tool call แต่ใช้ <code>terminal</code> รัน <code>claude -p</code> แทน Read-only inspection (search_files, read_file, git/gh status) ทำใน Hermes ได้ปกติ</p>
+        <h3>API keys summary</h3>
+        <ul>
+          <li><strong>Set</strong>: GITHUB_TOKEN, ANTHROPIC_TOKEN, ANTHROPIC_API_KEY (3 ตัว — ไม่มี OPENAI_API_KEY)</li>
+          <li><strong>Not set</strong>: OpenRouter, OpenAI, Exa, Parallel, Firecrawl, FAL, Browserbase, Browser Use, Honcho</li>
+          <li><strong>Subscription/OAuth only</strong>: ระบบพึ่ง subscription ล้วน ไม่มี self-hosted local model (no ollama/vllm/llama.cpp process)</li>
+        </ul>
+      </section>
+
       <section id="model-credit-usage">
-        <h2>5. Model Credit &amp; Usage</h2>
+        <h2>6. Model Credit &amp; Usage</h2>
         <p class="section-kicker">Function สำหรับเช็คเครดิตคงเหลือและ usage ของ model providers แบบไม่เอา secret ไปฝังใน GitHub Pages</p>
         <div class="callout warn-callout"><strong>Security rule:</strong> หน้านี้เป็น static public site จึงห้ามใส่ API key / OAuth token ใน HTML หรือ JavaScript ฝั่ง browser ให้รัน checker จากเครื่อง/Actions ที่มี secrets แล้วอัปเดตเฉพาะผลลัพธ์ที่ปลอดภัย</div>
         <table class="conn-table">
@@ -141,7 +167,7 @@ python3 scripts/check_model_credit_usage.py --days 30 --format markdown</pre>
       </section>
 
       <section id="external">
-        <h2>6. External APIs</h2>
+        <h2>7. External APIs</h2>
         <p class="section-kicker">Third-party APIs ที่ใช้ใน tooling/scripts</p>
         <table class="conn-table">
           <thead><tr><th>Connection</th><th>URL / Detail</th><th>Status</th><th>Last check</th><th>Note</th></tr></thead>
@@ -154,7 +180,7 @@ python3 scripts/check_model_credit_usage.py --days 30 --format markdown</pre>
       </section>
 
       <section id="how-to-update">
-        <h2>7. How to update this page</h2>
+        <h2>8. How to update this page</h2>
         <p class="section-kicker">หน้านี้เป็น cached/manual — ไม่มี auto-refresh</p>
         <h3>Trigger command</h3>
         <p>พิมพ์คำสั่งใดคำสั่งหนึ่งนี้เพื่อให้ผมอัปเดต:</p>
