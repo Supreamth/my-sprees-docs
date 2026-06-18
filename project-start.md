@@ -76,3 +76,15 @@ Requester เลือก next phase ได้:
    Issue ถูก import เป็น project + first task ใน SQLite แล้วแสดงใน dashboard ที่ http://127.0.0.1:8765
 
 Brief ที่ submit ผ่านฟอร์มนี้จะ land ใน `Supreamth/my-sprees` Issues พร้อม label `project-start:<route>` และ `/root/ai-project-tracker` จะ poll และ import เข้า dashboard โดยอัตโนมัติ
+
+## Live status (2026-06-18)
+
+**Pipeline**: end-to-end verified, public HTTPS dashboard live.
+
+- Form: https://supreamth.github.io/my-sprees-docs/project-start/
+- Action: https://github.com/Supreamth/my-sprees/blob/main/.github/workflows/project-start-intake.yml
+- Dashboard: https://tracker.sprees.net (auth: `Authorization: Bearer *** change-this-token`)
+- Test artifact: https://github.com/Supreamth/my-sprees/issues/35 (Issue) → tracker project #4
+
+**Owner**: Founder / PM
+**Runbook**: see `project-start/README.md` §4-6 for full pipeline + verification + infra details
